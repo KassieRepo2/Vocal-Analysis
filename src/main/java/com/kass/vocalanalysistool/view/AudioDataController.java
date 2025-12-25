@@ -159,6 +159,8 @@ public class AudioDataController {
     @FXML
     private void handleNewRecordingButton(){
         final Main start = new Main();
+        final Stage stage = (Stage) myInformationLabel.getScene().getWindow();
+
         try {
             start.start(new Stage());
         } catch (final IOException theEvent) {
@@ -166,8 +168,9 @@ public class AudioDataController {
             alert.setHeaderText("Unable to open a new recording!");
             alert.setTitle("Error Opening New Recording");
             alert.showAndWait();
-
         }
+
+        stage.close();
 
     }
 

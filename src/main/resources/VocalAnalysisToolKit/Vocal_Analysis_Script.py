@@ -610,14 +610,20 @@ def __predict__():
 
     if is_significant:
         if femme > masc:
-           results = f"Femme: : {round(femme,2)}"
+           results = f"Femme: {round(femme,2)}"
         else:
             results = f"Masc: {round(masc,2)}"
     else:
-        if femme > masc:
-            results = f"Androgynous Femme-leaning: {round(femme,2)}"
+        threshold = 0.04
+        diff = femme - masc
+
+        if abs(diff) <= threshold:
+            results = f"Androgynous Femme-leaning: {round(femme, 2)}" if diff > 0 \
+                else f"Androgynous Masc-leaning: {round(masc, 2)}" if diff < 0 \
+                else "Perfectly Androgynous"
         else:
-            results = f"Androgynous Masc-leaning: {round(masc,2)}"
+            results = f"Androgynous Femme-leaning: {round(femme, 2)}" if diff > 0 \
+                else f"Androgynous Masc-leaning: {round(masc, 2)}"
 
     return results
 

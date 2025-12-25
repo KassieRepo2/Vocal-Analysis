@@ -51,6 +51,12 @@ public class SelectAudioFileController implements PropertyChangeListener {
     private final PropertyChangeSupport myChanges = new PropertyChangeSupport(this);
 
     /**
+     * Opens the record scene
+     */
+    @FXML
+    public Button myRecordBtn;
+
+    /**
      * The open file button
      */
     @FXML
@@ -180,6 +186,36 @@ public class SelectAudioFileController implements PropertyChangeListener {
 
         });
         return task;
+    }
+
+    @FXML
+    private void handleRecordNewAudio() {
+        try {
+            final FXMLLoader fxmlLoader =
+                    new FXMLLoader(SelectAudioFileController.class.getResource("/com/kass" +
+                            "/vocalanalysistool/gui/AudioRecording.fxml"));
+
+            final Scene recorderScene = new Scene(fxmlLoader.load());
+            final AudioRecordingController recordSceneController = fxmlLoader.getController();
+
+            recordSceneController.init();
+
+            final Stage audioRecorderStage = new Stage();
+
+            audioRecorderStage.setScene(recorderScene);
+            audioRecorderStage.setTitle("Voice Recorder");
+            audioRecorderStage.getIcons().add(new Image(Objects.requireNonNull(getClass().
+                    getResourceAsStream("/com/kass/vocalanalysistool/icons/vocal_analysis_icon.png"))));
+            audioRecorderStage.show();
+            audioRecorderStage.setResizable(false);
+
+            Stage thisStage = (Stage) myRecordBtn.getScene().getWindow();
+            thisStage.close();
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 
     /**
