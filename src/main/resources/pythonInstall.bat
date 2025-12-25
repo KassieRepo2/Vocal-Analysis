@@ -9,7 +9,7 @@ set "PY_SHORT_FALLBACK=312"
 set "ARCH=amd64"
 set "VENV_DIR=.venv"
 set "REQ_FILE=requirements.txt"
-set "DEFAULT_PKGS=praat-parselmouth numpy matplotlib pandas"
+set "DEFAULT_PKGS=praat-parselmouth numpy matplotlib pandas joblib scikit-learn"
 
 set "REQ_HASH_FILE=%VENV_DIR%\.req.sha256"
 set "READY_MARK=%VENV_DIR%\.ready"
@@ -128,7 +128,8 @@ if exist "%READY_MARK%" (
     if /I "!HASH_OUT!"=="!OLDHASH!" (
       "%VENV_PY%" -c "import sys; ok=0
 try:
-    import parselmouth, numpy, matplotlib, pandas
+    import parselmouth, numpy, matplotlib, pandas, joblib, sklearn
+
 except Exception:
     ok=1
 sys.exit(ok)" && exit /b 0
@@ -137,7 +138,8 @@ sys.exit(ok)" && exit /b 0
     REM No requirements file; verify defaults present
     "%VENV_PY%" -c "import sys; ok=0
 try:
-    import parselmouth, numpy, matplotlib, pandas
+    import parselmouth, numpy, matplotlib, pandas, joblib, sklearn
+
 except Exception:
     ok=1
 sys.exit(ok)" && exit /b 0
@@ -169,7 +171,7 @@ if exist "%REQ_FILE%" (
 )
 
 REM Post-install sanity check: fail fast if imports still broken
-"%VENV_PY%" -c "import parselmouth, numpy, matplotlib, pandas" || (call :log "Post-install import failed." & exit /b 2)
+"%VENV_PY%" -c "import parselmouth, numpy, matplotlib, pandas, joblib, sklearn" || (call :log "Post-install import failed." & exit /b 2)
 
 REM mark ready
 > "%READY_MARK%" echo ready

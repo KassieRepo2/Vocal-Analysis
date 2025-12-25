@@ -8,6 +8,8 @@ from typing import Optional
 import matplotlib
 import pandas as pd
 
+import joblib
+
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
@@ -578,6 +580,18 @@ def _create_csv(row: dict) -> None:
     )
     print("CSV has been generated!")
 
+def __predict__():
+    user_data = pd.read_csv('user_features.csv')
+
+    pipeline = joblib.load('../../../../gender_model.joblib')
+
+    predictions = pipeline.predict(user_data)
+    probabilities = pipeline.predict_proba(user_data)
+
+    print("Predictions: ",predictions)
+    print("Probabilities: ", probabilities)
+
+
 def main():
     _reset_track_state()
 
@@ -649,7 +663,7 @@ def main():
             # Inserts the formant data into the sqlite3 database
             insert_to_table(times_, f0_vals_arr, f1_vals_arr, f2_vals_arr,
                             f3_vals_arr, f4_vals_arr, avg_formants)
-
+        __predict__()
 
     except NameError:
         print("No File Selected")
