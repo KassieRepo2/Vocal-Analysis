@@ -78,6 +78,7 @@ public class AudioRecordingController implements PropertyChangeListener {
         myRecordBtn.setDisable(true);
         myStopBtn.setDisable(false);
 
+
     }
 
     @FXML
