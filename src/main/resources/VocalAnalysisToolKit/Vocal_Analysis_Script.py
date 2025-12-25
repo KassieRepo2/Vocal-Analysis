@@ -523,7 +523,9 @@ def connect_table():
                        f3_json          TEXT NOT NULL CHECK (json_valid(f3_json)),
                        f4_json          TEXT NOT NULL CHECK (json_valid(f4_json)),
                        formant_avg_json TEXT NOT NULL CHECK (json_valid(formant_avg_json)),
-                       scatter_plot     BLOB NOT NULL
+                       scatter_plot     BLOB NOT NULL,
+                       gender_prediction TEXT NOT NULL CHECK (gender_prediction)
+                       
                    )
                    """)
     conn.commit()
@@ -531,10 +533,11 @@ def connect_table():
 
 
 def insert_to_table(time_: list[float], f0_: list[float], f1_: list[float], f2_: list[float], f3_: list[float], f4_: list[float],
-                    formant_avg: list[float]) -> None:
+                    formant_avg: list[float], gender_prediction: str) -> None:
     """
     Inserts the formant data (filtered and average) into the SQL database and generates a plot.
     Each element of formant corresponds to the time stamp in the list of time sequence.
+
 
     :param time_: The list of time sequence
     :param f0_: The list of pitch
@@ -543,6 +546,8 @@ def insert_to_table(time_: list[float], f0_: list[float], f1_: list[float], f2_:
     :param f3_: The list of Formant 3
     :param f4_: The list of Formant 4
     :param formant_avg: List of average formants (F0-F1)
+    :param gender_prediction: The predicted gender perception of the vocal sample (masc, andro masc-lean,
+    andro femme-lean, femme)
     :return: None
     """
     png_bytes = plot_formants(time_, f0_, f1_, f2_, f3_, f4_)
@@ -553,14 +558,16 @@ def insert_to_table(time_: list[float], f0_: list[float], f1_: list[float], f2_:
         json.dumps(list(map(float, f3_))),
         json.dumps(list(map(float, f4_))),
         json.dumps(list(map(float, formant_avg))),
-        Binary(png_bytes)
+        Binary(png_bytes),
+        gender_prediction
     )
 
     conn = sqlite3.connect("Vocal_Analysis.db")
     cur = conn.cursor()
     cur.execute("""
-                INSERT INTO user_formants(f0_json, f1_json, f2_json, f3_json, f4_json, formant_avg_json, scatter_plot)
-                VALUES (json(?), json(?), json(?), json(?), json(?), json(?), ?)
+                INSERT INTO user_formants(f0_json, f1_json, f2_json, f3_json, f4_json, formant_avg_json, 
+                                          scatter_plot, gender_prediction)
+                VALUES (json(?), json(?), json(?), json(?), json(?), json(?), ?, ?)
                 """, payload)
     conn.commit()
     conn.close()
@@ -574,22 +581,45 @@ def _create_csv(row: dict) -> None:
     out_csv = "user_features.csv"
     pd.DataFrame([row]).to_csv(
         out_csv,
-        mode="a",
-        header=not Path(out_csv).exists(),
+        mode="w",
+        header=True,
         index=False
     )
     print("CSV has been generated!")
 
 def __predict__():
+    """
+    Takes the users data and predicts the gender perception of the users vocal sample.
+    :return: The predicted value of the users vocal sample.
+    """
     user_data = pd.read_csv('user_features.csv')
 
-    pipeline = joblib.load('../../../../gender_model.joblib')
+    blob = joblib.load('gender_model.joblib')
 
-    predictions = pipeline.predict(user_data)
-    probabilities = pipeline.predict_proba(user_data)
+    pipeline = blob["pipeline"]
+    feature_names = blob["Feature_names"]
 
-    print("Predictions: ",predictions)
-    print("Probabilities: ", probabilities)
+    user_data = user_data.reindex(columns=feature_names)
+
+    prob = pipeline.predict_proba(user_data)[0]
+
+    masc = prob[0]
+    femme = prob[1]
+
+    is_significant = max(masc, femme) > 4.25 * min(masc, femme)
+
+    if is_significant:
+        if femme > masc:
+           results = f"Femme: : {round(femme,2)}"
+        else:
+            results = f"Masc: {round(masc,2)}"
+    else:
+        if femme > masc:
+            results = f"Androgynous Femme-leaning: {round(femme,2)}"
+        else:
+            results = f"Androgynous Masc-leaning: {round(masc,2)}"
+
+    return results
 
 
 def main():
@@ -661,9 +691,10 @@ def main():
             # Connects to the sqlite db
             connect_table()
             # Inserts the formant data into the sqlite3 database
+            prediction = __predict__();
             insert_to_table(times_, f0_vals_arr, f1_vals_arr, f2_vals_arr,
-                            f3_vals_arr, f4_vals_arr, avg_formants)
-        __predict__()
+                            f3_vals_arr, f4_vals_arr, avg_formants, prediction)
+
 
     except NameError:
         print("No File Selected")
