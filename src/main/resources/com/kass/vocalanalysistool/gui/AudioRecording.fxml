@@ -11,87 +11,100 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="279.0" prefWidth="472.0" style="-fx-background-color: black; -fx-background-radius: 50;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.kass.vocalanalysistool.view.AudioRecordingController">
-   <children>
-      <Pane prefHeight="279.3333333333333" prefWidth="472.0" style="-fx-background-color: black;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-         <ImageView fitHeight="444.0" fitWidth="718.0" layoutX="-122.0" layoutY="-78.0">
-            <Image url="@../icons/cassetteTape.png" />
-         </ImageView>
-         <HBox alignment="CENTER" layoutX="149.0" layoutY="47.0" prefHeight="37.0" prefWidth="174.0" spacing="10.0">
-            <children>
-               <Button fx:id="myRecordBtn" alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="25.0" prefWidth="25.0" style="-fx-background-radius: 999; -fx-border-radius: 999; -fx-border-width: 1; -fx-background-color: red; -fx-background-insets: 3; -fx-border-color: black; -fx-cursor: hand;">
-                  <cursor>
-                     <Cursor fx:constant="HAND" />
-                  </cursor></Button>
-               <HBox alignment="CENTER" prefHeight="28.0" prefWidth="81.0" style="-fx-background-color: white; -fx-border-radius: 10; -fx-border-color: black; -fx-background-radius: 10; -fx-background-insets: 2;">
-                  <Label fx:id="myHourLabel" prefHeight="28.0" prefWidth="17.0" text="99">
-                     <font>
-                        <Font size="15.0" />
-                     </font>
-                  </Label>
-                  <Label prefHeight="28.0" prefWidth="4.0" text=":">
-                     <font>
-                        <Font size="15.0" />
-                     </font>
-                  </Label>
-                  <Label fx:id="myMinuteLabel" prefHeight="28.0" prefWidth="17.0" text="99">
-                     <font>
-                        <Font size="15.0" />
-                     </font>
-                  </Label>
-                  <Label prefHeight="28.0" prefWidth="5.0" text=":">
-                     <font>
-                        <Font size="15.0" />
-                     </font>
-                  </Label>
-                  <Label fx:id="mySecondsLabel" prefHeight="28.0" prefWidth="17.0" text="99">
-                     <font>
-                        <Font size="15.0" />
-                     </font>
-                  </Label>
-                  <opaqueInsets>
-                     <Insets />
-                  </opaqueInsets>
-               </HBox>
-               <Button fx:id="myStopBtn" alignment="CENTER" disable="true" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="27.0" prefWidth="27.0" style="-fx-background-radius: 5; -fx-border-radius: 5; -fx-border-width: 1; -fx-background-color: red; -fx-background-insets: 2; -fx-border-color: black; -fx-cursor: hand;">
-                  <cursor>
-                     <Cursor fx:constant="HAND" />
-                  </cursor></Button>
-            </children>
-         </HBox>
-         <Label layoutX="35.0" layoutY="36.0" rotate="-46.6" snapToPixel="false" text="Vocal">
+<AnchorPane styleClass="ar_anchorPane" prefHeight="279.0" prefWidth="472.0"
+            xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.kass.vocalanalysistool.view.AudioRecordingController"
+            stylesheets="@style.css">
+    <Pane styleClass="ar_pane" prefHeight="279.3333333333333" prefWidth="472.0"
+          AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+          AnchorPane.topAnchor="0.0">
+        <ImageView fitHeight="444.0" fitWidth="718.0" layoutX="-122.0" layoutY="-78.0">
+            <Image url="@../icons/cassetteTape.png"/>
+        </ImageView>
+        <HBox alignment="CENTER" layoutX="149.0" layoutY="47.0" prefHeight="37.0" prefWidth="174.0" spacing="10.0">
+            <Button fx:id="myRecordBtn" styleClass="record-btn" alignment="CENTER" minHeight="-Infinity"
+                    minWidth="-Infinity"
+                    onAction="#handleRecordBtn"
+                    mnemonicParsing="false" prefHeight="25.0" prefWidth="25.0">
+                <cursor>
+                    <Cursor fx:constant="HAND"/>
+                </cursor>
+            </Button>
+            <HBox styleClass="ar_hBox" alignment="CENTER" prefHeight="28.0" prefWidth="81.0">
+                <Label fx:id="myHourLabel" prefHeight="28.0" prefWidth="17.0" text="99">
+                    <font>
+                        <Font size="15.0"/>
+                    </font>
+                </Label>
+                <Label prefHeight="28.0" prefWidth="4.0" text=":">
+                    <font>
+                        <Font size="15.0"/>
+                    </font>
+                </Label>
+                <Label fx:id="myMinuteLabel" prefHeight="28.0" prefWidth="17.0" text="99">
+                    <font>
+                        <Font size="15.0"/>
+                    </font>
+                </Label>
+                <Label prefHeight="28.0" prefWidth="5.0" text=":">
+                    <font>
+                        <Font size="15.0"/>
+                    </font>
+                </Label>
+                <Label fx:id="mySecondsLabel" prefHeight="28.0" prefWidth="17.0" text="99">
+                    <font>
+                        <Font size="15.0"/>
+                    </font>
+                </Label>
+                <opaqueInsets>
+                    <Insets/>
+                </opaqueInsets>
+            </HBox>
+            <Button fx:id="myStopBtn" styleClass="stop-btn" alignment="CENTER" disable="true" minHeight="-Infinity"
+                    minWidth="-Infinity"
+                    onAction="#handleStopBtn"
+                    mnemonicParsing="false" prefHeight="27.0" prefWidth="27.0">
+                <cursor>
+                    <Cursor fx:constant="HAND"/>
+                </cursor>
+            </Button>
+        </HBox>
+        <Label layoutX="35.0" layoutY="36.0" rotate="-46.6" snapToPixel="false" text="Vocal">
             <font>
-               <Font name="Harrington" size="19.0" />
+                <Font name="Harrington" size="19.0"/>
             </font>
-         </Label>
-         <Label layoutX="37.0" layoutY="47.0" rotate="-46.6" snapToPixel="false" text="Recorder">
+        </Label>
+        <Label layoutX="37.0" layoutY="47.0" rotate="-46.6" snapToPixel="false" text="Recorder">
             <font>
-               <Font name="Harrington" size="19.0" />
+                <Font name="Harrington" size="19.0"/>
             </font>
-         </Label>
-         <HBox layoutX="69.0" layoutY="170.0" prefHeight="37.0" prefWidth="336.0" spacing="30.0">
-            <children>
-               <Button fx:id="myAnalyzeButton" minWidth="130.0" prefHeight="30.0" prefWidth="152.0" style="-fx-background-radius: 45; -fx-border-color: #999; -fx-border-radius: 45; -fx-border-width: 1;            -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 2, 0, 0, 1);            -fx-background-color: #ffffff;" text="Analyze _Recording">
-                  <font>
-                     <Font name="Candara Bold" size="16.0" />
-                  </font>
-                  <cursor>
-                     <Cursor fx:constant="HAND" />
-                  </cursor>
-               </Button>
-               <Button fx:id="myExitBtn" alignment="CENTER" minWidth="130.0" prefHeight="30.0" prefWidth="152.0" style="-fx-background-radius: 45; -fx-border-color: #999; -fx-border-radius: 45; -fx-border-width: 1;            -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 2, 0, 0, 1);            -fx-background-color: #ffffff;" text="Close">
-                  <font>
-                     <Font name="Candara Bold" size="16.0" />
-                  </font>
-                  <cursor>
-                     <Cursor fx:constant="HAND" />
-                  </cursor>
-               </Button>
-            </children>
+        </Label>
+        <HBox layoutX="69.0" layoutY="170.0" prefHeight="37.0" prefWidth="336.0" spacing="30.0">
             <opaqueInsets>
-               <Insets />
+                <Insets/>
             </opaqueInsets>
-         </HBox>
-      </Pane>
-   </children>
+            <Button fx:id="myAnalyzeButton" styleClass="ar_analyzeBtn" minWidth="130.0" prefHeight="30.0"
+                    prefWidth="152.0"
+                    onAction="#handleAnalyzeBtn"
+                    text="Analyze _Recording">
+                <font>
+                    <Font name="Candara Bold" size="16.0"/>
+                </font>
+                <cursor>
+                    <Cursor fx:constant="HAND"/>
+                </cursor>
+            </Button>
+            <Button fx:id="myCloseBtn" styleClass="ar_exit-btn" alignment="CENTER" minWidth="130.0" prefHeight="30.0"
+                    prefWidth="152.0"
+                    onAction="#handleCloseBtn"
+                    text="Close">
+                <font>
+                    <Font name="Candara Bold" size="16.0"/>
+                </font>
+                <cursor>
+                    <Cursor fx:constant="HAND"/>
+                </cursor>
+            </Button>
+        </HBox>
+    </Pane>
 </AnchorPane>

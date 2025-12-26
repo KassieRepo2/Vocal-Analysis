@@ -12,10 +12,13 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="453.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.kass.vocalanalysistool.view.SelectAudioFileController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0"
+            prefWidth="453.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.kass.vocalanalysistool.view.SelectAudioFileController" stylesheets="@style.css">
 
    <!-- Background pane -->
-   <Pane prefHeight="400.0" prefWidth="453.0" style="-fx-border-radius: 0; -fx-border-color: #000000; -fx-border-width: 2; -fx-background-color: linear-gradient(to bottom, #92e7ff 0%, #ffb4fa 35%, #FFFFFF 100%);" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+   <Pane styleClass="saf_pane" prefHeight="400.0" prefWidth="453.0"
+         AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
       <Rectangle arcHeight="5.0" arcWidth="5.0" height="68.0" layoutX="265.0" layoutY="158.0" stroke="BLACK" strokeType="INSIDE" width="109.0" />
       <Rectangle arcHeight="5.0" arcWidth="5.0" height="68.0" layoutX="76.0" layoutY="158.0" stroke="BLACK" strokeType="INSIDE" width="109.0" />
 
@@ -47,9 +50,9 @@
       </Label>
       <HBox layoutX="36.0" layoutY="333.0" prefHeight="38.0" prefWidth="391.0"
             spacing="40.0"><!--Open File Button properties-->
-         <Button fx:id="myOpenFileButton" alignment="CENTER" contentDisplay="RIGHT" mnemonicParsing="false"
+         <Button fx:id="myOpenFileButton" styleClass="saf_open_file_btn" alignment="CENTER" contentDisplay="RIGHT"
+                 mnemonicParsing="false"
                  onAction="#handleOpenFile" prefHeight="38.0" prefWidth="102.0"
-                 style="-fx-background-color: #ffffff; -fx-border-color: #999; -fx-cursor: hand; -fx-background-radius: 8; -fx-border-radius: 8; -fx-border-width: 1; -fx-padding: 8 20; -fx-font-size: 13px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 2, 0, 0, 1); -fx-text-fill: #000; -fx-font-weight: bold;"
                  text="Open File">
             <font>
                <Font size="17.0"/>
@@ -61,10 +64,11 @@
                <Insets left="20.0"/>
             </padding>
          </Button>
-         <Button fx:id="myRecordBtn" alignment="CENTER" contentDisplay="RIGHT" mnemonicParsing="false" prefHeight="36.0"
+         <Button fx:id="myRecordBtn" styleClass="saf_record_btn" alignment="CENTER" contentDisplay="RIGHT"
+                 mnemonicParsing="false"
+                 prefHeight="36.0"
                  prefWidth="102.0"
                  onAction="#handleRecordNewAudio"
-                 style="-fx-background-color: #ffffff; -fx-border-color: #999; -fx-cursor: hand; -fx-background-radius: 8; -fx-border-radius: 8; -fx-border-width: 1; -fx-padding: 8 20; -fx-font-size: 13px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 2, 0, 0, 1); -fx-text-fill: #000; -fx-font-weight: bold;"
                  text="Record">
             <font>
                <Font size="17.0"/>
@@ -78,9 +82,9 @@
          </Button>
 
          <!--Exit Button properties-->
-         <Button fx:id="myExitButton" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false"
+         <Button fx:id="myExitButton" styleClass="saf_exit_btn" alignment="CENTER" contentDisplay="CENTER"
+                 mnemonicParsing="false"
                  onAction="#handleExit" prefHeight="38.0" prefWidth="102.0"
-                 style="-fx-background-color: #ffffff; -fx-border-color: #999; -fx-cursor: hand; -fx-background-radius: 8; -fx-border-radius: 8; -fx-border-width: 1; -fx-padding: 8 20; -fx-font-size: 13px; -fx-text-fill: #000; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 2, 0, 0, 1); -fx-font-weight: bold;"
                  text="Exit" textAlignment="CENTER">
             <font>
                <Font size="17.0"/>

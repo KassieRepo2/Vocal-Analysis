@@ -9,12 +9,27 @@ public enum Properties {
     UPDATE_PROGRESS,
 
     /**
-     * Notifies the viewer when the timer is incrementing
-     */
-    Timer,
-
-    /**
      * Notifies the Model when the recording has started
      */
-    START_RECORDING
+    START_RECORDING,
+
+    /**
+     * Notifies the model when the recording has stopped
+     */
+    STOP_RECORDING,
+
+    /**
+     * The updated hour
+     */
+    HOUR,
+
+    /**
+     * The updated minute
+     */
+    MIN,
+
+    /**
+     * The updated second.
+     */
+    SEC,
 }

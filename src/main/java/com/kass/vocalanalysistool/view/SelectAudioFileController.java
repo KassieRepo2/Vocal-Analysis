@@ -196,9 +196,6 @@ public class SelectAudioFileController implements PropertyChangeListener {
                             "/vocalanalysistool/gui/AudioRecording.fxml"));
 
             final Scene recorderScene = new Scene(fxmlLoader.load());
-            final AudioRecordingController recordSceneController = fxmlLoader.getController();
-
-            recordSceneController.init();
 
             final Stage audioRecorderStage = new Stage();
 

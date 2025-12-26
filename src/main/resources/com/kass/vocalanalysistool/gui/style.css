@@ -1,0 +1,140 @@
+
+.button:hover {
+    -fx-background-color: #a8a8a8;
+}
+
+.button:pressed {
+    -fx-background-color: #dadada;
+}
+
+
+/* Select Audio File Scene */
+.saf_record_btn,
+.saf_open_file_btn,
+.saf_exit_btn {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #999;
+    -fx-cursor: hand;
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
+    -fx-border-width: 1;
+    -fx-padding: 8 20;
+    -fx-font-size: 13px;
+    -fx-text-fill: #000;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.15), 2, 0, 0, 1);
+    -fx-font-weight: bold;
+}
+
+.saf_pane {
+    -fx-border-radius: 0;
+    -fx-border-color: #000000;
+    -fx-border-width: 2;
+    -fx-background-color: linear-gradient(to bottom, #92e7ff 0%, #ffb4fa 35%, #FFFFFF 100%);
+}
+
+/* Audio Data Scene*/
+
+.ad_analyze_btn {
+    -fx-background-radius: 45;
+    -fx-border-color: #999;
+    -fx-border-radius: 45;
+    -fx-border-width: 1;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.15), 2, 0, 0, 1);
+    -fx-background-color: #ffffff;
+}
+
+.ad_new_record_btn {
+    -fx-background-radius: 45;
+    -fx-border-color: #999;
+    -fx-border-radius: 45;
+    -fx-border-width: 1;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.15), 2, 0, 0, 1);
+    -fx-background-color: #ffffff;
+}
+
+.ad_info_label {
+}
+
+.ad_menuBar {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #f6f6f6;
+}
+
+.ad_scrollPane {
+    -fx-background-color: #f6f6f6;
+}
+
+.ad_anchorPane {
+    -fx-background-color: linear-gradient(to bottom, #92e7ff 0%, #ffb4fa 35%, #FFFFFF 100%);
+}
+
+/*Audio Recording Scene*/
+.ar_anchorPane {
+    -fx-background-color: black;
+    -fx-background-radius: 50;
+}
+
+.ar_pane {
+    -fx-background-color: black;
+}
+
+.record-btn {
+    -fx-background-radius: 999;
+    -fx-border-radius: 999;
+    -fx-border-width: 1;
+    -fx-background-color: red;
+    -fx-background-insets: 3;
+    -fx-border-color: black;
+    -fx-cursor: hand;
+}
+
+.record-btn:hover {
+
+    -fx-background-color: #5e0000;
+}
+
+.record-btn:pressed {
+    -fx-background-color: #fa4646;
+}
+
+
+.stop-btn {
+    -fx-background-radius: 5;
+    -fx-border-radius: 5;
+    -fx-border-width: 1;
+    -fx-background-color: red;
+    -fx-background-insets: 2;
+    -fx-border-color: black;
+    -fx-cursor: hand;
+}
+
+.stop-btn:hover {
+    -fx-background-color: #5e0000;
+}
+
+
+.stop-btn:pressed {
+    -fx-background-color: #fa4646;
+
+}
+
+.ar_hBox {
+    -fx-background-color: white;
+    -fx-border-radius: 10;
+    -fx-border-color: black;
+    -fx-background-radius: 10;
+    -fx-background-insets: 2;
+}
+
+.ar_analyzeBtn,
+.ar_exit-btn {
+    -fx-background-radius: 45;
+    -fx-border-color: #999;
+    -fx-border-radius: 45;
+    -fx-border-width: 1;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.15), 2, 0, 0, 1);
+    -fx-background-color: #ffffff;
+}
