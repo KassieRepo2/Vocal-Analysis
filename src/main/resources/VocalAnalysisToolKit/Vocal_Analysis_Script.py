@@ -13,6 +13,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import parselmouth
 import sqlite3
+from pathlib import Path
 
 FILE_PATH = None
 PREVIOUS_TIME: Optional[float] = None
@@ -582,7 +583,8 @@ def _create_csv(row: dict) -> None:
     :param row: The feature list.
     :return: None
     """
-    out_csv = "user_features.csv"
+    base_dir = Path.home()/"VocalAnalysisTool"/"user_features.csv"
+    out_csv = base_dir
     pd.DataFrame([row]).to_csv(
         out_csv,
         mode="w",
@@ -596,7 +598,8 @@ def __predict__():
     Takes the users data and predicts the gender perception of the users vocal sample.
     :return: The predicted value of the users vocal sample.
     """
-    user_data = pd.read_csv('user_features.csv')
+    user_path = Path.home() / "VocalAnalysisTool" / "user_features.csv"
+    user_data = pd.read_csv(user_path)
 
     blob = joblib.load('gender_model.joblib')
 
