@@ -14,5 +14,6 @@ module com.kass.vocalanalysistool {
     opens com.kass.vocalanalysistool.view to javafx.fxml;
     exports com.kass.vocalanalysistool.view;
     exports com.kass.vocalanalysistool.controller;
+    exports com.kass.vocalanalysistool.util;
     opens com.kass.vocalanalysistool.controller to javafx.fxml;
 }

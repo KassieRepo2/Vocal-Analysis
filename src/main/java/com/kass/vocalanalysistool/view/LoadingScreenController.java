@@ -1,5 +1,6 @@
 package com.kass.vocalanalysistool.view;
 
+import com.kass.vocalanalysistool.util.PythonScript;
 import com.kass.vocalanalysistool.common.Properties;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -14,14 +15,25 @@ import javafx.scene.control.ProgressBar;
  */
 public class LoadingScreenController implements PropertyChangeListener {
 
+    /**
+     * The progress bar element.
+     */
     @FXML
     private ProgressBar myProgBar;
 
-    protected void setMyMainSceneController(final SelectAudioFileController theScene) {
-        theScene.addPropertyChangeListener(this);
+    /**
+     * Used to the position of the current line of the python script
+     * @param theScript the PythonScript scene
+     */
+    public void addPropertyChangeListener(final PythonScript theScript) {
+        theScript.addPropertyListener(this);
     }
 
-    protected double getProgressStatus() {
+    /**
+     * Gets the current progress status.
+     * @return Data used to progress the progress bar.
+     */
+    public double getProgressStatus() {
         return myProgBar.getProgress();
     }
 
