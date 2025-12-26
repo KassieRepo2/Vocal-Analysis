@@ -19,7 +19,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.concurrent.Task;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
@@ -45,38 +44,46 @@ public class PythonScript implements PropertyChangeListener {
 
     /**
      * Runs the vocal analysis python script
+     *
      * @param thePath The path of the audio file
      * @throws IOException Thrown if the path to the audio file is invalid.
      */
     public void runScript(final String thePath) throws IOException {
         final FXMLLoader loadingScreenFXML = new FXMLLoader(getClass().getResource(
-                    "/com/kass/vocalanalysistool/gui/LoadingScreen.fxml"));
-            final Scene loadingScreenScene = new Scene(loadingScreenFXML.load());
-            final LoadingScreenController loadingScreenController = loadingScreenFXML.getController();
-            loadingScreenController.addPropertyChangeListener(this);
-            final Stage loadingScreenStage = new Stage();
-            loadingScreenStage.initStyle(StageStyle.UNDECORATED);
-            loadingScreenStage.setScene(loadingScreenScene);
-            loadingScreenStage.getIcons().add(new Image(Objects.requireNonNull
-                    (getClass().getResourceAsStream
-                            ("/com/kass/vocalanalysistool/icons/vocal_analysis_icon.png"))));
-            loadingScreenStage.setResizable(false);
-            loadingScreenStage.setAlwaysOnTop(true);
-            loadingScreenStage.show();
+                "/com/kass/vocalanalysistool/gui/LoadingScreen.fxml"));
+        final Scene loadingScreenScene = new Scene(loadingScreenFXML.load());
+        final LoadingScreenController loadingScreenController = loadingScreenFXML.getController();
+        loadingScreenController.addPropertyChangeListener(this);
+        final Stage loadingScreenStage = new Stage();
+        loadingScreenStage.initStyle(StageStyle.UNDECORATED);
+        loadingScreenStage.setScene(loadingScreenScene);
+        loadingScreenStage.getIcons().add(new Image(Objects.requireNonNull
+                (getClass().getResourceAsStream
+                        ("/com/kass/vocalanalysistool/icons/vocal_analysis_icon.png"))));
+        loadingScreenStage.setResizable(false);
+        loadingScreenStage.setAlwaysOnTop(true);
+        loadingScreenStage.show();
 
-            final Task<Void> task = getThreadedTask(thePath, loadingScreenController,
-                    loadingScreenStage);
+        final Task<Void> task = getThreadedTask(thePath, loadingScreenController,
+                loadingScreenStage);
 
-            final Thread worker = new Thread(task, "PythonRunner");
-            worker.setDaemon(true);
-            worker.start();
+        final Thread worker = new Thread(task, "PythonRunner");
+        worker.setDaemon(true);
+        worker.start();
+
+        task.setOnSucceeded(theEven->{
+            loadingScreenStage.close();
+            myChanges.firePropertyChange(Properties.SCRIPT_DONE.name(), null, true);
+        });
+
     }
 
     /**
      * Runs the python script on a separate thread.
-     * @param thePath the path of the python script.
+     *
+     * @param thePath                    the path of the python script.
      * @param theLoadingScreenController The loading screen controller object.
-     * @param theLoadingScreenStage The loading screen stage object.
+     * @param theLoadingScreenStage      The loading screen stage object.
      * @return a task object of the thread.
      */
     private Task<Void> getThreadedTask(final String thePath,
@@ -99,25 +106,6 @@ public class PythonScript implements PropertyChangeListener {
                 theLoadingScreenStage.close();
             }
 
-            try {
-                final FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/kass" +
-                        "/vocalanalysistool/gui/AudioData.fxml"));
-                final Parent root = loader.load();
-
-                final Stage audioDataController = new Stage();
-                audioDataController.setTitle("Analysis Results");
-                audioDataController.setScene(new Scene(root));
-                audioDataController.show();
-                audioDataController.setResizable(false);
-                audioDataController.getIcons().add(new Image(Objects.requireNonNull
-                        (getClass().getResourceAsStream
-                                ("/com/kass/vocalanalysistool/icons/vocal_analysis_icon.png"))));
-
-            } catch (final IOException theException) {
-
-                logger.log(Level.SEVERE, "No File Found!", theException);
-
-            }
         });
 
         task.setOnFailed(theEvent -> {
@@ -302,7 +290,6 @@ public class PythonScript implements PropertyChangeListener {
     public void addPropertyListener(final PropertyChangeListener theListener) {
         myChanges.addPropertyChangeListener(theListener);
     }
-
 
 
     @Override

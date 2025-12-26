@@ -1,7 +1,7 @@
 package com.kass.vocalanalysistool.view;
 
 import com.kass.vocalanalysistool.controller.Main;
-import com.kass.vocalanalysistool.model.UserFormantDatabase;
+import com.kass.vocalanalysistool.model.UserSampleDatabase;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import javafx.fxml.FXML;
@@ -16,7 +16,7 @@ public class AudioDataController {
     /**
      * The formant database object.
      */
-    private final UserFormantDatabase db = new UserFormantDatabase(false);
+    private final UserSampleDatabase db = new UserSampleDatabase(false);
 
     /**
      * The scatterplot image container

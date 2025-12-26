@@ -521,19 +521,25 @@ def connect_table():
                        f4_json          TEXT NOT NULL CHECK (json_valid(f4_json)),
                        formant_avg_json TEXT NOT NULL CHECK (json_valid(formant_avg_json)),
                        scatter_plot     BLOB NOT NULL,
-                       gender_prediction TEXT NOT NULL CHECK (gender_prediction)
-                       
-                   )
+                       gender_label     TEXT NOT NULL CHECK (gender_label IN (
+                                                                              'MASC', 'FEMME', 'ANDRO_MASC',
+                                                                              'ANDRO_FEMME', 'ANDRO'
+                           )),
+                       gender_score     REAL NOT NULL CHECK (gender_score >= 0 AND gender_score <= 1))
+
+
                    """)
     conn.commit()
     conn.close()
 
 
-def insert_to_table(time_: list[float], f0_: list[float], f1_: list[float], f2_: list[float], f3_: list[float], f4_: list[float],
-                    formant_avg: list[float], gender_prediction: str) -> None:
+def insert_to_table(time_: list[float], f0_: list[float], f1_: list[float], f2_: list[float],
+                    f3_: list[float], f4_: list[float], formant_avg: list[float],
+                    gender_label: str, gender_score: float) -> None:
     """
     Inserts the formant data (filtered and average) into the SQL database and generates a plot.
     Each element of formant corresponds to the time stamp in the list of time sequence.
+
 
 
     :param time_: The list of time sequence
@@ -543,8 +549,8 @@ def insert_to_table(time_: list[float], f0_: list[float], f1_: list[float], f2_:
     :param f3_: The list of Formant 3
     :param f4_: The list of Formant 4
     :param formant_avg: List of average formants (F0-F1)
-    :param gender_prediction: The predicted gender perception of the vocal sample (masc, andro masc-lean,
-    andro femme-lean, femme)
+    :param gender_label:
+    :param gender_score:
     :return: None
     """
     png_bytes = plot_formants(time_, f0_, f1_, f2_, f3_, f4_)
@@ -556,15 +562,16 @@ def insert_to_table(time_: list[float], f0_: list[float], f1_: list[float], f2_:
         json.dumps(list(map(float, f4_))),
         json.dumps(list(map(float, formant_avg))),
         Binary(png_bytes),
-        gender_prediction
+        gender_label,
+        float(gender_score) if gender_score is not None else None,
     )
 
     conn = sqlite3.connect("Vocal_Analysis.db")
     cur = conn.cursor()
     cur.execute("""
                 INSERT INTO user_formants(f0_json, f1_json, f2_json, f3_json, f4_json, formant_avg_json, 
-                                          scatter_plot, gender_prediction)
-                VALUES (json(?), json(?), json(?), json(?), json(?), json(?), ?, ?)
+                                          scatter_plot, gender_label, gender_score)
+                VALUES (json(?), json(?), json(?), json(?), json(?), json(?), ?, ?, ?)
                 """, payload)
     conn.commit()
     conn.close()
@@ -604,25 +611,18 @@ def __predict__():
     femme = prob[1]
 
     is_significant = max(masc, femme) > 4.25 * min(masc, femme)
+    threshold = 0.04
 
     if is_significant:
         if femme > masc:
-           results = f"Femme: {round(femme,2)}"
+            return "FEMME", float(femme)
         else:
-            results = f"Masc: {round(masc,2)}"
+            return "MASC", float(masc)
     else:
-        threshold = 0.04
         diff = femme - masc
-
         if abs(diff) <= threshold:
-            results = f"Androgynous Femme-leaning: {round(femme, 2)}" if diff > 0 \
-                else f"Androgynous Masc-leaning: {round(masc, 2)}" if diff < 0 \
-                else "Perfectly Androgynous"
-        else:
-            results = f"Androgynous Femme-leaning: {round(femme, 2)}" if diff > 0 \
-                else f"Androgynous Masc-leaning: {round(masc, 2)}"
-
-    return results
+            return "ANDRO", float(max(masc, femme))
+        return ("ANDRO_FEMME", float(femme)) if diff > 0 else ("ANDRO_MASC", float(masc))
 
 
 def main():
@@ -694,9 +694,9 @@ def main():
             # Connects to the sqlite db
             connect_table()
             # Inserts the formant data into the sqlite3 database
-            prediction = __predict__()
+            gender_label, gender_score = __predict__()
             insert_to_table(times_, f0_vals_arr, f1_vals_arr, f2_vals_arr,
-                            f3_vals_arr, f4_vals_arr, avg_formants, prediction)
+                            f3_vals_arr, f4_vals_arr, avg_formants, gender_label, gender_score)
 
 
     except NameError:

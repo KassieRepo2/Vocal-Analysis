@@ -30,6 +30,7 @@
       <w>recursesubdirs</w>
       <w>runhidden</w>
       <w>setlocal</w>
+      <w>sqlitejdbc</w>
       <w>usebackq</w>
       <w>vocalanalysistool</w>
       <w>waituntilterminated</w>

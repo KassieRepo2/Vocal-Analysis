@@ -32,4 +32,9 @@ public enum Properties {
      * The updated second.
      */
     SEC,
+
+    /**
+     * Notifies when the script has succeded
+     */
+    SCRIPT_DONE,
 }

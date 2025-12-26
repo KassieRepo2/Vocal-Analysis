@@ -1,5 +1,6 @@
 package com.kass.vocalanalysistool.view;
 
+import com.kass.vocalanalysistool.common.Properties;
 import com.kass.vocalanalysistool.util.PythonScript;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -11,6 +12,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
@@ -67,6 +69,7 @@ public class SelectAudioFileController implements PropertyChangeListener {
      */
     @FXML
     private void initialize() {
+        myPyScript.addPropertyListener(this);
     }
 
     /**
@@ -94,13 +97,31 @@ public class SelectAudioFileController implements PropertyChangeListener {
             logger.info(() -> "Path: " + path);
 
             thisStage.close();
-
             myPyScript.runScript(path);
-
         }
     }
 
+    private void openAudioDataScene() {
+        try {
+                final FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/kass" +
+                        "/vocalanalysistool/gui/AudioData.fxml"));
+                final Parent root = loader.load();
 
+                final Stage audioDataController = new Stage();
+                audioDataController.setTitle("Analysis Results");
+                audioDataController.setScene(new Scene(root));
+                audioDataController.show();
+                audioDataController.setResizable(false);
+                audioDataController.getIcons().add(new Image(Objects.requireNonNull
+                        (getClass().getResourceAsStream
+                                ("/com/kass/vocalanalysistool/icons/vocal_analysis_icon.png"))));
+
+            } catch (final IOException theException) {
+
+                logger.log(Level.SEVERE, "No File Found!", theException);
+
+            }
+    }
 
     @FXML
     private void handleRecordNewAudio() {
@@ -156,7 +177,9 @@ public class SelectAudioFileController implements PropertyChangeListener {
      */
     @Override
     public void propertyChange(final PropertyChangeEvent theEvent) {
-
+        if(theEvent.getPropertyName().equals(Properties.SCRIPT_DONE.name())){
+            openAudioDataScene();
+        }
     }
 
 }
