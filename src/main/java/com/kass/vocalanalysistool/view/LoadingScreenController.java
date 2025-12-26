@@ -29,14 +29,6 @@ public class LoadingScreenController implements PropertyChangeListener {
         theScript.addPropertyChangeListener(this);
     }
 
-    /**
-     * Gets the current progress status.
-     * @return Data used to progress the progress bar.
-     */
-    public double getProgressStatus() {
-        return myProgBar.getProgress();
-    }
-
     @Override
     public void propertyChange(final PropertyChangeEvent theEvent) {
         if(theEvent.getPropertyName().equals(ChangeEvents.UPDATE_PROGRESS.toString())) {

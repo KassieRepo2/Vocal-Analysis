@@ -3,6 +3,8 @@ package com.kass.vocalanalysistool.model;
 import com.kass.vocalanalysistool.common.ChangeEvents;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.beans.PropertyChangeEvent;
@@ -99,11 +101,15 @@ public class Recorder implements PropertyChangeListener {
             LINE = (TargetDataLine) AudioSystem.getLine(INFO);
 
             INPUT_STREAM = new AudioInputStream(LINE);
-
-            AUDIO_FILE = new File("Vocal_Sample.wav");
+            final Path audioPath = Path.of(System.getProperty("user.home"),
+                    "VocalAnalysisTool", "Vocal_Sample.wav");
+            Files.createDirectories(audioPath.getParent());
+            AUDIO_FILE = audioPath.toFile();
 
         } catch (final LineUnavailableException theException) {
             throwLineError();
+        } catch (final IOException theEvent) {
+            throw new RuntimeException("Something happened: " + theEvent.getMessage());
         }
     }
 
@@ -171,11 +177,7 @@ public class Recorder implements PropertyChangeListener {
 
                     AudioSystem.write(INPUT_STREAM, AudioFileFormat.Type.WAVE, AUDIO_FILE);
                 } catch (final IOException theException) {
-                    Alert alert = new Alert(Alert.AlertType.ERROR);
-                    alert.setTitle("Invalid Sound File");
-                    alert.setContentText("Something went wrong and was unable to create a " +
-                            "new audio file!");
-                    alert.show();
+                   LOGGER.log(Level.SEVERE, theException.getMessage());
                 }
             }, "wav-writer");
 
@@ -219,11 +221,6 @@ public class Recorder implements PropertyChangeListener {
      */
     private void throwLineError() {
         LOGGER.log(Level.SEVERE, "The line was unable to be initialized");
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Invalid Microphone Line");
-        alert.setContentText("The current microphone selected is invalid!\nPlease " +
-                "change your input device and try again!");
-        alert.show();
         throw new RuntimeException("Microphone Unavailable");
     }
 

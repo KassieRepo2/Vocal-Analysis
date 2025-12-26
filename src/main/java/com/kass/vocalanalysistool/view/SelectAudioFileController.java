@@ -115,6 +115,7 @@ public class SelectAudioFileController implements PropertyChangeListener {
             audioRecorderStage.show();
             audioRecorderStage.setResizable(false);
 
+
             Stage thisStage = (Stage) myRecordBtn.getScene().getWindow();
             thisStage.close();
 

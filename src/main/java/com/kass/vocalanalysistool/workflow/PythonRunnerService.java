@@ -66,13 +66,10 @@ public class PythonRunnerService implements PropertyChangeListener {
         loadingScreenStage.show();
 
         final Task<Void> task = getThreadedTask(thePath);
-        System.out.println("Task initialized");
-
 
         final Thread worker = new Thread(task, "PythonRunner");
         worker.setDaemon(true);
         worker.start();
-        System.out.println("Worker initialized");
 
         task.setOnSucceeded(theEvent -> {
             loadingScreenStage.close();
@@ -96,6 +93,9 @@ public class PythonRunnerService implements PropertyChangeListener {
      * @return a task object of the thread.
      */
     private Task<Void> getThreadedTask(final String thePath) {
+
+        System.out.println(thePath);
+
         return new Task<>() {
             @Override
             protected Void call() {
