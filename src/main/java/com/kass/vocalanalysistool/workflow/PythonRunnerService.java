@@ -93,9 +93,6 @@ public class PythonRunnerService implements PropertyChangeListener {
      * @return a task object of the thread.
      */
     private Task<Void> getThreadedTask(final String thePath) {
-
-        System.out.println(thePath);
-
         return new Task<>() {
             @Override
             protected Void call() {
