@@ -1,6 +1,6 @@
 package com.kass.vocalanalysistool.model;
 
-import com.kass.vocalanalysistool.common.Properties;
+import com.kass.vocalanalysistool.common.ChangeEvents;
 import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
@@ -127,20 +127,20 @@ public class Recorder implements PropertyChangeListener {
      */
     private void tick() {
         SEC++;
-        myChanges.firePropertyChange(Properties.SEC.toString(), null, numToString(SEC));
+        myChanges.firePropertyChange(ChangeEvents.SEC.toString(), null, numToString(SEC));
         if (SEC == 60) {
             SEC = 0;
             MIN++;
-            myChanges.firePropertyChange(Properties.SEC.toString(), null, numToString(SEC));
+            myChanges.firePropertyChange(ChangeEvents.SEC.toString(), null, numToString(SEC));
         }
 
         if (MIN == 60) {
             MIN = 0;
             HOUR++;
-            myChanges.firePropertyChange(Properties.MIN.toString(), null, numToString(MIN));
-            myChanges.firePropertyChange(Properties.HOUR.toString(), null, numToString(HOUR));
+            myChanges.firePropertyChange(ChangeEvents.MIN.toString(), null, numToString(MIN));
+            myChanges.firePropertyChange(ChangeEvents.HOUR.toString(), null, numToString(HOUR));
         }
-        myChanges.firePropertyChange(Properties.MIN.toString(), null, numToString(MIN));
+        myChanges.firePropertyChange(ChangeEvents.MIN.toString(), null, numToString(MIN));
     }
 
 

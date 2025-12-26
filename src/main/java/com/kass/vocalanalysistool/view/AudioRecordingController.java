@@ -1,6 +1,6 @@
 package com.kass.vocalanalysistool.view;
 
-import com.kass.vocalanalysistool.common.Properties;
+import com.kass.vocalanalysistool.common.ChangeEvents;
 import com.kass.vocalanalysistool.model.Recorder;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -87,7 +87,7 @@ public class AudioRecordingController implements PropertyChangeListener {
         myRecordBtn.setDisable(true);
         myStopBtn.setDisable(false);
         reset();
-        myChanges.firePropertyChange(Properties.START_RECORDING.toString(), null, true);
+        myChanges.firePropertyChange(ChangeEvents.START_RECORDING.toString(), null, true);
     }
 
     /**
@@ -95,7 +95,7 @@ public class AudioRecordingController implements PropertyChangeListener {
      */
     @FXML
     private void handleStopBtn() {
-        myChanges.firePropertyChange(Properties.STOP_RECORDING.name(), null, true);
+        myChanges.firePropertyChange(ChangeEvents.STOP_RECORDING.name(), null, true);
         myRecordBtn.setDisable(false);
         myAnalyzeButton.setDisable(false);
         myStopBtn.setDisable(true);
@@ -106,7 +106,7 @@ public class AudioRecordingController implements PropertyChangeListener {
      */
     @FXML
     private void handleCloseBtn() {
-        myChanges.firePropertyChange(Properties.STOP_RECORDING.name(), null, true);
+        myChanges.firePropertyChange(ChangeEvents.STOP_RECORDING.name(), null, true);
         final Stage stage = (Stage) myCloseBtn.getScene().getWindow();
         final FXMLLoader sfa_fxml = new FXMLLoader(AudioRecordingController.class.getResource("/com/kass/vocalanalysistool/gui/SelectAudioFile.fxml"));
         try {

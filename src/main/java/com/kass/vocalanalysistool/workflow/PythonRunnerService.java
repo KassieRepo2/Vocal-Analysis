@@ -1,6 +1,7 @@
-package com.kass.vocalanalysistool.util;
+package com.kass.vocalanalysistool.workflow;
 
-import com.kass.vocalanalysistool.common.Properties;
+import com.kass.vocalanalysistool.common.ChangeEvents;
+import com.kass.vocalanalysistool.common.WorkflowResult;
 import com.kass.vocalanalysistool.view.LoadingScreenController;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -30,7 +31,7 @@ import javafx.stage.StageStyle;
  * @author Kassie Whitney
  * @version 12/25/2025
  */
-public class PythonScript implements PropertyChangeListener {
+public class PythonRunnerService implements PropertyChangeListener {
 
     /**
      * Property change listener object
@@ -40,7 +41,7 @@ public class PythonScript implements PropertyChangeListener {
     /**
      * Logger for verbose data.
      */
-    private final Logger logger = Logger.getLogger(PythonScript.class.getName());
+    private final Logger logger = Logger.getLogger(PythonRunnerService.class.getName());
 
     /**
      * Runs the vocal analysis python script
@@ -71,11 +72,15 @@ public class PythonScript implements PropertyChangeListener {
         worker.setDaemon(true);
         worker.start();
 
-        task.setOnSucceeded(theEven->{
+        task.setOnSucceeded(theEvent -> {
             loadingScreenStage.close();
-            myChanges.firePropertyChange(Properties.SCRIPT_DONE.name(), null, true);
+            myChanges.firePropertyChange(WorkflowResult.SUCCESS.name(), null, true);
         });
 
+        task.setOnFailed(theEvent -> {
+            loadingScreenStage.close();
+            myChanges.firePropertyChange(WorkflowResult.FAILED.name(), null, true);
+        });
     }
 
     /**
@@ -89,32 +94,15 @@ public class PythonScript implements PropertyChangeListener {
     private Task<Void> getThreadedTask(final String thePath,
                                        final LoadingScreenController theLoadingScreenController,
                                        final Stage theLoadingScreenStage) {
-        final Task<Void> task = new Task<>() {
+        return new Task<>() {
             @Override
             protected Void call() {
                 runPythonScript(thePath);
-                myChanges.firePropertyChange(Properties.UPDATE_PROGRESS.toString(), 0,
+                myChanges.firePropertyChange(ChangeEvents.UPDATE_PROGRESS.toString(), 0,
                         (double) 1);
                 return null;
             }
         };
-
-        task.setOnSucceeded(theEvent -> {
-
-            if (theLoadingScreenController.getProgressStatus() == (double) 1) {
-                myChanges.removePropertyChangeListener(theLoadingScreenController);
-                theLoadingScreenStage.close();
-            }
-
-        });
-
-        task.setOnFailed(theEvent -> {
-            myChanges.removePropertyChangeListener(theLoadingScreenController);
-            theLoadingScreenStage.close();
-            logger.log(Level.SEVERE, "Processing failed", task.getException());
-
-        });
-        return task;
     }
 
     /**
@@ -130,10 +118,10 @@ public class PythonScript implements PropertyChangeListener {
 
             final Path appDir = getAppDir(); //The directory of the program install location
 
-            myChanges.firePropertyChange(Properties.UPDATE_PROGRESS.toString(), 0,
+            myChanges.firePropertyChange(ChangeEvents.UPDATE_PROGRESS.toString(), 0,
                     (double) 10);
 
-            myChanges.firePropertyChange(Properties.UPDATE_PROGRESS.toString(), 0,
+            myChanges.firePropertyChange(ChangeEvents.UPDATE_PROGRESS.toString(), 0,
                     (double) 16 / 100);
 
             // Run setup in appDir so .venv is created at appDir\.venv
@@ -153,7 +141,7 @@ public class PythonScript implements PropertyChangeListener {
                 return;
             }
 
-            myChanges.firePropertyChange(Properties.UPDATE_PROGRESS.toString(), 0,
+            myChanges.firePropertyChange(ChangeEvents.UPDATE_PROGRESS.toString(), 0,
                     (double) 32 / 100);
 
             // 2) Resolve venv python; do not silently fall back
@@ -178,7 +166,7 @@ public class PythonScript implements PropertyChangeListener {
                 }
             };
 
-            myChanges.firePropertyChange(Properties.UPDATE_PROGRESS.toString(), 0,
+            myChanges.firePropertyChange(ChangeEvents.UPDATE_PROGRESS.toString(), 0,
                     (double) 48 / 100);
             // 3) Ensure matplotlib is installed in the venv
             final Path req = appDir.resolve("requirements.txt");
@@ -196,7 +184,7 @@ public class PythonScript implements PropertyChangeListener {
                     throw new IllegalStateException("pip install matplotlib failed with code " + code);
             }
 
-            myChanges.firePropertyChange(Properties.UPDATE_PROGRESS.toString(), 0,
+            myChanges.firePropertyChange(ChangeEvents.UPDATE_PROGRESS.toString(), 0,
                     (double) 64 / 100);
             // 4) Probe: show interpreter & matplotlib version (fail fast if missing)
             code = run.apply(new String[]{pythonExe, "-c",
@@ -209,7 +197,7 @@ public class PythonScript implements PropertyChangeListener {
             if (code != 0)
                 throw new IllegalStateException("Probe failed; matplotlib not importable.");
 
-            myChanges.firePropertyChange(Properties.UPDATE_PROGRESS.toString(), 0,
+            myChanges.firePropertyChange(ChangeEvents.UPDATE_PROGRESS.toString(), 0,
                     (double) 95 / 100);
 
             // 5) Runs the python script
@@ -224,7 +212,7 @@ public class PythonScript implements PropertyChangeListener {
             }
             int exit = process.waitFor();
             if (exit != 0) logger.severe("Python script exited with code " + exit);
-            myChanges.firePropertyChange(Properties.UPDATE_PROGRESS.toString(), 0, (double) 1);
+            myChanges.firePropertyChange(ChangeEvents.UPDATE_PROGRESS.toString(), 0, (double) 1);
         } catch (final IOException | InterruptedException theEvent) {
             logger.log(Level.SEVERE, "Failed to run Python script", theEvent);
             Thread.currentThread().interrupt();
@@ -287,7 +275,7 @@ public class PythonScript implements PropertyChangeListener {
     }
 
 
-    public void addPropertyListener(final PropertyChangeListener theListener) {
+    public void addPropertyChangeListener(final PropertyChangeListener theListener) {
         myChanges.addPropertyChangeListener(theListener);
     }
 

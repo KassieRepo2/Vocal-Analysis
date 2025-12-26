@@ -1,7 +1,7 @@
 package com.kass.vocalanalysistool.view;
 
-import com.kass.vocalanalysistool.util.PythonScript;
-import com.kass.vocalanalysistool.common.Properties;
+import com.kass.vocalanalysistool.workflow.PythonRunnerService;
+import com.kass.vocalanalysistool.common.ChangeEvents;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import javafx.fxml.FXML;
@@ -23,10 +23,10 @@ public class LoadingScreenController implements PropertyChangeListener {
 
     /**
      * Used to the position of the current line of the python script
-     * @param theScript the PythonScript scene
+     * @param theScript the PythonRunnerService scene
      */
-    public void addPropertyChangeListener(final PythonScript theScript) {
-        theScript.addPropertyListener(this);
+    public void addPropertyChangeListener(final PythonRunnerService theScript) {
+        theScript.addPropertyChangeListener(this);
     }
 
     /**
@@ -39,7 +39,7 @@ public class LoadingScreenController implements PropertyChangeListener {
 
     @Override
     public void propertyChange(final PropertyChangeEvent theEvent) {
-        if(theEvent.getPropertyName().equals(Properties.UPDATE_PROGRESS.toString())) {
+        if(theEvent.getPropertyName().equals(ChangeEvents.UPDATE_PROGRESS.toString())) {
             myProgBar.setProgress((double) theEvent.getNewValue());
         }
     }

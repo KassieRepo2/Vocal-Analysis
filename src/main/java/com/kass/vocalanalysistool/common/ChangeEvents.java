@@ -1,8 +1,6 @@
 package com.kass.vocalanalysistool.common;
 
-import java.util.Timer;
-
-public enum Properties {
+public enum ChangeEvents {
     /**
      * Notifies the progress bar to update x amount
      */
@@ -31,10 +29,5 @@ public enum Properties {
     /**
      * The updated second.
      */
-    SEC,
-
-    /**
-     * Notifies when the script has succeded
-     */
-    SCRIPT_DONE,
+    SEC
 }

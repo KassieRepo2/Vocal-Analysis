@@ -1,10 +1,8 @@
 package com.kass.vocalanalysistool.view;
 
-import com.kass.vocalanalysistool.common.Properties;
-import com.kass.vocalanalysistool.util.PythonScript;
+import com.kass.vocalanalysistool.workflow.PythonRunnerService;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
 import java.io.File;
 import java.io.IOException;
 import java.util.Objects;
@@ -14,6 +12,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.stage.FileChooser;
@@ -37,11 +36,6 @@ public class SelectAudioFileController implements PropertyChangeListener {
     private final Logger logger = Logger.getLogger(this.getClass().getName());
 
     /**
-     * Used to execute property change events.
-     */
-    private final PropertyChangeSupport myChanges = new PropertyChangeSupport(this);
-
-    /**
      * Opens the record scene
      */
     @FXML
@@ -62,14 +56,14 @@ public class SelectAudioFileController implements PropertyChangeListener {
     /**
      * The python script utilities class.
      */
-    private final static PythonScript myPyScript = new PythonScript();
+    private final static PythonRunnerService myPyScript = new PythonRunnerService();
 
     /**
      * Used to initialize certain features.
      */
     @FXML
     private void initialize() {
-        myPyScript.addPropertyListener(this);
+        myPyScript.addPropertyChangeListener(this);
     }
 
     /**
@@ -101,6 +95,9 @@ public class SelectAudioFileController implements PropertyChangeListener {
         }
     }
 
+    /**
+     * Opens the data analysis screen.
+     */
     private void openAudioDataScene() {
         try {
                 final FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/kass" +
@@ -123,6 +120,9 @@ public class SelectAudioFileController implements PropertyChangeListener {
             }
     }
 
+    /**
+     * Handles the action event for the record new audio button.
+     */
     @FXML
     private void handleRecordNewAudio() {
         try {
@@ -160,16 +160,6 @@ public class SelectAudioFileController implements PropertyChangeListener {
 
 
     /**
-     * Adds the listener scene to the mains property change support object.
-     *
-     * @param theListener the scene listening for changed events.
-     */
-    public void addPropertyChangeListener(final PropertyChangeListener theListener) {
-        myChanges.addPropertyChangeListener(theListener);
-    }
-
-
-    /**
      * Handles property change events.
      *
      * @param theEvent A PropertyChangeEvent object describing the event source
@@ -177,9 +167,16 @@ public class SelectAudioFileController implements PropertyChangeListener {
      */
     @Override
     public void propertyChange(final PropertyChangeEvent theEvent) {
-        if(theEvent.getPropertyName().equals(Properties.SCRIPT_DONE.name())){
-            openAudioDataScene();
+        switch(theEvent.getPropertyName()) {
+            case "SUCCESS" -> openAudioDataScene();
+            case "FAILED" -> {
+                final Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Failed");
+                alert.setContentText("There was an error in the python script!");
+                alert.showAndWait();
+            }
         }
+
     }
 
 }
