@@ -1,5 +1,7 @@
 package com.kass.vocalanalysistool.view;
 
+import com.kass.vocalanalysistool.common.ChangeEvents;
+import com.kass.vocalanalysistool.workflow.OpenAudioDataScene;
 import com.kass.vocalanalysistool.workflow.PythonRunnerService;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -10,9 +12,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.stage.FileChooser;
@@ -22,8 +22,6 @@ import javafx.stage.Stage;
  * <p>Audio file selector. </p>
  *
  * <p> Audio file must be a [.wav] format. </p>
- *
- * <p>Use the provided Audacity software to record your voice. </p>
  *
  * @author Kassie Whitney
  * @version 9.3.25
@@ -95,30 +93,6 @@ public class SelectAudioFileController implements PropertyChangeListener {
         }
     }
 
-    /**
-     * Opens the data analysis screen.
-     */
-    private void openAudioDataScene() {
-        try {
-                final FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/kass" +
-                        "/vocalanalysistool/gui/AudioData.fxml"));
-                final Parent root = loader.load();
-
-                final Stage audioDataController = new Stage();
-                audioDataController.setTitle("Analysis Results");
-                audioDataController.setScene(new Scene(root));
-                audioDataController.show();
-                audioDataController.setResizable(false);
-                audioDataController.getIcons().add(new Image(Objects.requireNonNull
-                        (getClass().getResourceAsStream
-                                ("/com/kass/vocalanalysistool/icons/vocal_analysis_icon.png"))));
-
-            } catch (final IOException theException) {
-
-                logger.log(Level.SEVERE, "No File Found!", theException);
-
-            }
-    }
 
     /**
      * Handles the action event for the record new audio button.
@@ -158,7 +132,6 @@ public class SelectAudioFileController implements PropertyChangeListener {
         exitStage.close();
     }
 
-
     /**
      * Handles property change events.
      *
@@ -167,16 +140,8 @@ public class SelectAudioFileController implements PropertyChangeListener {
      */
     @Override
     public void propertyChange(final PropertyChangeEvent theEvent) {
-        switch(theEvent.getPropertyName()) {
-            case "SUCCESS" -> openAudioDataScene();
-            case "FAILED" -> {
-                final Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Failed");
-                alert.setContentText("There was an error in the python script!");
-                alert.showAndWait();
-            }
+        if (ChangeEvents.WORKFLOW_RESULT.name().equals(theEvent.getPropertyName())) {
+            OpenAudioDataScene.openAnalysis(theEvent);
         }
-
     }
-
 }

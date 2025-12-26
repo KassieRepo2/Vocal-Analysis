@@ -29,5 +29,10 @@ public enum ChangeEvents {
     /**
      * The updated second.
      */
-    SEC
+    SEC,
+
+    /**
+     * The workFlow Result
+     */
+    WORKFLOW_RESULT,
 }

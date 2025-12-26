@@ -144,6 +144,11 @@ public class AudioRecordingController implements PropertyChangeListener {
 
     }
 
+    /**
+     * Adds theListener to this property change support list.
+     *
+     * @param theListener The component listening for changes.
+     */
     public void addPropertyChangeListener(final PropertyChangeListener theListener) {
         myChanges.addPropertyChangeListener(theListener);
     }
@@ -167,6 +172,4 @@ public class AudioRecordingController implements PropertyChangeListener {
 
         }
     }
-
-
 }

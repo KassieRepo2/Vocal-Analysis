@@ -65,41 +65,41 @@ public class PythonRunnerService implements PropertyChangeListener {
         loadingScreenStage.setAlwaysOnTop(true);
         loadingScreenStage.show();
 
-        final Task<Void> task = getThreadedTask(thePath, loadingScreenController,
-                loadingScreenStage);
+        final Task<Void> task = getThreadedTask(thePath);
+        System.out.println("Task initialized");
+
 
         final Thread worker = new Thread(task, "PythonRunner");
         worker.setDaemon(true);
         worker.start();
+        System.out.println("Worker initialized");
 
         task.setOnSucceeded(theEvent -> {
             loadingScreenStage.close();
-            myChanges.firePropertyChange(WorkflowResult.SUCCESS.name(), null, true);
+            myChanges.firePropertyChange(ChangeEvents.WORKFLOW_RESULT.name(), null,
+                    WorkflowResult.SUCCESS);
         });
 
         task.setOnFailed(theEvent -> {
             loadingScreenStage.close();
-            myChanges.firePropertyChange(WorkflowResult.FAILED.name(), null, true);
+            myChanges.firePropertyChange(ChangeEvents.WORKFLOW_RESULT.name(), null,
+                    WorkflowResult.FAILED);
         });
+
+
     }
 
     /**
      * Runs the python script on a separate thread.
      *
-     * @param thePath                    the path of the python script.
-     * @param theLoadingScreenController The loading screen controller object.
-     * @param theLoadingScreenStage      The loading screen stage object.
+     * @param thePath the path of the python script.
      * @return a task object of the thread.
      */
-    private Task<Void> getThreadedTask(final String thePath,
-                                       final LoadingScreenController theLoadingScreenController,
-                                       final Stage theLoadingScreenStage) {
+    private Task<Void> getThreadedTask(final String thePath) {
         return new Task<>() {
             @Override
             protected Void call() {
-                runPythonScript(thePath);
-                myChanges.firePropertyChange(ChangeEvents.UPDATE_PROGRESS.toString(), 0,
-                        (double) 1);
+                runPythonScript(thePath); // must throw on failure
                 return null;
             }
         };
@@ -118,6 +118,7 @@ public class PythonRunnerService implements PropertyChangeListener {
 
             final Path appDir = getAppDir(); //The directory of the program install location
 
+
             myChanges.firePropertyChange(ChangeEvents.UPDATE_PROGRESS.toString(), 0,
                     (double) 10);
 
@@ -127,9 +128,11 @@ public class PythonRunnerService implements PropertyChangeListener {
             // Run setup in appDir so .venv is created at appDir\.venv
             final ProcessBuilder setupPB = new ProcessBuilder("cmd.exe", "/c",
                     setupBat.toString());
+
             setupPB.directory(appDir.toFile());
             setupPB.redirectErrorStream(true);
             final Process setupProc = setupPB.start();
+
             try (final BufferedReader reader =
                          new BufferedReader(new InputStreamReader(setupProc.getInputStream()))) {
                 String ln;
@@ -213,10 +216,12 @@ public class PythonRunnerService implements PropertyChangeListener {
             int exit = process.waitFor();
             if (exit != 0) logger.severe("Python script exited with code " + exit);
             myChanges.firePropertyChange(ChangeEvents.UPDATE_PROGRESS.toString(), 0, (double) 1);
+
         } catch (final IOException | InterruptedException theEvent) {
             logger.log(Level.SEVERE, "Failed to run Python script", theEvent);
             Thread.currentThread().interrupt();
         }
+
     }
 
     /**

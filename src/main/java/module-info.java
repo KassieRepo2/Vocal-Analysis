@@ -10,6 +10,7 @@ module com.kass.vocalanalysistool {
     requires org.xerial.sqlitejdbc;
     requires java.sql;
     requires com.google.gson;
+    requires jdk.jdi;
 
     opens com.kass.vocalanalysistool.view to javafx.fxml;
     exports com.kass.vocalanalysistool.view;
