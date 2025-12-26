@@ -7,9 +7,7 @@ from sqlite3 import Binary
 from typing import Optional
 import matplotlib
 import pandas as pd
-
 import joblib
-
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
@@ -202,7 +200,6 @@ def _hz_to_semitones(hz, ref=55.0):
     hz = np.asanyarray(hz, dtype=float)
     hz = hz[hz > 0]
     return 12.0 * np.log2(hz / ref)
-
 
 def _semitones(freq_list_1: list[float], freq_list_2: list[float]):
     """
@@ -697,7 +694,7 @@ def main():
             # Connects to the sqlite db
             connect_table()
             # Inserts the formant data into the sqlite3 database
-            prediction = __predict__();
+            prediction = __predict__()
             insert_to_table(times_, f0_vals_arr, f1_vals_arr, f2_vals_arr,
                             f3_vals_arr, f4_vals_arr, avg_formants, prediction)
 

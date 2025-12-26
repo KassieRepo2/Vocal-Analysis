@@ -7,7 +7,9 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="90.0" prefWidth="279.0" style="-fx-background-color: linear-gradient(to bottom, #92e7ff 0%, #ffb4fa 35%, #FFFFFF 100%);" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.kass.vocalanalysistool.view.LoadingScreenController">
+<AnchorPane prefHeight="90.0" prefWidth="279.0"
+            style="-fx-background-color: linear-gradient(to bottom, #92e7ff 0%, #ffb4fa 35%, #FFFFFF 100%);"
+            xmlns="http://javafx.com/javafx/21.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.kass.vocalanalysistool.view.LoadingScreenController">
     <Label layoutX="86.0" layoutY="27.0" text="Please Wait:" AnchorPane.topAnchor="27.0">
         <font>
           <Font name="Elephant" size="17.0" />

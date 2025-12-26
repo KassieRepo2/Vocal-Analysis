@@ -151,10 +151,6 @@ public class AudioRecordingController implements PropertyChangeListener {
     @Override
     public void propertyChange(final PropertyChangeEvent theEvent) {
 
-        if (theEvent.getPropertyName().equals("SEC")) {
-            System.out.println(theEvent.getNewValue());
-        }
-
         switch (theEvent.getPropertyName()) {
             case "HOUR": {
                 myHourLabel.setText(String.valueOf(theEvent.getNewValue()));

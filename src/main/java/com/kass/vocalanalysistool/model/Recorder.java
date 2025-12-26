@@ -21,6 +21,12 @@ import javax.sound.sampled.DataLine;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.TargetDataLine;
 
+/**
+ * Records vocal audio with the users default microphone.
+ *
+ * @author  Kassie Whitney
+ * @version 12/25/2025
+ */
 public class Recorder implements PropertyChangeListener {
 
     /**
@@ -232,6 +238,10 @@ public class Recorder implements PropertyChangeListener {
 
     }
 
+    /**
+     * Adds the seen as a listener for this scene's changes.
+     * @param theListener The scene that needs to be notified of changes.
+     */
     public void removePropertyChangeListener(final PropertyChangeListener theListener) {
         myChanges.removePropertyChangeListener(theListener);
     }

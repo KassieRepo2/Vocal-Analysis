@@ -11,35 +11,65 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <!-- Java / compiler -->
+        <maven.compiler.release>21</maven.compiler.release>
+
+        <!-- Versions -->
+        <javafx.version>21.0.2</javafx.version>
         <junit.version>5.10.3</junit.version>
+        <gson.version>2.11.0</gson.version>
+        <sqlite.version>3.46.1.0</sqlite.version>
+        <controlsfx.version>11.2.1</controlsfx.version>
+        <ikonli.version>12.3.1</ikonli.version>
+        <bootstrapfx.version>0.4.0</bootstrapfx.version>
     </properties>
 
     <dependencies>
+        <!-- JavaFX (match JDK 21) -->
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-controls</artifactId>
-            <version>24.0.2</version>
+            <version>${javafx.version}</version>
         </dependency>
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-fxml</artifactId>
-            <version>24.0.2</version>
+            <version>${javafx.version}</version>
         </dependency>
+
+        <!-- UI libs -->
         <dependency>
             <groupId>org.controlsfx</groupId>
             <artifactId>controlsfx</artifactId>
-            <version>11.2.1</version>
+            <version>${controlsfx.version}</version>
         </dependency>
         <dependency>
             <groupId>org.kordamp.ikonli</groupId>
             <artifactId>ikonli-javafx</artifactId>
-            <version>12.3.1</version>
+            <version>${ikonli.version}</version>
         </dependency>
         <dependency>
             <groupId>org.kordamp.bootstrapfx</groupId>
             <artifactId>bootstrapfx-core</artifactId>
-            <version>0.4.0</version>
+            <version>${bootstrapfx.version}</version>
         </dependency>
+
+        <!-- DB -->
+        <dependency>
+            <groupId>org.xerial</groupId>
+            <artifactId>sqlite-jdbc</artifactId>
+            <version>${sqlite.version}</version>
+        </dependency>
+
+        <!-- JSON -->
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>${gson.version}</version>
+        </dependency>
+
+        <!-- Tests -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
@@ -52,44 +82,37 @@
             <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>com.google.code.gson</groupId>
-            <artifactId>gson</artifactId>
-            <version>2.11.0</version>
-        </dependency>
     </dependencies>
 
     <build>
         <plugins>
+            <!-- Compile with Java 21 -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.13.0</version>
                 <configuration>
-                    <source>21</source>
-                    <target>21</target>
+                    <release>${maven.compiler.release}</release>
                 </configuration>
             </plugin>
+
+            <!-- JavaFX run / jlink -->
             <plugin>
                 <groupId>org.openjfx</groupId>
                 <artifactId>javafx-maven-plugin</artifactId>
                 <version>0.0.8</version>
-                <executions>
-                    <execution>
-                        <!-- Default configuration for running with: mvn clean javafx:run -->
-                        <id>default-cli</id>
-                        <configuration>
-                            <mainClass>com.kass.vocalanalysistool/com.kass.vocalanalysistool.controller.Main
-                            </mainClass>
-                            <launcher>app</launcher>
-                            <jlinkZipName>app</jlinkZipName>
-                            <jlinkImageName>app</jlinkImageName>
-                            <noManPages>true</noManPages>
-                            <stripDebug>true</stripDebug>
-                            <noHeaderFiles>true</noHeaderFiles>
-                        </configuration>
-                    </execution>
-                </executions>
+                <configuration>
+                    <!-- CHANGE THIS if your Application class is elsewhere -->
+                    <mainClass>com.kass.vocalanalysistool/com.kass.vocalanalysistool.controller.Main</mainClass>
+
+                    <!-- Optional nice defaults -->
+                    <launcher>app</launcher>
+                    <jlinkZipName>app</jlinkZipName>
+                    <jlinkImageName>app</jlinkImageName>
+                    <noManPages>true</noManPages>
+                    <stripDebug>true</stripDebug>
+                    <noHeaderFiles>true</noHeaderFiles>
+                </configuration>
             </plugin>
         </plugins>
     </build>

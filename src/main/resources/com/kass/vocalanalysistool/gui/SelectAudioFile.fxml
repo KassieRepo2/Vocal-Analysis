@@ -13,8 +13,9 @@
 <?import javafx.scene.text.Font?>
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0"
-            prefWidth="453.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.kass.vocalanalysistool.view.SelectAudioFileController" stylesheets="@style.css">
+            prefWidth="453.0" xmlns="http://javafx.com/javafx/21.0.2" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.kass.vocalanalysistool.view.SelectAudioFileController"
+            stylesheets="@style.css">
 
    <!-- Background pane -->
    <Pane styleClass="saf_pane" prefHeight="400.0" prefWidth="453.0"
@@ -33,7 +34,7 @@
       </ImageView>
 
       <!--Label asking to select audio file-->
-      <Label alignment="CENTER" contentDisplay="CENTER" layoutX="121.0" layoutY="226.0" prefHeight="38.0" prefWidth="222.0" text="Please Select Your Audio File" textAlignment="CENTER">
+      <Label alignment="CENTER" contentDisplay="CENTER" layoutX="121.0" layoutY="226.0" prefHeight="38.0" prefWidth="222.0" text="Select Your Audio File" textAlignment="CENTER">
          <font>
             <Font name="Calibri Italic" size="18.0" />
          </font>
@@ -97,7 +98,7 @@
             </padding>
          </Button>
       </HBox>
-      <Label layoutX="218.0" layoutY="253.0" text="Or">
+      <Label layoutX="218.0" layoutY="253.0" text="or">
          <font>
             <Font name="Calibri Italic" size="18.0" />
          </font>
