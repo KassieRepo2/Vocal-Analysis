@@ -142,6 +142,8 @@ public class AudioRecordingController implements PropertyChangeListener {
 
         reset();
         MY_RECORDER.removePropertyChangeListener(this);
+        MY_RUNNER_SERVICE.removePropertyChangeListener(this);
+        myChanges.removePropertyChangeListener(MY_RECORDER);
 
     }
 
@@ -151,7 +153,7 @@ public class AudioRecordingController implements PropertyChangeListener {
             final Path audioPath = Path.of(System.getProperty("user.home"),
                     "VocalAnalysisTool", "Vocal_Sample.wav");
 
-            if(!Files.exists(audioPath)) {
+            if (!Files.exists(audioPath)) {
                 throw new IOException("The file path can not be found!");
             }
 
@@ -209,6 +211,9 @@ public class AudioRecordingController implements PropertyChangeListener {
             }
             case "WORKFLOW_RESULT": {
                 OpenAudioDataScene.openAnalysis(theEvent);
+                MY_RECORDER.removePropertyChangeListener(this);
+                MY_RUNNER_SERVICE.removePropertyChangeListener(this);
+                myChanges.removePropertyChangeListener(MY_RECORDER);
             }
 
         }

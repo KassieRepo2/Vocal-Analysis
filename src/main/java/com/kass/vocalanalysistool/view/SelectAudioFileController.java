@@ -88,9 +88,8 @@ public class SelectAudioFileController implements PropertyChangeListener {
 
             logger.info(() -> "Path: " + path);
 
-            thisStage.close();
             myPyScript.runScript(path);
-
+            thisStage.close();
         }
     }
 
@@ -118,7 +117,7 @@ public class SelectAudioFileController implements PropertyChangeListener {
             ;
 
 
-            Stage thisStage = (Stage) myRecordBtn.getScene().getWindow();
+            final Stage thisStage = (Stage) myRecordBtn.getScene().getWindow();
             thisStage.close();
             myPyScript.removePropertyChangeListener(this);
 
@@ -149,6 +148,7 @@ public class SelectAudioFileController implements PropertyChangeListener {
         if (ChangeEvents.WORKFLOW_RESULT.name().equals(theEvent.getPropertyName())) {
             OpenAudioDataScene.openAnalysis(theEvent);
             myPyScript.removePropertyChangeListener(this);
+
         }
     }
 }
