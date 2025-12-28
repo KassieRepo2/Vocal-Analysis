@@ -1,20 +1,17 @@
 package com.kass.vocalanalysistool.view;
 
 import com.kass.vocalanalysistool.common.ChangeEvents;
+import com.kass.vocalanalysistool.view.util.StageFactory;
 import com.kass.vocalanalysistool.workflow.OpenAudioDataScene;
 import com.kass.vocalanalysistool.workflow.PythonRunnerService;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.IOException;
-import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.image.Image;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -99,32 +96,16 @@ public class SelectAudioFileController implements PropertyChangeListener {
      */
     @FXML
     private void handleRecordNewAudio() {
-        try {
-            final FXMLLoader fxmlLoader =
-                    new FXMLLoader(SelectAudioFileController.class.getResource("/com/kass" +
-                            "/vocalanalysistool/gui/AudioRecording.fxml"));
+        final Stage thisStage = (Stage) myRecordBtn.getScene().getWindow();
 
-            final Scene recorderScene = new Scene(fxmlLoader.load());
+        final Stage audioRecorderStage = StageFactory.buildStage(this,
+                "AudioRecording.fxml",
+                "Voice Recorder",
+                false);
+        audioRecorderStage.show();
+        thisStage.close();
+        myPyScript.removePropertyChangeListener(this);
 
-            final Stage audioRecorderStage = new Stage();
-
-            audioRecorderStage.setScene(recorderScene);
-            audioRecorderStage.setTitle("Voice Recorder");
-            audioRecorderStage.getIcons().add(new Image(Objects.requireNonNull(getClass().
-                    getResourceAsStream("/com/kass/vocalanalysistool/icons/vocal_analysis_icon.png"))));
-            audioRecorderStage.show();
-            audioRecorderStage.setResizable(false)
-            ;
-
-
-            final Stage thisStage = (Stage) myRecordBtn.getScene().getWindow();
-            thisStage.close();
-            myPyScript.removePropertyChangeListener(this);
-
-
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
     }
 
     /**

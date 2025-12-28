@@ -100,7 +100,7 @@ public class UsersAnalysisController {
             // Recompute whenever layout changes
             final Runnable relayout = () -> {
                 // plotBg bounds -> scene -> stack pane local
-                Bounds sceneB = plotBg.localToScene(plotBg.getBoundsInLocal());
+                final Bounds sceneB = plotBg.localToScene(plotBg.getBoundsInLocal());
                 Bounds b = myPitchTrendStackPane.sceneToLocal(sceneB);
 
                 // Move overlay to plot area (so it starts right of Y axis)

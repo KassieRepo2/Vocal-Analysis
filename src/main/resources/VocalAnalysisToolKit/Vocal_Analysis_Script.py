@@ -426,12 +426,6 @@ def feature_for_file(sound: parselmouth.Sound,
 
     row.update(formant_feats)
     row.update(flat_ib)
-    if "female" in file_id:
-        gender = 1
-    else:
-        gender = 0
-
-    row.update({"Gender Perception": str(gender)})
 
     return row
 
@@ -626,7 +620,9 @@ def __predict__():
 
     femme = prob[1]
 
-    is_significant = max(masc, femme) > 3.95 * min(masc, femme)
+    score = max(femme, masc)
+
+    is_significant = max(masc, femme) > 4 * min(masc, femme)
 
     threshold = 0.05
 
@@ -640,11 +636,11 @@ def __predict__():
 
         if femme > masc:
 
-            result = "FEMME", float(femme)
+            result = "FEMME", float(score)
 
         else:
 
-            result = "MASC", float(masc)
+            result = "MASC", float(score)
 
         if p5 or p95 or not within_means or low_st or high_st:
 
@@ -654,7 +650,7 @@ def __predict__():
                 or user_data["f0_sd_st"].iloc[0] > 4
                 or user_data["voiced_frac"].iloc[0] < 0.75)
             ):
-                result = "FEMME_FALSETTO", float(femme)
+                result = "FEMME_FALSETTO", float(score)
 
             elif (
                 user_data["f0_max_hz"].iloc[0] > 450
@@ -665,7 +661,7 @@ def __predict__():
                 and ( user_data["F2_med"].iloc[0] < 1700
                 or user_data["F3_over_F2"].iloc[0] < 1.85)
             ):
-                result = "MASC_FALSETTO", float(masc)
+                result = "MASC_FALSETTO", float(score)
 
     else:
 
@@ -673,9 +669,9 @@ def __predict__():
 
         if abs(diff) <= threshold:
 
-            return "ANDRO", float((femme + masc)/2)
+            return "ANDRO", float(score)
 
-        result = ("ANDRO_FEMME", float(femme)) if diff > 0 else ("ANDRO_MASC", float(masc))
+        result = ("ANDRO_FEMME", float(score)) if diff > 0 else ("ANDRO_MASC", float(score))
 
     return result
 """

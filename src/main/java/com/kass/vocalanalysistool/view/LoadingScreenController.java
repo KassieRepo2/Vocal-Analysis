@@ -4,7 +4,9 @@ import com.kass.vocalanalysistool.workflow.PythonRunnerService;
 import com.kass.vocalanalysistool.common.ChangeEvents;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 
 /**
@@ -15,6 +17,8 @@ import javafx.scene.control.ProgressBar;
  */
 public class LoadingScreenController implements PropertyChangeListener {
 
+    @FXML
+    private Label myProgressLabel;
     /**
      * The progress bar element.
      */
@@ -23,6 +27,7 @@ public class LoadingScreenController implements PropertyChangeListener {
 
     /**
      * Used to the position of the current line of the python script
+     *
      * @param theScript the PythonRunnerService scene
      */
     public void addPropertyChangeListener(final PythonRunnerService theScript) {
@@ -31,8 +36,11 @@ public class LoadingScreenController implements PropertyChangeListener {
 
     @Override
     public void propertyChange(final PropertyChangeEvent theEvent) {
-        if(theEvent.getPropertyName().equals(ChangeEvents.UPDATE_PROGRESS.toString())) {
-            myProgBar.setProgress((double) theEvent.getNewValue());
-        }
+        Platform.runLater(() -> {
+            if (theEvent.getPropertyName().equals(ChangeEvents.UPDATE_PROGRESS.toString())) {
+                myProgBar.setProgress((double) theEvent.getNewValue());
+                myProgressLabel.setText(String.valueOf(theEvent.getOldValue()));
+            }
+        });
     }
 }

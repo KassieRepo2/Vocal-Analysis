@@ -116,10 +116,8 @@ public class PythonRunnerService implements PropertyChangeListener {
             final Path appDir = getAppDir(); //The directory of the program install location
 
 
-            myChanges.firePropertyChange(ChangeEvents.UPDATE_PROGRESS.toString(), 0,
-                    (double) 10);
-
-            myChanges.firePropertyChange(ChangeEvents.UPDATE_PROGRESS.toString(), 0,
+            myChanges.firePropertyChange(ChangeEvents.UPDATE_PROGRESS.toString(), "Building " +
+                            "environment...",
                     (double) 16 / 100);
 
             // Run setup in appDir so .venv is created at appDir\.venv
@@ -141,7 +139,8 @@ public class PythonRunnerService implements PropertyChangeListener {
                 return;
             }
 
-            myChanges.firePropertyChange(ChangeEvents.UPDATE_PROGRESS.toString(), 0,
+            myChanges.firePropertyChange(ChangeEvents.UPDATE_PROGRESS.toString(),
+                    "Installing environment updates if needed...",
                     (double) 32 / 100);
 
             // 2) Resolve venv python; do not silently fall back
@@ -166,7 +165,8 @@ public class PythonRunnerService implements PropertyChangeListener {
                 }
             };
 
-            myChanges.firePropertyChange(ChangeEvents.UPDATE_PROGRESS.toString(), 0,
+            myChanges.firePropertyChange(ChangeEvents.UPDATE_PROGRESS.toString(), "Parsing " +
+                            "dependency requirements...",
                     (double) 48 / 100);
             // 3) Ensure matplotlib is installed in the venv
             final Path req = appDir.resolve("requirements.txt");
@@ -184,7 +184,8 @@ public class PythonRunnerService implements PropertyChangeListener {
                     throw new IllegalStateException("pip install matplotlib failed with code " + code);
             }
 
-            myChanges.firePropertyChange(ChangeEvents.UPDATE_PROGRESS.toString(), 0,
+            myChanges.firePropertyChange(ChangeEvents.UPDATE_PROGRESS.toString(), "Checking " +
+                            "dependency versions...",
                     (double) 64 / 100);
             // 4) Probe: show interpreter & matplotlib version (fail fast if missing)
             code = run.apply(new String[]{pythonExe, "-c",
@@ -197,7 +198,8 @@ public class PythonRunnerService implements PropertyChangeListener {
             if (code != 0)
                 throw new IllegalStateException("Probe failed; matplotlib not importable.");
 
-            myChanges.firePropertyChange(ChangeEvents.UPDATE_PROGRESS.toString(), 0,
+            myChanges.firePropertyChange(ChangeEvents.UPDATE_PROGRESS.toString(), "Analyzing" +
+                            " vocal recording...",
                     (double) 95 / 100);
 
             // 5) Runs the python script
@@ -205,19 +207,34 @@ public class PythonRunnerService implements PropertyChangeListener {
                     pythonScript.toString(), theFilePath), appDir);
             try (final BufferedReader reader =
                          new BufferedReader(new InputStreamReader(process.getInputStream()))) {
-                String line;
-                while ((line = reader.readLine()) != null)
 
+                String line;
+                while  ((line = reader.readLine()) != null) {
                     logger.info("[Python] " + line);
+
+                    if ("No valid frames after filtering; skipping file".contains(line)) {
+                        myChanges.firePropertyChange(ChangeEvents.WORKFLOW_RESULT.name()
+                                , "The audio recorder did not detect any valid acoustics" +
+                                        ". Please try again!", WorkflowResult.INVALID);
+                    }
+                }
+
             }
             int exit = process.waitFor();
-            if (exit != 0) logger.severe("Python script exited with code " + exit);
+            if (exit != 0) {
+                logger.severe("Python script exited with code " + exit);
+                myChanges.firePropertyChange(ChangeEvents.WORKFLOW_RESULT.name(), null,
+                        WorkflowResult.FAILED);
+            }
             myChanges.firePropertyChange(ChangeEvents.UPDATE_PROGRESS.toString(), 0, (double) 1);
 
         } catch (final IOException | InterruptedException theEvent) {
             logger.log(Level.SEVERE, "Failed to run Python script", theEvent);
             Thread.currentThread().interrupt();
         }
+
+        myChanges.firePropertyChange(ChangeEvents.UPDATE_PROGRESS.name(), "Completed!",
+                (double) 100/100);
 
     }
 

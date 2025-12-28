@@ -1,12 +1,9 @@
 package com.kass.vocalanalysistool.view;
 
 import com.kass.vocalanalysistool.model.UserSampleDatabase;
+import com.kass.vocalanalysistool.view.util.StageFactory;
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.util.Objects;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
@@ -166,24 +163,12 @@ public class AudioDataController {
     private void handleAnalyzeButton() {
         myStage = (Stage) myAnalyzeRecordingBtn.getScene().getWindow();
 
-        final FXMLLoader userAnalysisFXML = new FXMLLoader(AudioDataController.class.
-                getResource("/com/kass/vocalanalysistool/gui/UsersAnalysis.fxml"));
-        final Stage userAnalysisStage = new Stage();
-        try {
-            final Scene userAnalysisScene = new Scene(userAnalysisFXML.load());
-            userAnalysisStage.setScene(userAnalysisScene);
-            userAnalysisStage.setTitle("User Data Summary");
-            userAnalysisStage.getIcons().add(new Image(Objects.requireNonNull(getClass().
-                    getResourceAsStream("/com/kass/vocalanalysistool/icons/vocal_analysis_icon.png"))));
-            userAnalysisStage.setResizable(false);
-            userAnalysisStage.show();
-            myStage.close();
-
-        } catch (final IOException theEvent) {
-            throw new RuntimeException("Unable to open scene", theEvent);
-        }
-
-
+        final Stage userAnalysisStage = StageFactory.buildStage(this,
+                "UserAnalysis.fxml",
+                "User Data Summary",
+                false);
+        userAnalysisStage.show();
+        myStage.close();
     }
 
     /**
@@ -193,28 +178,16 @@ public class AudioDataController {
     private void handleRecordNewSample() {
         myStage = (Stage) myInformationLabel.getScene().getWindow();
 
-        try {
-            final FXMLLoader recorderFXML =
-                    new FXMLLoader(AudioDataController.class.getResource("/com/kass" +
-                            "/vocalanalysistool/gui/AudioRecording.fxml"));
+        final Stage audioRecorderStage = StageFactory.buildStage(this,
+                "AudioRecording.fxml",
+                "Voice Recorder",
+                false
+        );
 
-            final Stage audioRecorderStage = new Stage();
-
-            final Scene recorderScene = new Scene(recorderFXML.load());
-
-            audioRecorderStage.setScene(recorderScene);
-            audioRecorderStage.setTitle("Voice Recorder");
-            audioRecorderStage.getIcons().add(new Image(Objects.requireNonNull(getClass().
-                    getResourceAsStream("/com/kass/vocalanalysistool/icons/vocal_analysis_icon.png"))));
-            audioRecorderStage.setResizable(false);
-            audioRecorderStage.show();
-            myStage.close();
-
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
+        audioRecorderStage.show();
+        myStage.close();
     }
+
 
     /**
      * Reopens a new selectAudioFileController scene
@@ -222,23 +195,13 @@ public class AudioDataController {
     @FXML
     private void handleNewRecordingButton() {
         myStage = (Stage) myInformationLabel.getScene().getWindow();
-        try {
-            final FXMLLoader selectAudioFXML = new FXMLLoader(AudioDataController.class.
-                    getResource("/com/kass/vocalanalysistool/gui/SelectAudioFile.fxml"));
 
-            final Stage safStage = new Stage();
-            final Scene safScene = new Scene(selectAudioFXML.load());
-            safStage.setScene(safScene);
-            safStage.setResizable(false);
-            safStage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResourceAsStream(
-                    "/com/kass/vocalanalysistool/icons/vocal_analysis_icon.png"))));
-            safStage.show();
-            myStage.close();
-
-
-        } catch (final IOException theEvent) {
-            throw new RuntimeException(theEvent);
-        }
+        final Stage safStage = StageFactory.buildStage(this,
+                "SelectAudioFile.fxml",
+                "Select Audio File",
+                false);
+        safStage.show();
+        myStage.close();
     }
 
     /**

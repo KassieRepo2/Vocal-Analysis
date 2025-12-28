@@ -2,6 +2,7 @@ package com.kass.vocalanalysistool.view;
 
 import com.kass.vocalanalysistool.common.ChangeEvents;
 import com.kass.vocalanalysistool.model.Recorder;
+import com.kass.vocalanalysistool.view.util.StageFactory;
 import com.kass.vocalanalysistool.workflow.OpenAudioDataScene;
 import com.kass.vocalanalysistool.workflow.PythonRunnerService;
 import java.beans.PropertyChangeEvent;
@@ -12,8 +13,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Objects;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -79,6 +78,15 @@ public class AudioRecordingController implements PropertyChangeListener {
      */
     private final static PythonRunnerService MY_RUNNER_SERVICE = new PythonRunnerService();
 
+    /**
+     * The path of the audio file.
+     */
+    private final Path myAudioPath = Path.of(System.getProperty("user.home"),
+                    "VocalAnalysisTool", "Vocal_Sample.wav");
+
+    /**
+     * This component's stage.
+     */
     private Stage myStage;
 
 
@@ -124,52 +132,58 @@ public class AudioRecordingController implements PropertyChangeListener {
     private void handleCloseBtn() {
         myStage = (Stage) myCloseBtn.getScene().getWindow();
         myChanges.firePropertyChange(ChangeEvents.STOP_RECORDING.name(), null, true);
-        final FXMLLoader sfa_fxml = new FXMLLoader(AudioRecordingController.class.getResource("/com/kass/vocalanalysistool/gui/SelectAudioFile.fxml"));
-        try {
-            final Scene sfa_scene = new Scene(sfa_fxml.load());
-            final Stage sfa_stage = new Stage();
-            sfa_stage.setScene(sfa_scene);
-            sfa_stage.setTitle("Select Audio File");
-            sfa_stage.getIcons().add(new Image(Objects.requireNonNull(getClass().
-                    getResourceAsStream("/com/kass/vocalanalysistool/icons" +
-                            "/vocal_analysis_icon.png"))));
-            sfa_stage.show();
-            myStage.close();
 
-        } catch (final IOException theEvent) {
-            throw new RuntimeException("The scene failed to load!");
-        }
+        final Stage sfaStage = StageFactory.buildStage(this,
+                "SelectAudioFile.fxml",
+                "Select Audio File",
+                false);
+
+        sfaStage.show();
+        myStage.close();
 
         reset();
         MY_RECORDER.removePropertyChangeListener(this);
         MY_RUNNER_SERVICE.removePropertyChangeListener(this);
         myChanges.removePropertyChangeListener(MY_RECORDER);
-
     }
 
     @FXML
     private void handleAnalyzeBtn() {
+        myStage = (Stage) myAnalyzeButton.getScene().getWindow();
         try {
-            final Path audioPath = Path.of(System.getProperty("user.home"),
-                    "VocalAnalysisTool", "Vocal_Sample.wav");
 
-            if (!Files.exists(audioPath)) {
+            if (!Files.exists(myAudioPath)) {
                 throw new IOException("The file path can not be found!");
             }
 
-            MY_RUNNER_SERVICE.runScript(String.valueOf(audioPath));
+            MY_RUNNER_SERVICE.runScript(String.valueOf(myAudioPath));
             myStage = (Stage) myAnalyzeButton.getScene().getWindow();
             MY_RECORDER.removePropertyChangeListener(this);
             myStage.close();
 
 
         } catch (final IOException theEvent) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Vocal Sample audio file not found!");
-            alert.setContentText("Something happened and was unable to locate the audio " +
-                    "sample");
+            final Alert alert = new Alert(Alert.AlertType.ERROR);
+            final Stage alertStage = (Stage) alert.getDialogPane().getScene().getWindow();
+            alertStage.getIcons().add(new Image(Objects.requireNonNull(getClass().
+                    getResourceAsStream("/com/kass/vocalanalysistool/" +
+                            "icons/vocal_analysis_icon.png"))));
+
+            alert.setTitle("Vocal Sample Audio File Not Found!");
+            alert.setContentText("""
+            Something happened and was unable to locate
+            the audio sample.
+            """);
             alert.showAndWait();
-            System.exit(1);
+
+            final Stage reOpenStage = StageFactory.buildStage(this,
+                    "AudioRecording.fxml",
+                    "Voice Recorder",
+                    false);
+            reOpenStage.show();
+            myStage.close();
+            MY_RECORDER.removePropertyChangeListener(this);
+            MY_RUNNER_SERVICE.removePropertyChangeListener(this);
         }
 
     }

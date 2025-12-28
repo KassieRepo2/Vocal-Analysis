@@ -1,14 +1,12 @@
 package com.kass.vocalanalysistool.workflow;
 
 import com.kass.vocalanalysistool.common.WorkflowResult;
+import com.kass.vocalanalysistool.view.util.StageFactory;
+import com.kass.vocalanalysistool.view.AudioDataController;
+import com.kass.vocalanalysistool.view.AudioRecordingController;
+import com.kass.vocalanalysistool.view.SelectAudioFileController;
 import java.beans.PropertyChangeEvent;
-import java.io.IOException;
 import java.util.Objects;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
@@ -34,36 +32,75 @@ public class OpenAudioDataScene {
      * service returned successfully
      */
     public static void openAnalysis(final PropertyChangeEvent theEvent) {
-        final Alert alert = new Alert(Alert.AlertType.ERROR);
+
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        final Stage alertStage = (Stage) alert.getDialogPane().getScene().getWindow();
+        setIconToStage(alertStage);
 
         final WorkflowResult result = (WorkflowResult) theEvent.getNewValue();
 
         if (result.equals(WorkflowResult.FAILED) || result.equals(WorkflowResult.CANCELLED)) {
 
-            alert.setTitle("Failed");
-            alert.setContentText("There was an error in the python script!");
+
+            alert.setAlertType(Alert.AlertType.ERROR);
+            alert.setTitle("Failed To Process");
+            alert.setContentText("""
+                    The audio recording could not be processed!
+                    
+                    The CSV file might still be open or the audio file might
+                    have gotten corrupted or the audio file is not in a .wav format.
+                    """);
+
             alert.showAndWait();
-            throw new IllegalStateException("The python script had failed!");
+
+            final Stage safStage = StageFactory.buildStage(new SelectAudioFileController(),
+                    "SelectAudioFile.fxml",
+                    "Select Audio File",
+                    "/com/kass/vocalanalysistool/icons/vocal_analysis_icon.png",
+                    false);
+
+            safStage.show();
+
+        } else if (result.equals(WorkflowResult.INVALID)) {
+            alert = new Alert(Alert.AlertType.WARNING);
+            alert.setAlertType(Alert.AlertType.WARNING);
+            alert.setHeaderText("Invalid Recording");
+            alert.setContentText("""
+                    The recorder couldn't detect any valid acoustics.
+                    
+                    Check your microphone settings and try again!
+                    """);
+            alert.showAndWait();
+
+            final Stage recorderStage =
+                    StageFactory.buildStage(new AudioRecordingController(),
+                            "AudioRecording.fxml",
+                            "Voice Recorder",
+                            "/com/kass/vocalanalysistool/icons/vocal_analysis_icon.png",
+                            false);
+
+            recorderStage.show();
         } else {
-            final Logger logger = Logger.getLogger(OpenAudioDataScene.class.getName());
-            try {
-                final FXMLLoader loader = new FXMLLoader(OpenAudioDataScene.class.getResource("/com/kass" +
-                        "/vocalanalysistool/gui/AudioData.fxml"));
-                final Parent root = loader.load();
-                final Stage audioDataController = new Stage();
-                audioDataController.setTitle("Analysis Results");
-                audioDataController.setScene(new Scene(root));
-                audioDataController.show();
-                audioDataController.setResizable(false);
-                audioDataController.getIcons().add(new Image(Objects.requireNonNull
-                        (OpenAudioDataScene.class.getResourceAsStream
-                                ("/com/kass/vocalanalysistool/icons/vocal_analysis_icon.png"))));
 
-            } catch (final IOException theException) {
+            final Stage audioDataController =
+                    StageFactory.buildStage(new AudioDataController(),
+                            "AudioData.fxml",
+                            "Analysis Results",
+                            "/com/kass/vocalanalysistool/icons/vocal_analysis_icon.png",
+                            false);
 
-                logger.log(Level.SEVERE, "No File Found!", theException);
-            }
+            audioDataController.show();
         }
 
+    }
+
+    /**
+     * Sets the icon to the stage.
+     * @param theStage the new stage being initialized.
+     */
+    private static void setIconToStage(final Stage theStage) {
+        theStage.getIcons().add(new Image(Objects.requireNonNull
+                        (OpenAudioDataScene.class.getResourceAsStream
+                                ("/com/kass/vocalanalysistool/icons/vocal_analysis_icon.png"))));
     }
 }

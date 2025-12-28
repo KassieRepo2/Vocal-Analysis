@@ -15,5 +15,10 @@ public enum WorkflowResult {
     /**
      * The python script execution was canceled or interrupted
      */
-    CANCELLED
+    CANCELLED,
+
+    /**
+     * Invalid recorded sample
+     */
+    INVALID,
 }
