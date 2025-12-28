@@ -15,6 +15,7 @@
       <w>hooksconfig</w>
       <w>hookspath</w>
       <w>ignoreversion</w>
+      <w>iloc</w>
       <w>mplbackend</w>
       <w>nanfilter</w>
       <w>noarchive</w>
