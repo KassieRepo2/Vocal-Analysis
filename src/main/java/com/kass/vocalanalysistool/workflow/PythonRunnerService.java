@@ -277,10 +277,21 @@ public class PythonRunnerService implements PropertyChangeListener {
     }
 
 
+    /**
+     * Adds component to this property change listener list
+     * @param theListener the component
+     */
     public void addPropertyChangeListener(final PropertyChangeListener theListener) {
         myChanges.addPropertyChangeListener(theListener);
     }
 
+    /**
+     * Removes the component from this property change listener list
+     * @param theListener the component
+     */
+    public void removePropertyChangeListener(final PropertyChangeListener theListener) {
+        myChanges.removePropertyChangeListener(theListener);
+    }
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {

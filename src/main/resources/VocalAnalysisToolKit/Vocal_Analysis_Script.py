@@ -401,7 +401,6 @@ def flatten_features(breathiness: dict, intonation: dict) -> dict:
 
     return flat
 
-
 # ---- 3) end-to-end: turn one audio file -> one feature row ----
 def feature_for_file(sound: parselmouth.Sound,
                      data_rows: list[list[float]],
@@ -423,11 +422,16 @@ def feature_for_file(sound: parselmouth.Sound,
     flat_ib = flatten_features(ibi["breathiness"], ibi["intonation"])
     row = {
         "file_id": file_id,
-
     }
 
     row.update(formant_feats)
     row.update(flat_ib)
+    if "female" in file_id:
+        gender = 1
+    else:
+        gender = 0
+
+    row.update({"Gender Perception": str(gender)})
 
     return row
 
@@ -435,7 +439,7 @@ def feature_for_file(sound: parselmouth.Sound,
 def _feature_for_file(sound: parselmouth.Sound,
                      data_rows: list[list[float]],
                      file_id: str,
-                     label: int) -> dict:
+                     label) -> dict:
     """
     [Used for training]\n
     Generates a feature list, used for generating the CSV file to run through the ML algo.
@@ -514,7 +518,7 @@ def connect_table():
                    CREATE TABLE IF NOT EXISTS user_formants
                    (
                        id               INTEGER PRIMARY KEY AUTOINCREMENT,
-                       timestamp        TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                       timestamp        TIMESTAMP DEFAULT (datetime('now', 'localtime')),
                        f0_json          TEXT NOT NULL CHECK (json_valid(f0_json)),
                        f1_json          TEXT NOT NULL CHECK (json_valid(f1_json)),
                        f2_json          TEXT NOT NULL CHECK (json_valid(f2_json)),
@@ -523,9 +527,9 @@ def connect_table():
                        formant_avg_json TEXT NOT NULL CHECK (json_valid(formant_avg_json)),
                        scatter_plot     BLOB NOT NULL,
                        gender_label     TEXT NOT NULL CHECK (gender_label IN (
-                                                                              'MASC', 'FEMME', 'ANDRO_MASC',
-                                                                              'ANDRO_FEMME', 'ANDRO'
-                           )),
+                                        'MASC', 'FEMME', 'ANDRO_MASC',
+                                        'ANDRO_FEMME', 'ANDRO', 'FEMME_FALSETTO', 'MASC_FALSETTO')
+                                         ),
                        gender_score     REAL NOT NULL CHECK (gender_score >= 0 AND gender_score <= 1))
 
 
@@ -593,40 +597,132 @@ def _create_csv(row: dict) -> None:
     )
     print("CSV has been generated!")
 
+"""
+Logistic regression prediction.
+"""
 def __predict__():
+    """ Takes the users data and predicts the gender perception of the users vocal sample. :return:The predicted value of the users vocal sample.
     """
-    Takes the users data and predicts the gender perception of the users vocal sample.
-    :return: The predicted value of the users vocal sample.
-    """
+
     user_path = Path.home() / "VocalAnalysisTool" / "user_features.csv"
+
     user_data = pd.read_csv(user_path)
 
     blob = joblib.load('gender_model.joblib')
 
     pipeline = blob["pipeline"]
+
     feature_names = blob["Feature_names"]
 
+    # Ensure we only predict on a single sample row (and ignore any extra rows).
+    # user_data = user_data.iloc[:1].copy() # Align to the exact training schema:
+    # - Extra columns (excessive data) are dropped
+    # - Missing columns become NaN (handled elsewhere, e.g., by an imputer in the pipeline)
     user_data = user_data.reindex(columns=feature_names)
 
     prob = pipeline.predict_proba(user_data)[0]
 
     masc = prob[0]
+
     femme = prob[1]
 
-    is_significant = max(masc, femme) > 4.25 * min(masc, femme)
-    threshold = 0.04
+    is_significant = max(masc, femme) > 3.95 * min(masc, femme)
+
+    threshold = 0.05
+
+    p5 = user_data["F0_p5"].iloc[0] < 165
+    p95 = user_data["F0_p95"].iloc[0] > 350
+    within_means = (220 <= user_data["f0_mean_hz"].iloc[0] <= 280)
+    low_st = user_data["range_st_5_95"].iloc[0] <= 6
+    high_st = user_data["range_st_5_95"].iloc[0] > 18
 
     if is_significant:
-        if femme > masc:
-            return "FEMME", float(femme)
-        else:
-            return "MASC", float(masc)
-    else:
-        diff = femme - masc
-        if abs(diff) <= threshold:
-            return "ANDRO", float(max(masc, femme))
-        return ("ANDRO_FEMME", float(femme)) if diff > 0 else ("ANDRO_MASC", float(masc))
 
+        if femme > masc:
+
+            result = "FEMME", float(femme)
+
+        else:
+
+            result = "MASC", float(masc)
+
+        if p5 or p95 or not within_means or low_st or high_st:
+
+            if (user_data["F0_p5"].iloc[0] > 250
+                and (user_data["F2_med"].iloc[0] < 1700
+                or user_data["hnr_mean_db"].iloc[0] < 16
+                or user_data["f0_sd_st"].iloc[0] > 4
+                or user_data["voiced_frac"].iloc[0] < 0.75)
+            ):
+                result = "FEMME_FALSETTO", float(femme)
+
+            elif (
+                user_data["f0_max_hz"].iloc[0] > 450
+                and user_data["range_st_5_95"].iloc[0] > 16
+                and (user_data["range_semitones"].iloc[0] > 24
+                or user_data["f0_sd_st"].iloc[0] > 5
+                or user_data["hnr_mean_db"].iloc[0] < 15)
+                and ( user_data["F2_med"].iloc[0] < 1700
+                or user_data["F3_over_F2"].iloc[0] < 1.85)
+            ):
+                result = "MASC_FALSETTO", float(masc)
+
+    else:
+
+        diff = femme - masc
+
+        if abs(diff) <= threshold:
+
+            return "ANDRO", float((femme + masc)/2)
+
+        result = ("ANDRO_FEMME", float(femme)) if diff > 0 else ("ANDRO_MASC", float(masc))
+
+    return result
+"""
+HistGradientBoostingClassifier
+"""
+# def __predict__():
+#     """
+#     Takes the users data and predicts the gender perception of the users vocal sample.
+#     :return: The predicted value of the users vocal sample.
+#     """
+#     user_path = Path.home() / "VocalAnalysisTool" / "user_features.csv"
+#     user_data = pd.read_csv(user_path)
+#
+#     blob = joblib.load('gender_model.joblib')
+#
+#     pipeline = blob["pipeline"]
+#     feature_names = blob["Feature_names"]
+#
+#     # Ensure we only predict on a single sample row (and ignore any extra rows).
+#     user_data = user_data.iloc[:1].copy()
+#
+#     # Align to the exact training schema:
+#     # - Extra columns (excessive data) are dropped
+#     # - Missing columns become NaN (handled elsewhere, e.g., by an imputer in the pipeline)
+#     user_data = user_data.reindex(columns=feature_names)
+#
+#     prob = pipeline.predict_proba(user_data)[0]
+#
+#     model = pipeline.named_steps["model"]
+#     class_to_prob = dict(zip(model.classes_, prob))
+#
+#     masc = class_to_prob.get("MASC", 0.0)
+#     femme = class_to_prob.get("FEMME", 0.0)
+#
+#     is_significant = max(masc, femme) > 4.25 * min(masc, femme)
+#     threshold = 0.04
+#
+#     if is_significant:
+#         if femme > masc:
+#             return "FEMME", float(femme)
+#         else:
+#             return "MASC", float(masc)
+#     else:
+#         diff = femme - masc
+#         if abs(diff) <= threshold:
+#             return "ANDRO", float(max(masc, femme))
+#         return ("ANDRO_FEMME", float(femme)) if diff > 0 else ("ANDRO_MASC", float(masc))
 
 def main():
     _reset_track_state()

@@ -25,6 +25,7 @@ public class AudioRecordingController implements PropertyChangeListener {
     /**
      * The close button.
      */
+    @FXML
     private Button myCloseBtn;
 
     /**
@@ -121,7 +122,7 @@ public class AudioRecordingController implements PropertyChangeListener {
      */
     @FXML
     private void handleCloseBtn() {
-        final Stage myStage = (Stage) myCloseBtn.getScene().getWindow();
+        myStage = (Stage) myCloseBtn.getScene().getWindow();
         myChanges.firePropertyChange(ChangeEvents.STOP_RECORDING.name(), null, true);
         final FXMLLoader sfa_fxml = new FXMLLoader(AudioRecordingController.class.getResource("/com/kass/vocalanalysistool/gui/SelectAudioFile.fxml"));
         try {
@@ -150,12 +151,13 @@ public class AudioRecordingController implements PropertyChangeListener {
             final Path audioPath = Path.of(System.getProperty("user.home"),
                     "VocalAnalysisTool", "Vocal_Sample.wav");
 
-//            if(!Files.exists(audioPath)) {
-//                throw new IOException("The file path can not be found!");
-//            }
+            if(!Files.exists(audioPath)) {
+                throw new IOException("The file path can not be found!");
+            }
 
             MY_RUNNER_SERVICE.runScript(String.valueOf(audioPath));
             myStage = (Stage) myAnalyzeButton.getScene().getWindow();
+            MY_RECORDER.removePropertyChangeListener(this);
             myStage.close();
 
 
@@ -167,6 +169,7 @@ public class AudioRecordingController implements PropertyChangeListener {
             alert.showAndWait();
             System.exit(1);
         }
+
     }
 
     /**

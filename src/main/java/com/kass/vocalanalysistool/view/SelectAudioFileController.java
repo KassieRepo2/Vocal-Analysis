@@ -90,6 +90,7 @@ public class SelectAudioFileController implements PropertyChangeListener {
 
             thisStage.close();
             myPyScript.runScript(path);
+
         }
     }
 
@@ -113,11 +114,14 @@ public class SelectAudioFileController implements PropertyChangeListener {
             audioRecorderStage.getIcons().add(new Image(Objects.requireNonNull(getClass().
                     getResourceAsStream("/com/kass/vocalanalysistool/icons/vocal_analysis_icon.png"))));
             audioRecorderStage.show();
-            audioRecorderStage.setResizable(false);
+            audioRecorderStage.setResizable(false)
+            ;
 
 
             Stage thisStage = (Stage) myRecordBtn.getScene().getWindow();
             thisStage.close();
+            myPyScript.removePropertyChangeListener(this);
+
 
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -131,6 +135,7 @@ public class SelectAudioFileController implements PropertyChangeListener {
     private void handleExit() {
         Stage exitStage = (Stage) myExitButton.getScene().getWindow();
         exitStage.close();
+        myPyScript.removePropertyChangeListener(this);
     }
 
     /**
@@ -143,6 +148,7 @@ public class SelectAudioFileController implements PropertyChangeListener {
     public void propertyChange(final PropertyChangeEvent theEvent) {
         if (ChangeEvents.WORKFLOW_RESULT.name().equals(theEvent.getPropertyName())) {
             OpenAudioDataScene.openAnalysis(theEvent);
+            myPyScript.removePropertyChangeListener(this);
         }
     }
 }

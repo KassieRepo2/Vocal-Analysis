@@ -1,4 +1,4 @@
-
+/* MASTER */
 .button:hover {
     -fx-background-color: #a8a8a8;
 }
@@ -8,7 +8,7 @@
 }
 
 
-/* Select Audio File Scene */
+/* SELECT AUDIO FILE SCENE */
 .saf_record_btn,
 .saf_open_file_btn,
 .saf_exit_btn {
@@ -32,7 +32,7 @@
     -fx-background-color: linear-gradient(to bottom, #92e7ff 0%, #ffb4fa 35%, #FFFFFF 100%);
 }
 
-/* Audio Data Scene*/
+/* AUDIO DATA SCENE */
 
 .ad_analyze_btn {
     -fx-background-radius: 45;
@@ -70,7 +70,7 @@
     -fx-background-color: linear-gradient(to bottom, #92e7ff 0%, #ffb4fa 35%, #FFFFFF 100%);
 }
 
-/*Audio Recording Scene*/
+/* AUDIO RECORDING SCENE */
 .ar_anchorPane {
     -fx-background-color: black;
     -fx-background-radius: 50;
@@ -137,4 +137,65 @@
     -fx-cursor: hand;
     -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.15), 2, 0, 0, 1);
     -fx-background-color: #ffffff;
+}
+
+
+/* USER ANALYSIS STYLE */
+
+.ua_pane {
+    -fx-background-color: #ffffff;
+}
+
+.ua_tabPane {
+    -fx-border-color: #aaaaaa;
+    -fx-font-family: "Segoe UI";
+    -fx-background-color: #ffffff;
+    -fx-font-size: 12;
+
+}
+
+.ua_tab {
+
+    -fx-background-radius: 5px 5px 0 0;
+}
+
+.ua_pitchPane {
+
+}
+
+.ua_f1Pane {
+
+}
+
+.ua_f2Pane {
+
+}
+
+.ua_f3Pane {
+
+}
+
+.ua_f4Pane {
+
+}
+
+.ua_headerPane {
+}
+
+.ua_chart {
+    -fx-background-color: transparent;
+
+}
+
+.ua_chart .char-content {
+    -fx-background-color: transparent;
+
+}
+
+.ua_chart .chart-plot-background {
+    -fx-background-color: transparent;
+}
+
+.ua_chart .chart-background {
+    -fx-background-color: transparent;
 }

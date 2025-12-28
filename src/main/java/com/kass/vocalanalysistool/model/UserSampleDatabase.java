@@ -63,6 +63,7 @@ public class UserSampleDatabase {
         }
     }
 
+
     /**
      * Deletes all records from the 'user_formants' table.
      */
@@ -203,10 +204,10 @@ public class UserSampleDatabase {
                 LIMIT 1
                 """;
         try (Connection conn = myDs.getConnection();
-        PreparedStatement ps = conn.prepareStatement(query);
-        ResultSet rs = ps.executeQuery()) {
+             PreparedStatement ps = conn.prepareStatement(query);
+             ResultSet rs = ps.executeQuery()) {
             if (rs.next()) {
-                return rs.getString("gener_label");
+                return rs.getString("gender_label");
             } else {
                 throw new RuntimeException("No gender_labels were found!");
             }
@@ -231,10 +232,10 @@ public class UserSampleDatabase {
                 LIMIT 1
                 """;
         try (final Connection conn = myDs.getConnection();
-        PreparedStatement ps = conn.prepareStatement(query);
-        ResultSet rs = ps.executeQuery()) {
+             PreparedStatement ps = conn.prepareStatement(query);
+             ResultSet rs = ps.executeQuery()) {
             if (rs.next()) {
-                return rs.getString("gener_score");
+                return rs.getString("gender_score");
             } else {
                 throw new RuntimeException("No gender_score were found!");
             }
@@ -242,6 +243,33 @@ public class UserSampleDatabase {
         } catch (final SQLException theEvent) {
             MY_LOGGER.severe("Unable to retrieve the gender score: " + theEvent.getMessage());
             throw new RuntimeException("Unable to retrieve the gender score: " + theEvent.getMessage());
+        }
+    }
+
+    /**
+     * Gets the latest time stamp from the latest recording.
+     *
+     * @return the time stamp.
+     */
+    public final String getTimeStamp() {
+
+        final String query = """
+                SELECT timestamp
+                FROM user_formants
+                ORDER BY timestamp DESC
+                LIMIT 1
+                """;
+        try (final Connection conn = myDs.getConnection();
+             final PreparedStatement ps = conn.prepareStatement(query);
+             final ResultSet rs = ps.executeQuery()) {
+            if (rs.next()) {
+                return rs.getString("timestamp");
+            } else {
+                throw new RuntimeException("No time stamps were found!");
+            }
+        } catch (final SQLException theEvent) {
+            MY_LOGGER.severe("Unable to retrieve time stamp: " + theEvent);
+            throw new RuntimeException("Unable to retrieve time stamp: " + theEvent);
         }
     }
 
