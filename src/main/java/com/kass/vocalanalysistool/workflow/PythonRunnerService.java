@@ -83,7 +83,7 @@ public class PythonRunnerService implements PropertyChangeListener {
             loadingScreenStage.close();
             myChanges.firePropertyChange(ChangeEvents.WORKFLOW_RESULT.name(), null,
                     WorkflowResult.FAILED);
-            throw new IllegalArgumentException("The run time failed to process.");
+//            throw new IllegalArgumentException("The run time failed to process.");
         });
 
 

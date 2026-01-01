@@ -773,10 +773,11 @@ def __predict__():
 
     femme = prob[1]
 
-    score = max(femme, masc)
+    multiplier = 1.25
 
     eps = 1e-9
-    is_significant = (max(masc, femme) + eps) > 2.3 * (min(masc, femme) + eps)
+
+    is_significant = (max(masc, femme) + eps) > multiplier * (min(masc, femme) + eps)
 
     threshold = 0.05
 
@@ -807,8 +808,9 @@ def __predict__():
 
             diff = femme - masc
 
-            if abs(diff) <= 0.08:
-                result = ("ANDRO", float(femme))
+            if abs(diff) <= threshold:
+                print("Andro threshold")
+                result = ("ANDRO", (max((femme - min(femme, masc)), (masc + min(femme, masc)) )))
             else:
                 result = ("FEMME", float(femme)) if (diff > 0 and user_data["breathiness_index"].iloc[0] < -11) else (
                     "MASC", float(femme))
@@ -840,17 +842,20 @@ def __predict__():
             result = ("MASC_FALSETTO", float(0.5))
 
     else:
+        print("Masc: ", masc, "Femme: ", femme)
+        print(f"Threshold: ",({max(masc, femme) + eps}), ">" ,({multiplier * (min(masc, femme) + eps)}))
+
 
         diff = femme - masc
         print("Small difference found")
 
         if abs(diff) <= threshold:
-            return "ANDRO", float(femme)
+            return "ANDRO", (max((0.5 - min(femme, masc)), (0.5 + min(femme, masc)) ))
 
-        result = ("ANDRO_FEMME", float(femme)) if (diff > 0 and
+        result = ("ANDRO_FEMME", float(max(femme, masc))) if (diff > 0 and
                                                    (user_data["breathiness_index"].iloc[0] < -11
-                                                    or user_data["F1_med"].iloc[0] > 450)) else ("ANDRO_MASC",
-                                                                                                     float(masc))
+                                                    or user_data["F1_med"].iloc[0] > 450)) else \
+            ("ANDRO_MASC",min(femme, masc))
 
     # Adjust this guardrail once the learning model gains higher confidence.
     # This guardrail prevents false FEMME/MASC due to speaking with a lower/higher falsetto.
@@ -865,9 +870,9 @@ def __predict__():
                 result = ("ANDRO_MASC", float(masc))
             elif _femme_requires_support_guardrail(user_data):
 
+                andro_threshold = (min((femme - min(femme, masc)), (femme + min(femme, masc))))
                 print("femme requires support guardrail used")
-                print(result)
-                result = ("ANDRO", float(max(femme, masc) - min(femme, masc)))
+                result = ("ANDRO", andro_threshold) if (0.35 < andro_threshold < 0.45) else "MASC", andro_threshold
 
         if label == "MASC" and _soft_masc_androgyny_guardrail(user_data, masc_value=masc, femme_value=femme):
             print("soft masc androgyny used")

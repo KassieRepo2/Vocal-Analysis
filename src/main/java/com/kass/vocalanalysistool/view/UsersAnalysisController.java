@@ -118,7 +118,7 @@ public class UsersAnalysisController {
 
         series.getData().add(new XYChart.Data<>(latestScore[0],
                 Double.parseDouble(latestScore[1])));
-        series.setName("The Likelihood Of Your Voice Being Perceived As");
+        series.setName("The likelihood of the gender your voice will be perceived as");
 
         myGenderPerceptChart.getData().add(series);
     }
@@ -131,7 +131,7 @@ public class UsersAnalysisController {
         final XYChart.Series<String, Number> series = new XYChart.Series<>();
         series.getData().add(new XYChart.Data<>("", -1));
         myGenderPerceptChart.getData().add(series);
-        series.setName("The Likelihood Of Your Voice Being Perceived As");
+        series.setName("The likelihood of the gender your voice will be perceived as");
     }
 
     /**
@@ -450,9 +450,6 @@ public class UsersAnalysisController {
         return result;
     }
 
-    public static void main(String[] args) {
-
-    }
 }
 
 
