@@ -872,7 +872,8 @@ def __predict__():
 
                 andro_threshold = (min((femme - min(femme, masc)), (femme + min(femme, masc))))
                 print("femme requires support guardrail used")
-                result = ("ANDRO", andro_threshold) if (0.35 < andro_threshold < 0.45) else "MASC", andro_threshold
+                result = (("ANDRO", andro_threshold) if (0.35 < andro_threshold < 0.45) else ("MASC",
+                          float(andro_threshold)))
 
         if label == "MASC" and _soft_masc_androgyny_guardrail(user_data, masc_value=masc, femme_value=femme):
             print("soft masc androgyny used")
