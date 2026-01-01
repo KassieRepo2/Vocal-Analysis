@@ -43,6 +43,8 @@ public class PythonRunnerService implements PropertyChangeListener {
      */
     private final Logger logger = Logger.getLogger(PythonRunnerService.class.getName());
 
+
+
     /**
      * Runs the vocal analysis python script
      *
@@ -54,7 +56,7 @@ public class PythonRunnerService implements PropertyChangeListener {
                 "/com/kass/vocalanalysistool/gui/LoadingScreen.fxml"));
         final Scene loadingScreenScene = new Scene(loadingScreenFXML.load());
         final LoadingScreenController loadingScreenController = loadingScreenFXML.getController();
-        loadingScreenController.addPropertyChangeListener(this);
+        loadingScreenController.addLoadingScreenAsListener(this);
         final Stage loadingScreenStage = new Stage();
         loadingScreenStage.initStyle(StageStyle.UNDECORATED);
         loadingScreenStage.setScene(loadingScreenScene);
@@ -81,6 +83,7 @@ public class PythonRunnerService implements PropertyChangeListener {
             loadingScreenStage.close();
             myChanges.firePropertyChange(ChangeEvents.WORKFLOW_RESULT.name(), null,
                     WorkflowResult.FAILED);
+            throw new IllegalArgumentException("The run time failed to process.");
         });
 
 
@@ -109,51 +112,52 @@ public class PythonRunnerService implements PropertyChangeListener {
      */
     private void runPythonScript(final String theFilePath) {
         try {
-            final Path pythonScript = extractResourceToTemp(
-                    "/VocalAnalysisToolKit/Vocal_Analysis_Script.py", ".py");
-            final Path setupBat = extractResourceToTemp("/pythonInstall.bat", ".bat");
-
             final Path appDir = getAppDir(); //The directory of the program install location
+            final Path dataDir = getDataDir(); // Writable directory for venv + extracted resources
 
+            logger.info("Resolved appDir: " + appDir);
+            logger.info("Resolved dataDir: " + dataDir);
 
-            myChanges.firePropertyChange(ChangeEvents.UPDATE_PROGRESS.toString(), "Building " +
-                            "environment...",
-                    (double) 16 / 100);
+            // Extract resources to a stable, writable location (NOT temp, NOT install dir)
+            final Path pythonScript = extractResourceToDir(
+                    "/VocalAnalysisToolKit/Vocal_Analysis_Script.py",
+                    dataDir,
+                    "Vocal_Analysis_Script.py"
+            );
+            final Path setupBat = extractResourceToDir(
+                    "/pythonInstall.bat",
+                    dataDir,
+                    "pythonInstall.bat"
+            );
+            final Path requirements = extractResourceToDir(
+                    "/VocalAnalysisToolKit/requirements.txt",
+                    dataDir,
+                    "requirements.txt"
+            );
 
-            // Run setup in appDir so .venv is created at appDir\.venv
-            final ProcessBuilder setupPB = new ProcessBuilder("cmd.exe", "/c",
-                    setupBat.toString());
+            final Path modelFile = extractResourceToDir(
+                    "/VocalAnalysisToolKit/gender_model.joblib",
+                    dataDir,
+                    "gender_model.joblib"
+            );
 
-            setupPB.directory(appDir.toFile());
-            setupPB.redirectErrorStream(true);
-            final Process setupProc = setupPB.start();
+            final Path venvPy = dataDir.resolve(".venv").resolve("Scripts").resolve("python.exe");
 
-            try (final BufferedReader reader =
-                         new BufferedReader(new InputStreamReader(setupProc.getInputStream()))) {
-                String ln;
-                while ((ln = reader.readLine()) != null) logger.info("[setup] " + ln);
-            }
-            final int setupExit = setupProc.waitFor();
-            if (setupExit != 0) {
-                logger.severe("Environment setup failed (exit " + setupExit + "); aborting.");
-                return;
-            }
 
             myChanges.firePropertyChange(ChangeEvents.UPDATE_PROGRESS.toString(),
                     "Installing environment updates if needed...",
                     (double) 32 / 100);
 
             // 2) Resolve venv python; do not silently fall back
-            final Path venvPy = appDir.resolve(".venv").resolve("Scripts").resolve("python.exe");
             if (!Files.exists(venvPy)) {
-                throw new IllegalStateException("Venv python not found at " + venvPy + ". Ensure setup ran in " + appDir);
+                throw new IllegalStateException("Venv python not found at " + venvPy + ". Ensure setup ran in " + dataDir);
             }
             final String pythonExe = venvPy.toString();
 
             // Helper to run a short python/pip command and log all output
             Function<String[], Integer> run = (args) -> {
                 try {
-                    Process p = getProcess(new ProcessBuilder(args), appDir);
+                    Process p = getProcess(new ProcessBuilder(args), dataDir);
                     try (BufferedReader br = new BufferedReader(new InputStreamReader(p.getInputStream()))) {
                         String s;
                         while ((s = br.readLine()) != null) logger.info("[pip] " + s);
@@ -168,31 +172,31 @@ public class PythonRunnerService implements PropertyChangeListener {
             myChanges.firePropertyChange(ChangeEvents.UPDATE_PROGRESS.toString(), "Parsing " +
                             "dependency requirements...",
                     (double) 48 / 100);
+
             // 3) Ensure matplotlib is installed in the venv
-            final Path req = appDir.resolve("requirements.txt");
             int code;
-            if (Files.exists(req)) {
-                logger.info("Installing requirements from: " + req);
-                code = run.apply(new String[]{pythonExe, "-m", "pip", "install", "-r", req.toString()});
+            if (Files.exists(requirements)) {
+                logger.info("Installing requirements from: " + requirements);
+                myChanges.firePropertyChange(ChangeEvents.UPDATE_PROGRESS.toString(),
+                        "Installing dependency requirements...", (double) 55 / 100);
+                code = run.apply(new String[]{pythonExe, "-m", "pip", "install", "-r", requirements.toString()});
                 if (code != 0)
                     throw new IllegalStateException("pip install -r failed with code " + code);
             } else {
                 // Minimal guarantee
-                logger.info("requirements.txt not found in " + appDir + " — installing matplotlib explicitly.");
+                logger.info("requirements.txt not found in " + dataDir + " — installing matplotlib explicitly.");
+                myChanges.firePropertyChange(ChangeEvents.UPDATE_PROGRESS.toString(),
+                        "Installing basic requirements...", (double) 55 / 100);
                 code = run.apply(new String[]{pythonExe, "-m", "pip", "install", "matplotlib"});
                 if (code != 0)
                     throw new IllegalStateException("pip install matplotlib failed with code " + code);
             }
 
-            myChanges.firePropertyChange(ChangeEvents.UPDATE_PROGRESS.toString(), "Checking " +
-                            "dependency versions...",
-                    (double) 64 / 100);
+            myChanges.firePropertyChange(ChangeEvents.UPDATE_PROGRESS.toString(),
+                    "Importing dependencies...", (double) 64 / 100);
             // 4) Probe: show interpreter & matplotlib version (fail fast if missing)
             code = run.apply(new String[]{pythonExe, "-c",
                     "import sys; print('[PyProbe] exe:', sys.executable); " +
-                            "import importlib, pkgutil; " +
-                            "m = importlib.util.find_spec('matplotlib'); " +
-                            "print('[PyProbe] matplotlib present:', bool(m)); " +
                             "import matplotlib; print('[PyProbe] matplotlib version:', matplotlib.__version__)"
             });
             if (code != 0)
@@ -204,15 +208,16 @@ public class PythonRunnerService implements PropertyChangeListener {
 
             // 5) Runs the python script
             final Process process = getProcess(new ProcessBuilder(pythonExe,
-                    pythonScript.toString(), theFilePath), appDir);
+                    pythonScript.toString(), theFilePath, modelFile.toString()), dataDir);
             try (final BufferedReader reader =
                          new BufferedReader(new InputStreamReader(process.getInputStream()))) {
 
                 String line;
-                while  ((line = reader.readLine()) != null) {
+                while ((line = reader.readLine()) != null) {
+
                     logger.info("[Python] " + line);
 
-                    if ("No valid frames after filtering; skipping file".contains(line)) {
+                    if (line.contains("No valid frames after filtering; skipping file")) {
                         myChanges.firePropertyChange(ChangeEvents.WORKFLOW_RESULT.name()
                                 , "The audio recorder did not detect any valid acoustics" +
                                         ". Please try again!", WorkflowResult.INVALID);
@@ -225,8 +230,8 @@ public class PythonRunnerService implements PropertyChangeListener {
                 logger.severe("Python script exited with code " + exit);
                 myChanges.firePropertyChange(ChangeEvents.WORKFLOW_RESULT.name(), null,
                         WorkflowResult.FAILED);
+                throw new IllegalStateException("The python script could not write to file!");
             }
-            myChanges.firePropertyChange(ChangeEvents.UPDATE_PROGRESS.toString(), 0, (double) 1);
 
         } catch (final IOException | InterruptedException theEvent) {
             logger.log(Level.SEVERE, "Failed to run Python script", theEvent);
@@ -234,7 +239,7 @@ public class PythonRunnerService implements PropertyChangeListener {
         }
 
         myChanges.firePropertyChange(ChangeEvents.UPDATE_PROGRESS.name(), "Completed!",
-                (double) 100/100);
+                (double) 1);
 
     }
 
@@ -264,38 +269,74 @@ public class PythonRunnerService implements PropertyChangeListener {
 
 
     /**
-     * Gets the temporary location of the python file for execution.
-     *
-     * @param resourcePath the path of the resource file.
-     * @param suffix       the file extension type.
-     * @return returns the path of the temporary file.
-     * @throws IOException Thrown if the input stream is null
-     */
-    private Path extractResourceToTemp(final String resourcePath, final String suffix) throws IOException {
-        final Path tmp = Files.createTempFile("vat_", suffix);
-        tmp.toFile().deleteOnExit();
-        try (final InputStream in = getClass().getResourceAsStream(resourcePath)) {
-            if (in == null) {
-                throw new IOException("Resource not found");
-            }
-            Files.copy(in, tmp, StandardCopyOption.REPLACE_EXISTING);
-        }
-
-        return tmp;
-    }
-
-    /**
      * Gets the temporary directory of the python script.
      *
      * @return the path of the directory that the python script is installed on.
      */
     private Path getAppDir() {
+        final String jpackageAppPath = System.getProperty("jpackage.app-path");
+        if (jpackageAppPath != null && !jpackageAppPath.isBlank()) {
+            return Path.of(jpackageAppPath).toAbsolutePath().getParent();
+        }
         return Path.of(System.getProperty("user.dir")).toAbsolutePath();
+    }
+
+    /**
+     * Gets a writable directory for the python environment.
+     *
+     * @return the path of the directory that the python environment is installed on.
+     * @throws IOException thrown if the directory can not be created.
+     */
+    private Path getDataDir() throws IOException {
+
+        // If running from a jpackage launcher, store python/venv in LocalAppData
+        final String jpackageAppPath = System.getProperty("jpackage.app-path");
+        if (jpackageAppPath != null && !jpackageAppPath.isBlank()) {
+            final String localAppData = System.getenv("LOCALAPPDATA");
+            final Path base = (localAppData != null && !localAppData.isBlank())
+                    ? Path.of(localAppData)
+                    : Path.of(System.getProperty("user.home"));
+            final Path dir = base.resolve("VocalAnalysisTool");
+            Files.createDirectories(dir);
+            return dir.toAbsolutePath();
+        }
+
+        // IntelliJ / dev run: keep everything relative to the project working directory
+        final Path dir = Path.of(System.getProperty("user.dir")).toAbsolutePath();
+        Files.createDirectories(dir);
+        return dir;
     }
 
 
     /**
+     * Extracts a resource from the jar into a stable, writable directory.
+     *
+     * @param resourcePath the path of the resource file.
+     * @param outDir       the directory to copy to.
+     * @param filename     the filename to write as.
+     * @return returns the path of the extracted file.
+     * @throws IOException Thrown if the input stream is null
+     */
+    private Path extractResourceToDir(final String resourcePath,
+                                      final Path outDir,
+                                      final String filename) throws IOException {
+
+        Files.createDirectories(outDir);
+        final Path out = outDir.resolve(filename);
+
+        try (final InputStream in = getClass().getResourceAsStream(resourcePath)) {
+            if (in == null) {
+                throw new IOException("Resource not found");
+            }
+            Files.copy(in, out, StandardCopyOption.REPLACE_EXISTING);
+        }
+
+        return out;
+    }
+
+    /**
      * Adds component to this property change listener list
+     *
      * @param theListener the component
      */
     public void addPropertyChangeListener(final PropertyChangeListener theListener) {
@@ -304,6 +345,7 @@ public class PythonRunnerService implements PropertyChangeListener {
 
     /**
      * Removes the component from this property change listener list
+     *
      * @param theListener the component
      */
     public void removePropertyChangeListener(final PropertyChangeListener theListener) {
@@ -311,7 +353,7 @@ public class PythonRunnerService implements PropertyChangeListener {
     }
 
     @Override
-    public void propertyChange(PropertyChangeEvent evt) {
+    public void propertyChange(final PropertyChangeEvent theEvent) {
 
     }
 }

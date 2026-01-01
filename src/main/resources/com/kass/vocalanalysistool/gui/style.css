@@ -1,4 +1,5 @@
 /* MASTER */
+.play_button:hover,
 .button:hover {
     -fx-background-color: #a8a8a8;
 }
@@ -34,6 +35,7 @@
 
 /* AUDIO DATA SCENE */
 
+.ad_new_record_btn,
 .ad_analyze_btn {
     -fx-background-radius: 45;
     -fx-border-color: #999;
@@ -44,15 +46,6 @@
     -fx-background-color: #ffffff;
 }
 
-.ad_new_record_btn {
-    -fx-background-radius: 45;
-    -fx-border-color: #999;
-    -fx-border-radius: 45;
-    -fx-border-width: 1;
-    -fx-cursor: hand;
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.15), 2, 0, 0, 1);
-    -fx-background-color: #ffffff;
-}
 
 .ad_info_label {
 }
@@ -72,7 +65,7 @@
 
 /* AUDIO RECORDING SCENE */
 .ar_anchorPane {
-    -fx-background-color: black;
+    -fx-background-color: transparent;
     -fx-background-radius: 50;
 }
 
@@ -99,6 +92,14 @@
     -fx-background-color: #fa4646;
 }
 
+.play_button {
+    -fx-cursor: hand;
+}
+.play_button.hover {
+    -fx-background-color: #5e0000;
+
+}
+
 
 .stop-btn {
     -fx-background-radius: 5;
@@ -118,6 +119,14 @@
 .stop-btn:pressed {
     -fx-background-color: #fa4646;
 
+}
+
+.play_icon:hover {
+   -fx-fill: #1d5a1d;
+}
+
+.play_icon:pressed {
+    -fx-fill: #32e332;
 }
 
 .ar_hBox {
@@ -143,7 +152,8 @@
 /* USER ANALYSIS STYLE */
 
 .ua_pane {
-    -fx-background-color: #ffffff;
+    -fx-background-color: linear-gradient(to top, #92e7ff 0%, #ffb4fa 55%, #FFFFFF 100%);
+
 }
 
 .ua_tabPane {
@@ -187,6 +197,16 @@
 
 }
 
+.chart-line-symbol {
+    -fx-background-radius: 3px;
+    -fx-padding: 3px;
+}
+
+
+.chart-series-line {
+    -fx-stroke-width: 2px;
+}
+
 .ua_chart .char-content {
     -fx-background-color: transparent;
 
@@ -199,3 +219,47 @@
 .ua_chart .chart-background {
     -fx-background-color: transparent;
 }
+
+.ua_ClearTrend {
+    -fx-background-radius: 45;
+    -fx-border-color: #999;
+    -fx-border-radius: 45;
+    -fx-border-width: 1;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.15), 2, 0, 0, 1);
+    -fx-background-color: #ffffff;
+}
+
+
+.shimmer-bar {
+    -fx-pref-height: 18px;
+}
+
+.shimmer-bar .track {
+    -fx-background-color: #dbefff;
+    -fx-background-radius: 9;
+}
+
+.shimmer-bar .bar {
+    -fx-background-color: linear-gradient(
+            to right,
+            #2483ff 0%,
+            #74b0fb 40%,
+             #74b0fb 50%,
+            #74b0fb 60%,
+            #2483ff 100%
+    );
+    -fx-background-size: 200% 100%;
+    -fx-background-position: 0% 0%;
+    -fx-animation: shimmer-lr 1.3s infinite linear;
+}
+
+@keyframes shimmer-lr {
+    from {
+        -fx-background-position: -200% 0%;
+    }
+    to {
+        -fx-background-position: 200% 0%;
+    }
+}
+

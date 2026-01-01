@@ -11,6 +11,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
+<?import javafx.scene.layout.StackPane?>
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0"
             prefWidth="800.0" styleClass="ad_anchorPane" stylesheets="@style.css"
             xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1"
@@ -19,7 +20,8 @@
     <!-- The analyze button !-->
     <Button fx:id="myAnalyzeRecordingBtn" accessibleHelp="Opens a new window that analyzes your formant data"
             accessibleText="Analyze Recording"
-            defaultButton="true" layoutX="620.0" layoutY="553.0" minWidth="130.0" onAction="#handleAnalyzeButton"
+            defaultButton="true" layoutX="620.0" layoutY="553.0" minWidth="130.0"
+            onAction="#handleAnalyzeNewRecordingButton"
             prefHeight="30.0" styleClass="ad_analyze_btn" text="_Analyze Recording" AnchorPane.bottomAnchor="15.0"
             AnchorPane.rightAnchor="50.0">
         <font>
@@ -29,7 +31,7 @@
 
     <!-- The new recording button !-->
     <Button layoutX="377.0" layoutY="553.0" minWidth="130.0"
-            onAction="#handleNewRecordingButton" prefHeight="30.0"
+            onAction="#handleRecordNewSample" prefHeight="30.0"
             prefWidth="152.0" styleClass="ad_new_record_btn" text="New _Recording" AnchorPane.bottomAnchor="15.0">
         <font>
             <Font name="Candara Bold" size="16.0"/>
@@ -37,10 +39,10 @@
     </Button>
     <MenuBar prefHeight="26.0" prefWidth="800.0" styleClass="ad_menuBar">
         <Menu text="_File">
-            <MenuItem onAction="#handleNewRecordingButton"
+            <MenuItem onAction="#handleRecordNewSample"
                       text="_Open New Recording"/>
             <MenuItem onAction="#handleRecordNewSample" text="_Record New Sample"/>
-            <MenuItem onAction="#handleAnalyzeButton" text="_Analyze Recording"/>
+            <MenuItem onAction="#handleAnalyzeNewRecordingButton" text="_Analyze Recording"/>
             <MenuItem onAction="#handleCloseProgram" text="_Close"/>
         </Menu>
         <Menu text="_Help">
@@ -49,9 +51,11 @@
         </Menu>
     </MenuBar>
     <!-- The Scatter plot image !-->
-    <ImageView fx:id="myScatterPlotImage" fitHeight="548.0" fitWidth="320.0" layoutX="14.0" layoutY="36.0"
-               pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="17.0" AnchorPane.leftAnchor="15.0"
-               AnchorPane.topAnchor="35.0"/>
+    <StackPane fx:id="myScatterPlotContainer">
+        <ImageView fx:id="myScatterPlotImage" fitHeight="548.0" fitWidth="320.0" layoutX="14.0" layoutY="36.0"
+                   pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="17.0" AnchorPane.leftAnchor="15.0"
+                   AnchorPane.topAnchor="35.0"/>
+    </StackPane>
 
     <ScrollPane layoutX="400.0" layoutY="74.0" prefHeight="469.0" prefWidth="439.0" styleClass="ad_scrollPane"
                 AnchorPane.bottomAnchor="56.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="75.0">

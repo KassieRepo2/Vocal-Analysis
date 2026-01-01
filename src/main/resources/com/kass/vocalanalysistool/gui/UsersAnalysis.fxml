@@ -4,10 +4,12 @@
 <?import javafx.scene.chart.CategoryAxis?>
 <?import javafx.scene.chart.LineChart?>
 <?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.text.Font?>
@@ -15,6 +17,24 @@
 <AnchorPane prefHeight="720.0" prefWidth="1091.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.kass.vocalanalysistool.view.UsersAnalysisController">
     <Pane prefHeight="720.0" prefWidth="1091.0" styleClass="ua_pane" stylesheets="@style.css">
         <TabPane layoutX="607.0" layoutY="14.0" prefHeight="382.0" prefWidth="470.0" snapToPixel="false" styleClass="ua_tabPane" stylesheets="@style.css" tabClosingPolicy="UNAVAILABLE">
+            <Tab styleClass="ua_tab" text="Perceived Gender">
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="255.0" prefWidth="560.0"
+                            styleClass="ua_pitchPane">
+                    <StackPane fx:id="myGenderPerceptStackPane" prefHeight="359.0" prefWidth="481.0">
+                        <LineChart fx:id="myGenderPerceptChart" animated="false" prefHeight="195.0"
+                                   prefWidth="275.0" styleClass="ua_chart" stylesheets="@style.css">
+                            <xAxis>
+                                <CategoryAxis animated="false" label="Dates" side="BOTTOM"/>
+                            </xAxis>
+                            <yAxis>
+                                <NumberAxis autoRanging="false" label="Gender Perception" minorTickCount="0"
+                                            minorTickLength="0.0" minorTickVisible="false" side="LEFT"
+                                            tickLabelGap="0.5" tickUnit="0.1" upperBound="1.0"/>
+                            </yAxis>
+                        </LineChart>
+                    </StackPane>
+                </AnchorPane>
+            </Tab>
             <Tab styleClass="ua_tab" text="Pitch Trend">
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="255.0" prefWidth="560.0" styleClass="ua_pitchPane">
                     <StackPane fx:id="myPitchTrendStackPane" prefHeight="352.0" prefWidth="481.0">
@@ -31,7 +51,7 @@
             </Tab>
             <Tab styleClass="ua_tab" text="F1 Trend">
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="255.0" prefWidth="560.0" styleClass="ua_pitchPane">
-                    <StackPane fx:id="myF1StackPane" layoutX="1.0" layoutY="1.0" prefHeight="359.0" prefWidth="481.0">
+                    <StackPane layoutX="1.0" layoutY="1.0" prefHeight="359.0" prefWidth="481.0">
                         <LineChart fx:id="myF1Chart" prefHeight="359.0" prefWidth="478.0" styleClass="ua_chart" stylesheets="@style.css">
                             <xAxis>
                                 <CategoryAxis label="Dates" side="BOTTOM" />
@@ -45,7 +65,7 @@
             </Tab>
             <Tab styleClass="ua_tab" text="F2 Trend">
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="255.0" prefWidth="560.0" styleClass="ua_pitchPane">
-                    <StackPane fx:id="myF2StackPane" prefHeight="359.0" prefWidth="481.0">
+                    <StackPane prefHeight="359.0" prefWidth="481.0">
                         <LineChart fx:id="myF2Chart" prefHeight="359.0" prefWidth="491.0" styleClass="ua_chart" stylesheets="@style.css">
                             <xAxis>
                                 <CategoryAxis label="Dates" side="BOTTOM" />
@@ -59,7 +79,7 @@
             </Tab>
             <Tab styleClass="ua_tab" text="F3 Trend">
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="255.0" prefWidth="560.0" styleClass="ua_pitchPane">
-                    <StackPane fx:id="myF3StackPane" prefHeight="359.0" prefWidth="481.0">
+                    <StackPane prefHeight="359.0" prefWidth="481.0">
                         <LineChart fx:id="myF3Chart" prefHeight="195.0" prefWidth="275.0" styleClass="ua_chart" stylesheets="@style.css">
                             <xAxis>
                                 <CategoryAxis label="Dates" side="BOTTOM" />
@@ -73,7 +93,7 @@
             </Tab>
             <Tab styleClass="ua_tab" text="F4 Trend">
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="255.0" prefWidth="560.0" styleClass="ua_pitchPane">
-                    <StackPane fx:id="myF4StackPane" prefHeight="359.0" prefWidth="481.0">
+                    <StackPane prefHeight="359.0" prefWidth="481.0">
                         <LineChart fx:id="myF4Chart" prefHeight="345.0" prefWidth="461.0" styleClass="ua_chart" stylesheets="@style.css">
                             <xAxis>
                                 <CategoryAxis label="Dates" side="BOTTOM" />
@@ -85,26 +105,6 @@
                     </StackPane>
                 </AnchorPane>
             </Tab>
-         <Tab styleClass="ua_tab" text="Gender P.I.R">
-            <content>
-               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="255.0" prefWidth="560.0" styleClass="ua_pitchPane">
-                  <children>
-                     <StackPane fx:id="myF4StackPane1" prefHeight="359.0" prefWidth="481.0">
-                        <children>
-                           <LineChart fx:id="myF4Chart1" prefHeight="195.0" prefWidth="275.0" styleClass="ua_chart" stylesheets="@style.css">
-                              <xAxis>
-                                 <CategoryAxis label="Dates" side="BOTTOM" />
-                              </xAxis>
-                              <yAxis>
-                                 <NumberAxis autoRanging="false" label="Frequency (Hz)" minorTickLength="0.01" minorTickVisible="false" side="LEFT" tickLabelGap="0.5" tickUnit="0.1" upperBound="1.0" />
-                              </yAxis>
-                           </LineChart>
-                        </children>
-                     </StackPane>
-                  </children>
-               </AnchorPane>
-            </content>
-         </Tab>
          <opaqueInsets>
             <Insets right="5.0" top="5.0" />
          </opaqueInsets>
@@ -114,5 +114,11 @@
             <Font name="Monotype Corsiva" size="44.0" />
          </font>
       </Label>
+        <HBox alignment="CENTER" layoutX="607.0" layoutY="396.0" prefHeight="32.0" prefWidth="470.0" spacing="120.0">
+            <Button fx:id="myClearTrendButton" mnemonicParsing="false" onAction="#handleClearTrendButton" styleClass="ua_ClearTrend" stylesheets="@style.css" text="Clear Trends">
+            <font>
+               <Font name="Century Schoolbook Bold" size="12.0" />
+            </font></Button>
+        </HBox>
     </Pane>
 </AnchorPane>

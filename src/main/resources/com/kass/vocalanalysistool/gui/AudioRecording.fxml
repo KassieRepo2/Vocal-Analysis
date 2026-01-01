@@ -9,102 +9,94 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
+<?import javafx.scene.shape.Polygon?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane styleClass="ar_anchorPane" prefHeight="279.0" prefWidth="472.0"
-            xmlns="http://javafx.com/javafx/21.0.2" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.kass.vocalanalysistool.view.AudioRecordingController"
-            stylesheets="@style.css">
-    <Pane styleClass="ar_pane" prefHeight="279.3333333333333" prefWidth="472.0"
-          AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
-          AnchorPane.topAnchor="0.0">
-        <ImageView fitHeight="444.0" fitWidth="718.0" layoutX="-122.0" layoutY="-78.0">
-            <Image url="@../icons/cassetteTape.png"/>
+<AnchorPane prefHeight="279.0" prefWidth="472.0" styleClass="ar_anchorPane" stylesheets="@style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.kass.vocalanalysistool.view.AudioRecordingController">
+    <Pane prefHeight="279.3333333333333" prefWidth="472.0" styleClass="ar_pane" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <ImageView fitHeight="447.0" fitWidth="723.0" layoutX="-127.0" layoutY="-79.0">
+            <Image url="@../icons/cassetteTape.png" />
         </ImageView>
-        <HBox alignment="CENTER" layoutX="149.0" layoutY="47.0" prefHeight="37.0" prefWidth="174.0" spacing="10.0">
-            <Button fx:id="myRecordBtn" styleClass="record-btn" alignment="CENTER" minHeight="-Infinity"
-                    minWidth="-Infinity"
-                    onAction="#handleRecordBtn"
-                    mnemonicParsing="false" prefHeight="25.0" prefWidth="25.0">
+        <HBox alignment="CENTER" layoutX="149.0" layoutY="48.0" prefHeight="44.0" prefWidth="179.0" spacing="15.0">
+            <Button fx:id="myRecordBtn" alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleRecordBtn" prefHeight="25.0" prefWidth="25.0" styleClass="record-btn">
                 <cursor>
-                    <Cursor fx:constant="HAND"/>
+                    <Cursor fx:constant="HAND" />
                 </cursor>
             </Button>
-            <HBox styleClass="ar_hBox" alignment="CENTER" prefHeight="28.0" prefWidth="81.0">
-                <Label fx:id="myHourLabel" prefHeight="28.0" prefWidth="17.0" text="99">
-                    <font>
-                        <Font size="15.0"/>
-                    </font>
-                </Label>
-                <Label prefHeight="28.0" prefWidth="4.0" text=":">
-                    <font>
-                        <Font size="15.0"/>
-                    </font>
-                </Label>
-                <Label fx:id="myMinuteLabel" prefHeight="28.0" prefWidth="17.0" text="99">
-                    <font>
-                        <Font size="15.0"/>
-                    </font>
-                </Label>
-                <Label prefHeight="28.0" prefWidth="5.0" text=":">
-                    <font>
-                        <Font size="15.0"/>
-                    </font>
-                </Label>
-                <Label fx:id="mySecondsLabel" prefHeight="28.0" prefWidth="17.0" text="99">
-                    <font>
-                        <Font size="15.0"/>
-                    </font>
-                </Label>
-                <opaqueInsets>
-                    <Insets/>
-                </opaqueInsets>
-            </HBox>
-            <Button fx:id="myStopBtn" styleClass="stop-btn" alignment="CENTER" disable="true" minHeight="-Infinity"
-                    minWidth="-Infinity"
-                    onAction="#handleStopBtn"
-                    mnemonicParsing="false" prefHeight="27.0" prefWidth="27.0">
+            <Button fx:id="myStopBtn" alignment="CENTER" disable="true" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleStopBtn" prefHeight="27.0" prefWidth="27.0" styleClass="stop-btn">
                 <cursor>
-                    <Cursor fx:constant="HAND"/>
+                    <Cursor fx:constant="HAND" />
                 </cursor>
             </Button>
+         <Button fx:id="myPlayButton" disable="true" mnemonicParsing="false" onAction="#handlePlayBtn" style="-fx-background-color: transparent;" styleClass="play_button" stylesheets="@style.css">
+            <graphic>
+               <Polygon fill="#35c935" points="-50.000152587890625, 44.99970245361328, -27.333486557006836, 31.666370391845703, -50.00018310546875, 19.999727249145508" stroke="BLACK" strokeLineCap="BUTT" strokeLineJoin="BEVEL" strokeType="OUTSIDE" />
+            </graphic>
+            <padding>
+               <Insets left="5.0" />
+            </padding>
+         </Button>
         </HBox>
         <Label layoutX="35.0" layoutY="36.0" rotate="-46.6" snapToPixel="false" text="Vocal">
             <font>
-                <Font name="Harrington" size="19.0"/>
+                <Font name="Harrington" size="19.0" />
             </font>
         </Label>
         <Label layoutX="37.0" layoutY="47.0" rotate="-46.6" snapToPixel="false" text="Recorder">
             <font>
-                <Font name="Harrington" size="19.0"/>
+                <Font name="Harrington" size="19.0" />
             </font>
         </Label>
         <HBox layoutX="69.0" layoutY="170.0" prefHeight="37.0" prefWidth="336.0" spacing="30.0">
             <opaqueInsets>
-                <Insets/>
+                <Insets />
             </opaqueInsets>
-            <Button fx:id="myAnalyzeButton" styleClass="ar_analyzeBtn" minWidth="130.0" prefHeight="30.0"
-                    prefWidth="152.0"
-                    onAction="#handleAnalyzeBtn"
-                    text="Analyze _Recording">
+            <Button fx:id="myAnalyzeButton" minWidth="130.0" onAction="#handleAnalyzeBtn" prefHeight="30.0" prefWidth="152.0" styleClass="ar_analyzeBtn" text="Analyze _Recording">
                 <font>
-                    <Font name="Candara Bold" size="16.0"/>
+                    <Font name="Candara Bold" size="16.0" />
                 </font>
                 <cursor>
-                    <Cursor fx:constant="HAND"/>
+                    <Cursor fx:constant="HAND" />
                 </cursor>
             </Button>
-            <Button fx:id="myCloseBtn" styleClass="ar_exit-btn" alignment="CENTER" minWidth="130.0" prefHeight="30.0"
-                    prefWidth="152.0"
-                    onAction="#handleCloseBtn"
-                    text="Close">
+            <Button fx:id="myCloseBtn" alignment="CENTER" minWidth="130.0" onAction="#handleCloseBtn" prefHeight="30.0" prefWidth="152.0" styleClass="ar_exit-btn" text="Close">
                 <font>
-                    <Font name="Candara Bold" size="16.0"/>
+                    <Font name="Candara Bold" size="16.0" />
                 </font>
                 <cursor>
-                    <Cursor fx:constant="HAND"/>
+                    <Cursor fx:constant="HAND" />
                 </cursor>
             </Button>
         </HBox>
+         <HBox alignment="CENTER" layoutX="195.0" layoutY="22.0" prefHeight="28.0" prefWidth="81.0" styleClass="ar_hBox">
+             <Label fx:id="myHourLabel" prefHeight="28.0" prefWidth="17.0" text="99">
+                 <font>
+                     <Font size="15.0" />
+                 </font>
+             </Label>
+             <Label prefHeight="28.0" prefWidth="4.0" text=":">
+                 <font>
+                     <Font size="15.0" />
+                 </font>
+             </Label>
+             <Label fx:id="myMinuteLabel" prefHeight="28.0" prefWidth="17.0" text="99">
+                 <font>
+                     <Font size="15.0" />
+                 </font>
+             </Label>
+             <Label prefHeight="28.0" prefWidth="5.0" text=":">
+                 <font>
+                     <Font size="15.0" />
+                 </font>
+             </Label>
+             <Label fx:id="mySecondsLabel" prefHeight="28.0" prefWidth="17.0" text="99">
+                 <font>
+                     <Font size="15.0" />
+                 </font>
+             </Label>
+             <opaqueInsets>
+                 <Insets />
+             </opaqueInsets>
+         </HBox>
     </Pane>
 </AnchorPane>

@@ -1,8 +1,10 @@
 package com.kass.vocalanalysistool.view;
 
 import com.kass.vocalanalysistool.common.ChangeEvents;
+import com.kass.vocalanalysistool.common.StageNames;
 import com.kass.vocalanalysistool.model.Recorder;
 import com.kass.vocalanalysistool.view.util.StageFactory;
+import com.kass.vocalanalysistool.view.util.StageRegistry;
 import com.kass.vocalanalysistool.workflow.OpenAudioDataScene;
 import com.kass.vocalanalysistool.workflow.PythonRunnerService;
 import java.beans.PropertyChangeEvent;
@@ -21,6 +23,9 @@ import javafx.stage.Stage;
 
 public class AudioRecordingController implements PropertyChangeListener {
 
+
+    @FXML
+    private Button myPlayButton;
     /**
      * The close button.
      */
@@ -82,7 +87,7 @@ public class AudioRecordingController implements PropertyChangeListener {
      * The path of the audio file.
      */
     private final Path myAudioPath = Path.of(System.getProperty("user.home"),
-                    "VocalAnalysisTool", "Vocal_Sample.wav");
+            "VocalAnalysisTool", "Vocal_Sample.wav");
 
     /**
      * This component's stage.
@@ -96,6 +101,8 @@ public class AudioRecordingController implements PropertyChangeListener {
     @FXML
     public void initialize() {
         reset();
+
+
         myAnalyzeButton.setDisable(true);
         MY_RECORDER.addPropertyChangeListener(this);
         this.addPropertyChangeListener(MY_RECORDER);
@@ -110,6 +117,7 @@ public class AudioRecordingController implements PropertyChangeListener {
     private void handleRecordBtn() {
         myRecordBtn.setDisable(true);
         myStopBtn.setDisable(false);
+
         reset();
         myChanges.firePropertyChange(ChangeEvents.START_RECORDING.toString(), null, true);
     }
@@ -123,6 +131,16 @@ public class AudioRecordingController implements PropertyChangeListener {
         myRecordBtn.setDisable(false);
         myAnalyzeButton.setDisable(false);
         myStopBtn.setDisable(true);
+        myPlayButton.setDisable(false);
+    }
+
+    @FXML
+    private void handlePlayBtn() {
+        reset();
+        myChanges.firePropertyChange(ChangeEvents.PLAY_RECORDING.name(), null, true);
+        myStopBtn.setDisable(false);
+        myPlayButton.setDisable(true);
+        myRecordBtn.setDisable(true);
     }
 
     /**
@@ -132,24 +150,25 @@ public class AudioRecordingController implements PropertyChangeListener {
     private void handleCloseBtn() {
         myStage = (Stage) myCloseBtn.getScene().getWindow();
         myChanges.firePropertyChange(ChangeEvents.STOP_RECORDING.name(), null, true);
-
-        final Stage sfaStage = StageFactory.buildStage(this,
-                "SelectAudioFile.fxml",
-                "Select Audio File",
-                false);
-
-        sfaStage.show();
-        myStage.close();
-
         reset();
         MY_RECORDER.removePropertyChangeListener(this);
         MY_RUNNER_SERVICE.removePropertyChangeListener(this);
         myChanges.removePropertyChangeListener(MY_RECORDER);
+        myStage.close();
+
     }
 
     @FXML
     private void handleAnalyzeBtn() {
         myStage = (Stage) myAnalyzeButton.getScene().getWindow();
+
+        if (StageRegistry.isOpen(StageNames.AUDIO_DATA.name())) {
+            StageRegistry.getStage(StageNames.AUDIO_DATA.name()).close();
+            if (StageRegistry.isOpen(StageNames.USER_ANALYSIS.name())) {
+                StageRegistry.getStage(StageNames.USER_ANALYSIS.name()).close();
+            }
+        }
+
         try {
 
             if (!Files.exists(myAudioPath)) {
@@ -157,10 +176,6 @@ public class AudioRecordingController implements PropertyChangeListener {
             }
 
             MY_RUNNER_SERVICE.runScript(String.valueOf(myAudioPath));
-            myStage = (Stage) myAnalyzeButton.getScene().getWindow();
-            MY_RECORDER.removePropertyChangeListener(this);
-            myStage.close();
-
 
         } catch (final IOException theEvent) {
             final Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -171,20 +186,20 @@ public class AudioRecordingController implements PropertyChangeListener {
 
             alert.setTitle("Vocal Sample Audio File Not Found!");
             alert.setContentText("""
-            Something happened and was unable to locate
-            the audio sample.
-            """);
+                    Something happened and was unable to locate
+                    the audio sample.
+                    """);
+            alertStage.setAlwaysOnTop(true);
             alert.showAndWait();
 
-            final Stage reOpenStage = StageFactory.buildStage(this,
+            StageRegistry.show(StageNames.VOICE_RECORDING.name(), () ->
+                    StageFactory.buildStage(this,
                     "AudioRecording.fxml",
                     "Voice Recorder",
-                    false);
-            reOpenStage.show();
-            myStage.close();
-            MY_RECORDER.removePropertyChangeListener(this);
-            MY_RUNNER_SERVICE.removePropertyChangeListener(this);
+                    false));
         }
+
+        reset();
 
     }
 
@@ -225,11 +240,22 @@ public class AudioRecordingController implements PropertyChangeListener {
             }
             case "WORKFLOW_RESULT": {
                 OpenAudioDataScene.openAnalysis(theEvent);
-                MY_RECORDER.removePropertyChangeListener(this);
-                MY_RUNNER_SERVICE.removePropertyChangeListener(this);
-                myChanges.removePropertyChangeListener(MY_RECORDER);
+                if (!StageRegistry.isOpen(StageNames.VOICE_RECORDING.name())) {
+                    MY_RECORDER.removePropertyChangeListener(this);
+                    MY_RUNNER_SERVICE.removePropertyChangeListener(this);
+                    myChanges.removePropertyChangeListener(MY_RECORDER);
+                }
+                break;
             }
+            case "PLAY_STATUS": {
 
+                if (!(boolean) theEvent.getNewValue()) {
+                    handleStopBtn();
+                }
+                break;
+
+            }
         }
+
     }
 }

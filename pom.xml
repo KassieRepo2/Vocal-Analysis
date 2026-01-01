@@ -5,9 +5,9 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.kass</groupId>
-    <artifactId>VocalAnalysisTool</artifactId>
-    <version>1.0-SNAPSHOT</version>
-    <name>VocalAnalysisTool</name>
+    <artifactId>VocalAnalysis</artifactId>
+    <version>2.3-SNAPSHOT</version>
+    <name>VocalAnalysis</name>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -26,6 +26,12 @@
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-media</artifactId>
+            <version>21.0.2</version>
+        </dependency>
+
         <!-- Logging -->
         <dependency>
             <groupId>org.slf4j</groupId>
@@ -128,6 +134,8 @@
                     <argLine>--enable-native-access=org.xerial.sqlitejdbc</argLine>
                 </configuration>
             </plugin>
+
+
         </plugins>
     </build>
 </project>

@@ -36,7 +36,7 @@
       <!--Label asking to select audio file-->
       <Label alignment="CENTER" contentDisplay="CENTER" layoutX="121.0" layoutY="226.0" prefHeight="38.0" prefWidth="222.0" text="Select Your Audio File" textAlignment="CENTER">
          <font>
-            <Font name="Calibri Italic" size="18.0" />
+            <Font name="Calibre Italic" size="18.0" />
          </font>
       </Label>
       <Label layoutX="79.0" prefHeight="131.0" prefWidth="305.0" text="Vocal Analysis">
@@ -86,7 +86,7 @@
          <Button fx:id="myExitButton" styleClass="saf_exit_btn" alignment="CENTER" contentDisplay="CENTER"
                  mnemonicParsing="false"
                  onAction="#handleExit" prefHeight="38.0" prefWidth="102.0"
-                 text="Exit" textAlignment="CENTER">
+                 text="Close" textAlignment="CENTER">
             <font>
                <Font size="17.0"/>
             </font>

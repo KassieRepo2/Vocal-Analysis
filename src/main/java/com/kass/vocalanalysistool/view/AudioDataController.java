@@ -1,16 +1,30 @@
 package com.kass.vocalanalysistool.view;
 
+import com.kass.vocalanalysistool.common.ChangeEvents;
+import com.kass.vocalanalysistool.common.StageNames;
 import com.kass.vocalanalysistool.model.UserSampleDatabase;
 import com.kass.vocalanalysistool.view.util.StageFactory;
+import com.kass.vocalanalysistool.view.util.StageRegistry;
+import com.kass.vocalanalysistool.workflow.OpenAudioDataScene;
+import com.kass.vocalanalysistool.workflow.PythonRunnerService;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.IOException;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.StackPane;
+import javafx.scene.shape.Circle;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
-public class AudioDataController {
+public class AudioDataController implements PropertyChangeListener {
 
     /**
      * The formant database object.
@@ -22,6 +36,12 @@ public class AudioDataController {
      */
     @FXML
     public Button myAnalyzeRecordingBtn;
+
+    /**
+     * The scatter plot container
+     */
+    @FXML
+    public StackPane myScatterPlotContainer;
 
     /**
      * The scatterplot image container
@@ -41,12 +61,38 @@ public class AudioDataController {
     private Stage myStage;
 
     /**
+     * The python runner
+     */
+
+    private final PythonRunnerService myPythonScript = new PythonRunnerService();
+
+    /**
+     * The zoom lens
+     */
+    private ImageView lensView;
+
+    /**
+     * The lens diameter
+     */
+    private static final double LENS_DIAMETER = 100;
+
+    /**
+     * The zoom magnification
+     */
+    private static final double ZOOM = 1.5;
+
+    /**
      * Initializes the scene prior to showcasing it.
      */
     @FXML
     private void initialize() {
 
         myScatterPlotImage.setImage(new Image(new ByteArrayInputStream(myDataBase.getScatterPlot())));
+
+        setUpZoomView(myScatterPlotImage);
+
+
+        myPythonScript.addPropertyChangeListener(this);
 
         myInformationLabel.setText(
                 """    
@@ -153,22 +199,94 @@ public class AudioDataController {
                         """
         );
 
+    }
 
+    /**
+     * Sets up the magnifying cursor for the formant graph.
+     *
+     * @param imageView The formant graph.
+     */
+    private void setUpZoomView(final ImageView imageView) {
+        // Create lens overlay
+        lensView = new ImageView(imageView.getImage());
+        lensView.setFitWidth(LENS_DIAMETER);
+        lensView.setFitHeight(LENS_DIAMETER);
+        lensView.setPreserveRatio(false);
+
+        final Circle clip = new Circle(LENS_DIAMETER / 2.0);
+        clip.setCenterX(LENS_DIAMETER / 2.0);
+        clip.setCenterY(LENS_DIAMETER / 2.0);
+        lensView.setClip(clip);
+
+        lensView.setVisible(false);
+        lensView.setMouseTransparent(true);
+
+        myScatterPlotContainer.getChildren().add(lensView);
+
+        imageView.setOnMouseMoved(e -> {
+
+            lensView.setVisible(true);
+
+            lensView.setTranslateX(e.getX() - imageView.getBoundsInLocal().getWidth() / 2.0);
+            lensView.setTranslateY(e.getY() - imageView.getBoundsInLocal().getHeight() / 2.0);
+
+            final Image img = imageView.getImage();
+            final double viewW = imageView.getBoundsInLocal().getWidth();
+            final double viewH = imageView.getBoundsInLocal().getHeight();
+
+            final double mx = e.getX();
+            final double my = e.getY();
+
+            final double px = (mx / viewW) * img.getWidth();
+            final double py = (my / viewH) * img.getHeight();
+
+            final double vw = img.getWidth() / (ZOOM * (viewW / LENS_DIAMETER));
+            final double vh = img.getHeight() / (ZOOM * (viewH / LENS_DIAMETER));
+
+            final double vx = clamp(px - vw / 2.0, 0, img.getWidth() - vw);
+            final double vy = clamp(py - vh / 2.0, 0, img.getHeight() - vh);
+
+            lensView.setViewport(new Rectangle2D(vx, vy, vw, vh));
+        });
+
+        imageView.setOnMouseExited(e -> lensView.setVisible(false));
+    }
+
+    /**
+     * Sets the boundary for the view port to keep it only on the image.
+     *
+     * @param v the current mouse position converted into image coordinates.
+     * @param min The smallest boundary that the view port is allowed in
+     * @param max The greatest value that the view port is allowed in
+     * @return The greatest smallest value that is set as a boundary for the viewport.
+     */
+    private static double clamp(final double v, final double min, final double max) {
+        return Math.max(min, Math.min(max, v));
     }
 
     /**
      * Opens the analysis scene where it breaks down formant data and outputs gender perception
      */
     @FXML
-    private void handleAnalyzeButton() {
-        myStage = (Stage) myAnalyzeRecordingBtn.getScene().getWindow();
+    private void handleAnalyzeNewRecordingButton() throws IOException {
+        myStage = (Stage) myInformationLabel.getScene().getWindow();
 
-        final Stage userAnalysisStage = StageFactory.buildStage(this,
-                "UserAnalysis.fxml",
-                "User Data Summary",
-                false);
-        userAnalysisStage.show();
-        myStage.close();
+        final FileChooser fileChooser = new FileChooser();
+
+        fileChooser.setTitle("Select Audio File");
+
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("WAV Audio Files", "*.wav"),
+                new FileChooser.ExtensionFilter("AIFF Audio Files", "*.aiff"));
+
+        final File file = fileChooser.showOpenDialog(myStage);
+
+        if (file != null) {
+            final String path = file.getAbsolutePath();
+
+            myPythonScript.runScript(path);
+
+        }
     }
 
     /**
@@ -176,33 +294,15 @@ public class AudioDataController {
      */
     @FXML
     private void handleRecordNewSample() {
-        myStage = (Stage) myInformationLabel.getScene().getWindow();
 
-        final Stage audioRecorderStage = StageFactory.buildStage(this,
-                "AudioRecording.fxml",
-                "Voice Recorder",
-                false
+        StageRegistry.show(StageNames.VOICE_RECORDING.name(), () ->
+                StageFactory.buildStage(this,
+                        "AudioRecording.fxml",
+                        "Voice Recorder",
+                        false)
         );
-
-        audioRecorderStage.show();
-        myStage.close();
     }
 
-
-    /**
-     * Reopens a new selectAudioFileController scene
-     */
-    @FXML
-    private void handleNewRecordingButton() {
-        myStage = (Stage) myInformationLabel.getScene().getWindow();
-
-        final Stage safStage = StageFactory.buildStage(this,
-                "SelectAudioFile.fxml",
-                "Select Audio File",
-                false);
-        safStage.show();
-        myStage.close();
-    }
 
     /**
      * Opens the UserGuide scene.
@@ -227,7 +327,20 @@ public class AudioDataController {
     private void handleCloseProgram() {
         myStage = (Stage) myInformationLabel.getScene().getWindow();
         myStage.close();
+        Platform.exit();
     }
 
 
+    @Override
+    public void propertyChange(final PropertyChangeEvent theEvent) {
+
+        if (theEvent.getPropertyName().equals(ChangeEvents.WORKFLOW_RESULT.name())) {
+            Platform.runLater(() -> {
+                System.out.println(theEvent.getNewValue());
+                OpenAudioDataScene.openAnalysis(theEvent);
+                myPythonScript.removePropertyChangeListener(this);
+
+            });
+        }
+    }
 }

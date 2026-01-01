@@ -13,7 +13,6 @@ import java.beans.PropertyChangeSupport;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
-import javafx.scene.control.Alert;
 import javafx.util.Duration;
 import javax.sound.sampled.AudioFileFormat;
 import javax.sound.sampled.AudioFormat;
@@ -22,11 +21,13 @@ import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.DataLine;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.TargetDataLine;
+import javafx.scene.media.MediaPlayer;
+import javafx.scene.media.Media;
 
 /**
  * Records vocal audio with the users default microphone.
  *
- * @author  Kassie Whitney
+ * @author Kassie Whitney
  * @version 12/25/2025
  */
 public class Recorder implements PropertyChangeListener {
@@ -92,6 +93,10 @@ public class Recorder implements PropertyChangeListener {
      */
     private static File AUDIO_FILE;
 
+    private Path myAudioPath;
+    private MediaPlayer myPlayer;
+
+
     /**
      * The constructor
      */
@@ -101,10 +106,10 @@ public class Recorder implements PropertyChangeListener {
             LINE = (TargetDataLine) AudioSystem.getLine(INFO);
 
             INPUT_STREAM = new AudioInputStream(LINE);
-            final Path audioPath = Path.of(System.getProperty("user.home"),
+            myAudioPath = Path.of(System.getProperty("user.home"),
                     "VocalAnalysisTool", "Vocal_Sample.wav");
-            Files.createDirectories(audioPath.getParent());
-            AUDIO_FILE = audioPath.toFile();
+            Files.createDirectories(myAudioPath.getParent());
+            AUDIO_FILE = myAudioPath.toFile();
 
         } catch (final LineUnavailableException theException) {
             throwLineError();
@@ -116,7 +121,7 @@ public class Recorder implements PropertyChangeListener {
     /**
      * Starts the audio timer.
      */
-    public void startTimer() {
+    private void startTimer() {
 
         if (myTimeLine == null) {
             myTimeLine = new Timeline(new KeyFrame(Duration.seconds(1
@@ -167,7 +172,7 @@ public class Recorder implements PropertyChangeListener {
     /**
      * Starts the audio recording.
      */
-    public void startRecording() {
+    private void startRecording() {
         try {
             LINE.open(FORMAT);
             LINE.start();
@@ -177,7 +182,7 @@ public class Recorder implements PropertyChangeListener {
 
                     AudioSystem.write(INPUT_STREAM, AudioFileFormat.Type.WAVE, AUDIO_FILE);
                 } catch (final IOException theException) {
-                   LOGGER.log(Level.SEVERE, theException.getMessage());
+                    LOGGER.log(Level.SEVERE, theException.getMessage());
                 }
             }, "wav-writer");
 
@@ -192,9 +197,46 @@ public class Recorder implements PropertyChangeListener {
     /**
      * Stops the recording.
      */
-    public void stopRecording() {
+    private void stopRecording() {
         LINE.stop();
+        LINE.close();
         stopTimer();
+    }
+
+    /**
+     * Plays back the audio recording.
+     */
+    private void playRecording() {
+
+        final File recording = new File(myAudioPath.toString());
+        final Media media = new Media(recording.toURI().toString());
+        myPlayer = new MediaPlayer(media);
+
+        myPlayer.play();
+
+        final boolean[] last = {false};
+
+        Runnable publish = () -> {
+            boolean now = myPlayer.getStatus() == MediaPlayer.Status.PLAYING;
+            if (now != last[0]) {
+                last[0] = now;
+                myChanges.firePropertyChange(ChangeEvents.PLAY_STATUS.name(), null, now);
+            }
+        };
+
+        myPlayer.statusProperty().addListener((obs, oldStatus, newStatus) -> {
+            publish.run();
+        });
+
+        myPlayer.setOnEndOfMedia(() -> {
+            myPlayer.stop();
+            publish.run();
+        });
+
+        myPlayer.setOnError(publish);
+
+        myPlayer.play();
+        publish.run();
     }
 
 
@@ -237,6 +279,7 @@ public class Recorder implements PropertyChangeListener {
 
     /**
      * Adds the seen as a listener for this scene's changes.
+     *
      * @param theListener The scene that needs to be notified of changes.
      */
     public void removePropertyChangeListener(final PropertyChangeListener theListener) {
@@ -253,8 +296,16 @@ public class Recorder implements PropertyChangeListener {
                 break;
             }
             case "STOP_RECORDING": {
-                stopTimer();
+                if (myPlayer != null) {
+                    myPlayer.stop();
+                }
                 stopRecording();
+                break;
+            }
+            case "PLAY_RECORDING": {
+                startTimer();
+                playRecording();
+                break;
             }
         }
     }

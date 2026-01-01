@@ -1,7 +1,9 @@
 package com.kass.vocalanalysistool.view;
 
 import com.kass.vocalanalysistool.common.ChangeEvents;
+import com.kass.vocalanalysistool.common.StageNames;
 import com.kass.vocalanalysistool.view.util.StageFactory;
+import com.kass.vocalanalysistool.view.util.StageRegistry;
 import com.kass.vocalanalysistool.workflow.OpenAudioDataScene;
 import com.kass.vocalanalysistool.workflow.PythonRunnerService;
 import java.beans.PropertyChangeEvent;
@@ -10,6 +12,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.stage.FileChooser;
@@ -24,6 +27,7 @@ import javafx.stage.Stage;
  * @version 9.3.25
  */
 public class SelectAudioFileController implements PropertyChangeListener {
+
 
     /**
      * The logger object for debugging.
@@ -51,7 +55,7 @@ public class SelectAudioFileController implements PropertyChangeListener {
     /**
      * The python script utilities class.
      */
-    private final static PythonRunnerService myPyScript = new PythonRunnerService();
+    private final PythonRunnerService myPyScript = new PythonRunnerService();
 
     /**
      * Used to initialize certain features.
@@ -86,7 +90,7 @@ public class SelectAudioFileController implements PropertyChangeListener {
             logger.info(() -> "Path: " + path);
 
             myPyScript.runScript(path);
-            thisStage.close();
+            thisStage.hide();
         }
     }
 
@@ -98,14 +102,14 @@ public class SelectAudioFileController implements PropertyChangeListener {
     private void handleRecordNewAudio() {
         final Stage thisStage = (Stage) myRecordBtn.getScene().getWindow();
 
-        final Stage audioRecorderStage = StageFactory.buildStage(this,
-                "AudioRecording.fxml",
-                "Voice Recorder",
-                false);
-        audioRecorderStage.show();
-        thisStage.close();
+        final Stage recorderStage = StageRegistry.show(StageNames.VOICE_RECORDING.name(), () ->
+                StageFactory.buildStage(this,
+                        "AudioRecording.fxml",
+                        "Voice Recorder",
+                        false));
+        recorderStage.toFront();
+        thisStage.hide();
         myPyScript.removePropertyChangeListener(this);
-
     }
 
     /**
@@ -127,9 +131,13 @@ public class SelectAudioFileController implements PropertyChangeListener {
     @Override
     public void propertyChange(final PropertyChangeEvent theEvent) {
         if (ChangeEvents.WORKFLOW_RESULT.name().equals(theEvent.getPropertyName())) {
-            OpenAudioDataScene.openAnalysis(theEvent);
+            Platform.runLater(() -> {
+                logger.log(Level.INFO, "Opening Audio DataScene");
+                OpenAudioDataScene.openAnalysis(theEvent);
+            });
             myPyScript.removePropertyChangeListener(this);
-
         }
     }
+
+
 }

@@ -2,6 +2,8 @@ package com.kass.vocalanalysistool.view.util;
 
 import java.io.IOException;
 import java.util.Objects;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
@@ -14,54 +16,31 @@ import javafx.stage.Stage;
  * @version 12/28/2025
  */
 public class StageFactory {
+
+    private final static Logger LOGGER = Logger.getLogger(StageFactory.class.getName());
+
     private StageFactory() {
     }
 
-    /**
-     * Builds the stage of the next scene.
-     *
-     * @param theCurrentClass The current class that is building the stage. (this).
-     * @param theFxmlName The name of the fxml file. Must be in the gui directory.
-     * @param theStageTitle The title of the stage being built.
-     * @param theStageIconPath The relative path of the icon file.
-     * @param theSetResizable True makes the stage resizable, false makes the size static.
-     * @return A stage object with all the corresponding attributes.
-     */
-    public static Stage buildStage(final Object theCurrentClass, final String theFxmlName,
-                                   final String theStageTitle, final String theStageIconPath,
-                                   final boolean theSetResizable) {
-        final FXMLLoader fxmlLoader = new FXMLLoader(theCurrentClass.getClass().
-                getResource("/com/kass/vocalanalysistool/gui/" + theFxmlName));
-        try {
-
-            final Scene scene = new Scene(fxmlLoader.load());
-            final Stage stage = new Stage();
-            stage.setScene(scene);
-            stage.setTitle(theStageTitle);
-            stage.getIcons().add(new Image(Objects.requireNonNull(theCurrentClass.getClass().
-                    getResourceAsStream(theStageIconPath))));
-            stage.setResizable(theSetResizable);
-            return stage;
-
-        } catch (final IOException theException) {
-            throw new RuntimeException("The scene failed to load!");
-        }
-    }
 
     /**
      * Builds the stage of the next scene.
      * <P>Sets a default icon to the stage</P>
      *
      * @param theCurrentClass The current class that is building the stage. (this).
-     * @param theFxmlName The name of the fxml file. Must be in the gui directory.
-     * @param theStageTitle The title of the stage being built.
+     * @param theFxmlName     The name of the fxml file. Must be in the gui directory.
+     * @param theStageTitle   The title of the stage being built.
      * @param theSetResizable True makes the stage resizable, false makes the size static.
      * @return A stage object with all the corresponding attributes.
      */
-    public static Stage buildStage(final Object theCurrentClass, final String theFxmlName,
-                                   final String theStageTitle, final boolean theSetResizable) {
+    public static Stage buildStage(final Object theCurrentClass,
+                                   final String theFxmlName,
+                                   final String theStageTitle,
+                                   final boolean theSetResizable) {
+
         final FXMLLoader fxmlLoader = new FXMLLoader(theCurrentClass.getClass().
                 getResource("/com/kass/vocalanalysistool/gui/" + theFxmlName));
+
         try {
 
             final Scene scene = new Scene(fxmlLoader.load());
@@ -69,12 +48,101 @@ public class StageFactory {
             stage.setScene(scene);
             stage.setTitle(theStageTitle);
             stage.getIcons().add(new Image(Objects.requireNonNull(theCurrentClass.getClass().
-                    getResourceAsStream("com/kass/vocalanalysistool/icons/vocal_analysis_icon.png"))));
+                    getResourceAsStream(
+                            "/com/kass/vocalanalysistool/icons/vocal_analysis_icon.png"))));
+
             stage.setResizable(theSetResizable);
             return stage;
 
         } catch (final IOException theException) {
+            LOGGER.log(Level.SEVERE, "[Stage Factory] The FXMLoader failed: ");
+            LOGGER.log(Level.SEVERE, "/com/kass/vocalanalysistool/gui/" + theFxmlName, theException);
+
+            Throwable cause = theException.getCause();
+            while (cause != null) {
+                cause = cause.getCause();
+            }
+
+
             throw new RuntimeException("The scene failed to load!");
         }
+    }
+
+
+    /**
+     * Builds the stage of the next scene.
+     *
+     * @param theCurrentClass  The current class that is building the stage. (this).
+     * @param theFxmlName      The name of the fxml file. Must be in the gui directory.
+     * @param theStageTitle    The title of the stage being built.
+     * @param theStageIconPath The relative path of the icon file.
+     * @param theSetResizable  True makes the stage resizable, false makes the size static.
+     * @return A stage object with all the corresponding attributes.
+     */
+    public static Stage buildStage(final Object theCurrentClass,
+                                   final String theFxmlName,
+                                   final String theStageTitle,
+                                   final String theStageIconPath,
+                                   final boolean theSetResizable) {
+
+
+        final Stage stage = buildStage(theCurrentClass, theFxmlName, theStageTitle,
+                theSetResizable);
+
+        stage.getIcons().add(new Image(Objects.requireNonNull(theCurrentClass.getClass().getResourceAsStream(theStageIconPath))));
+
+        return stage;
+    }
+
+
+    /**
+     * Builds the stage of the next scene.
+     * <P>Sets a default icon to the stage</P>
+     * <P>Customize the stage screen location.</P>
+     *
+     *
+     * @param theCurrentClass The current class that is building the stage. (this).
+     * @param theFxmlName     The name of the fxml file. Must be in the gui directory.
+     * @param theStageTitle   The title of the stage being built.
+     * @param theSetResizable True makes the stage resizable, false makes the size static.
+     * @return A stage object with all the corresponding attributes.
+     */
+    public static Stage buildStage(final Object theCurrentClass,
+                                   final String theFxmlName,
+                                   final String theStageTitle,
+                                   final boolean theSetResizable,
+                                   final double theXPosition,
+                                   final double theYPosition) {
+        final Stage stage = buildStage(theCurrentClass, theFxmlName, theStageTitle, theSetResizable);
+        stage.setX(theXPosition);
+        stage.setY(theYPosition);
+        return stage;
+    }
+
+    /**
+     * Builds the stage of the next scene.
+     * <P>Customize the stage screen location.</P>
+     *
+     * @param theCurrentClass  The current class that is building the stage. (this).
+     * @param theFxmlName      The name of the fxml file. Must be in the gui directory.
+     * @param theStageTitle    The title of the stage being built.
+     * @param theStageIconPath The relative path of the icon file.
+     * @param theSetResizable  True makes the stage resizable, false makes the size static.
+     * @return A stage object with all the corresponding attributes.
+     */
+    public static Stage buildStage(final Object theCurrentClass,
+                                   final String theFxmlName,
+                                   final String theStageTitle,
+                                   final String theStageIconPath,
+                                   final boolean theSetResizable,
+                                   final double theXPosition,
+                                   final double theYPosition) {
+
+        final Stage stage = buildStage(theCurrentClass, theFxmlName, theStageTitle, theStageIconPath, theSetResizable);
+
+        stage.setX(theXPosition);
+        stage.setY(theYPosition);
+
+        return stage;
     }
 }
