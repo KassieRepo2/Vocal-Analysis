@@ -1,0 +1,806 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ArtifactsWorkspaceSettings">
+    <artifacts-to-build>
+      <artifact name="VocalAnalysisTool:jar" />
+    </artifacts-to-build>
+  </component>
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="NONE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="4417c054-6fb1-4ee5-ace1-3c4266a437d7" name="Changes" comment="Fixed directory issue">
+      <change beforePath="$PROJECT_DIR$/Vocal_Analysis_Script.py" beforeDir="false" afterPath="$PROJECT_DIR$/Vocal_Analysis_Script.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/VocalAnalysisToolKit/Vocal_Analysis_Script.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/VocalAnalysisToolKit/Vocal_Analysis_Script.py" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ClangdSettings">
+    <option name="formatViaClangd" value="false" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="CSS File" />
+        <option value="Python Script" />
+        <option value="FxmlFile" />
+        <option value="Class" />
+        <option value="Enum" />
+      </list>
+    </option>
+  </component>
+  <component name="FindBugs-IDEA-Workspace">
+    <toolWindowEditorPreview>false</toolWindowEditorPreview>
+  </component>
+  <component name="Git.Settings">
+    <option name="PUSH_AUTO_UPDATE" value="true" />
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="ROOT_SYNC" value="SYNC" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;Kjw072892&quot;
+  }
+}</component>
+  <component name="GithubDefaultAccount">
+    <option name="defaultAccountId" value="6acf9d74-5ac9-448d-899f-20d0fb2582e9" />
+  </component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/Kjw072892/VocalAnalysis_JavaFX.git&quot;,
+    &quot;accountId&quot;: &quot;2187a731-b4ef-4fe9-abf5-8c02b8ad8b82&quot;
+  }
+}</component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="jar://$USER_HOME$/Program Files/Java/jdk-24/lib/src.zip!/java.base/java/lang/Process.java" root0="SKIP_INSPECTION" />
+    <setting file="jar://$USER_HOME$/Program Files/Java/jdk-24/lib/src.zip!/java.base/java/lang/ProcessBuilder.java" root0="SKIP_INSPECTION" />
+    <setting file="jar://$MAVEN_REPOSITORY$/com/google/code/gson/gson/2.11.0/gson-2.11.0.jar!/com/google/gson/Gson.class" root0="SKIP_INSPECTION" />
+  </component>
+  <component name="MavenImportPreferences">
+    <option name="generalSettings">
+      <MavenGeneralSettings>
+        <option name="mavenHomeTypeForPersistence" value="WRAPPER" />
+      </MavenGeneralSettings>
+    </option>
+  </component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 5
+}</component>
+  <component name="ProjectId" id="2zRPuZHDfqh6CugVKWquxxgTiuV" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Application.AudioDataController.executor&quot;: &quot;Run&quot;,
+    &quot;Application.Main.executor&quot;: &quot;Run&quot;,
+    &quot;Application.UserFormantDatabase.executor&quot;: &quot;Run&quot;,
+    &quot;Application.UsersAnalysisController.executor&quot;: &quot;Run&quot;,
+    &quot;Application.VocalAnalysisTool.executor&quot;: &quot;Run&quot;,
+    &quot;Maven.VocalAnalysisTool [org.apache.maven.plugins:maven-clean-plugin:2.5:clean].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.VocalAnalysisTool [org.apache.maven.plugins:maven-compiler-plugin:3.13.0:compile].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.VocalAnalysisTool [org.openjfx:javafx-maven-plugin:0.0.8:run].executor&quot;: &quot;Run&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;Python.Vocal_Analysis_Script (1).executor&quot;: &quot;Run&quot;,
+    &quot;Python.Vocal_Analysis_Script.executor&quot;: &quot;Run&quot;,
+    &quot;Python.test.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.cidr.known.project.marker&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.readMode.enableVisualFormatting&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;cf.first.check.clang-format&quot;: &quot;false&quot;,
+    &quot;cidr.known.project.marker&quot;: &quot;true&quot;,
+    &quot;extract.method.default.visibility&quot;: &quot;private&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/Kassi/OneDrive/Computer/Documents/GitHub/Vocal-Analysis&quot;,
+    &quot;list.type.of.created.stylesheet&quot;: &quot;CSS&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Artifacts&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.26436782&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;vcs.Git&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  },
+  &quot;keyToStringList&quot;: {
+    &quot;DatabaseDriversLRU&quot;: [
+      &quot;sqlite&quot;
+    ]
+  }
+}</component>
+  <component name="ReadonlyStatusHandler">
+    <option name="SHOW_DIALOG" value="false" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\Kassi\OneDrive\Computer\Documents\GitHub\Vocal-Analysis" />
+      <recent name="C:\Users\Kassi\OneDrive\Computer\Documents\GitHub\Vocal-Analysis\src\main\resources\VocalAnalysisToolKit" />
+      <recent name="C:\Users\Kassi\OneDrive\Computer\Documents\GitHub\Vocal-Analysis\src\main\resources\com\kass\vocalanalysistool\icons" />
+      <recent name="C:\Users\Kassi\OneDrive\Computer\Documents\GitHub\VocalAnalysis_JavaFX" />
+      <recent name="C:\Users\Kassi\OneDrive\Computer\Documents\GitHub\VocalAnalysis_JavaFX\assets\whiper_models" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\Kassi\OneDrive\Computer\Documents\GitHub\Vocal-Analysis\src\main\java\com\kass\vocalanalysistool\view" />
+      <recent name="C:\Users\Kassi\OneDrive\Computer\Documents\GitHub\Vocal-Analysis" />
+      <recent name="C:\Users\Kassi\OneDrive\Computer\Documents\GitHub\Vocal-Analysis\src\main\resources\VocalAnalysisToolKit" />
+      <recent name="C:\Users\Kassi\OneDrive\Computer\Documents\GitHub\Vocal-Analysis\src\main\resources\com\kass\vocalanalysistool\gui" />
+      <recent name="C:\Users\Kassi\OneDrive\Computer\Documents\GitHub\Vocal-Analysis\src\main\resources\com\kass\vocalanalysistool\icons" />
+    </key>
+    <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
+      <recent name="com.kass.vocalanalysistool" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Application.Main">
+    <configuration name="AudioDataController" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.kass.vocalanalysistool.view.AudioDataController" />
+      <module name="VocalAnalysisTool" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.kass.vocalanalysistool.view.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.kass.vocalanalysistool.controller.Main" />
+      <module name="VocalAnalysisTool" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.kass.vocalanalysistool.controller.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="UsersAnalysisController" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.kass.vocalanalysistool.view.UsersAnalysisController" />
+      <module name="VocalAnalysisTool" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.kass.vocalanalysistool.view.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="VocalAnalysisTool" type="Application" factoryName="Application">
+      <option name="ALTERNATIVE_JRE_PATH" value="24" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
+      <option name="MAIN_CLASS_NAME" value="com.kass.vocalanalysistool.controller.Main" />
+      <module name="VocalAnalysisTool" />
+      <option name="VM_PARAMETERS" value="--enable-native-access=javafx.graphics --enable-native-access=ALL-UNNAMED --enable-native-access=javafx.graphics" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Vocal_Analysis_Script (1)" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="VocalAnalysisTool" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/src/main/resources/VocalAnalysisToolKit" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/src/main/resources/VocalAnalysisToolKit/Vocal_Analysis_Script.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="Vocal_Analysis_Script" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="VocalAnalysisTool" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="SDK_NAME" value="Python 3.13 (Machine Learning)" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/src/main/VocalAnalysisToolKit" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/src/main/java/com/kass/vocalanalysistool/model/Vocal_Analysis_Script.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.Main" />
+        <item itemvalue="Python.Vocal_Analysis_Script (1)" />
+        <item itemvalue="Application.UsersAnalysisController" />
+        <item itemvalue="Application.AudioDataController" />
+        <item itemvalue="Python.Vocal_Analysis_Script" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-9823dce3aa75-fbdcb00ec9e3-intellij.indexing.shared.core-IU-251.26927.53" />
+        <option value="bundled-js-predefined-d6986cc7102b-09060db00ec0-JavaScript-IU-251.26927.53" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="4417c054-6fb1-4ee5-ace1-3c4266a437d7" name="Changes" comment="" />
+      <created>1751691136854</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1751691136854</updated>
+      <workItem from="1751691918481" duration="12000" />
+      <workItem from="1751712203098" duration="43000" />
+      <workItem from="1751860431218" duration="485000" />
+      <workItem from="1751860938980" duration="54000" />
+      <workItem from="1751861011030" duration="1864000" />
+      <workItem from="1751863059696" duration="4070000" />
+      <workItem from="1751908117979" duration="29000" />
+      <workItem from="1751920219411" duration="547000" />
+      <workItem from="1751923375641" duration="616000" />
+      <workItem from="1752099526918" duration="37000" />
+      <workItem from="1752124565919" duration="3739000" />
+      <workItem from="1752471740035" duration="121000" />
+      <workItem from="1752471871254" duration="1382000" />
+      <workItem from="1752473446456" duration="343000" />
+      <workItem from="1752474815489" duration="7173000" />
+      <workItem from="1752482216292" duration="5292000" />
+      <workItem from="1752512894593" duration="3080000" />
+      <workItem from="1752541012885" duration="16977000" />
+      <workItem from="1752559420759" duration="5873000" />
+      <workItem from="1752626814127" duration="603000" />
+      <workItem from="1752652013495" duration="1795000" />
+      <workItem from="1752714432407" duration="1446000" />
+      <workItem from="1752717608119" duration="624000" />
+      <workItem from="1752719428081" duration="1120000" />
+      <workItem from="1752721020469" duration="160000" />
+      <workItem from="1752721352830" duration="228000" />
+      <workItem from="1752721719566" duration="599000" />
+      <workItem from="1752799708604" duration="604000" />
+      <workItem from="1753131083266" duration="5560000" />
+      <workItem from="1753139555866" duration="18000" />
+      <workItem from="1753236679677" duration="660000" />
+      <workItem from="1753237478113" duration="2151000" />
+      <workItem from="1753244560867" duration="1057000" />
+      <workItem from="1753257797626" duration="41000" />
+      <workItem from="1753290012818" duration="25000" />
+      <workItem from="1753293451676" duration="37000" />
+      <workItem from="1753293503507" duration="9000" />
+      <workItem from="1756620455843" duration="798000" />
+      <workItem from="1756621269573" duration="7056000" />
+      <workItem from="1756670406695" duration="2011000" />
+      <workItem from="1756844941400" duration="18000" />
+      <workItem from="1756844969488" duration="51000" />
+      <workItem from="1756845031089" duration="1608000" />
+      <workItem from="1756846653193" duration="12249000" />
+      <workItem from="1756921541253" duration="12000" />
+      <workItem from="1756921565434" duration="72000" />
+      <workItem from="1756921648165" duration="14096000" />
+      <workItem from="1756936573471" duration="78000" />
+      <workItem from="1756936661154" duration="27064000" />
+      <workItem from="1757004803639" duration="33368000" />
+      <workItem from="1757113338558" duration="2170000" />
+      <workItem from="1757120128830" duration="19660000" />
+      <workItem from="1757385381668" duration="2822000" />
+      <workItem from="1757457337592" duration="20000" />
+      <workItem from="1759687873631" duration="127000" />
+      <workItem from="1759688012491" duration="412000" />
+      <workItem from="1759688454461" duration="11714000" />
+      <workItem from="1759704662088" duration="5706000" />
+      <workItem from="1760070276104" duration="97000" />
+      <workItem from="1761623832281" duration="765000" />
+      <workItem from="1762410519978" duration="3358000" />
+      <workItem from="1764041817445" duration="629000" />
+      <workItem from="1765923348816" duration="598000" />
+      <workItem from="1766637246270" duration="15848000" />
+      <workItem from="1766658837599" duration="3157000" />
+      <workItem from="1766685323603" duration="8507000" />
+      <workItem from="1766710344366" duration="14313000" />
+      <workItem from="1766725294374" duration="3071000" />
+      <workItem from="1766728395722" duration="3241000" />
+      <workItem from="1766770790595" duration="3612000" />
+      <workItem from="1766775108221" duration="13157000" />
+      <workItem from="1766788500868" duration="2791000" />
+      <workItem from="1766795867351" duration="252000" />
+      <workItem from="1766796152767" duration="24121000" />
+      <workItem from="1766826229354" duration="637000" />
+      <workItem from="1766868642562" duration="29406000" />
+      <workItem from="1766910197512" duration="1383000" />
+      <workItem from="1766911692409" duration="105000" />
+      <workItem from="1766943979597" duration="35361000" />
+      <workItem from="1766981103045" duration="8379000" />
+      <workItem from="1766989546372" duration="1643000" />
+      <workItem from="1767036099591" duration="64000" />
+      <workItem from="1767042293401" duration="25850000" />
+      <workItem from="1767127170700" duration="22524000" />
+      <workItem from="1767151378533" duration="7031000" />
+      <workItem from="1767159126018" duration="6050000" />
+      <workItem from="1767165459364" duration="14486000" />
+      <workItem from="1767224703786" duration="4199000" />
+      <workItem from="1767229100713" duration="176000" />
+      <workItem from="1767230536460" duration="1109000" />
+      <workItem from="1767232130385" duration="26886000" />
+      <workItem from="1767261744387" duration="5032000" />
+      <workItem from="1767267036388" duration="225000" />
+      <workItem from="1767306078288" duration="20780000" />
+      <workItem from="1767335767720" duration="393000" />
+      <workItem from="1767336208715" duration="6031000" />
+      <workItem from="1767383128213" duration="12537000" />
+      <workItem from="1767418977042" duration="11386000" />
+      <workItem from="1767430533879" duration="2089000" />
+      <workItem from="1767562738883" duration="82000" />
+      <workItem from="1767562848357" duration="1473000" />
+      <workItem from="1767564346938" duration="55000" />
+    </task>
+    <task id="LOCAL-00001" summary="added audio controller">
+      <option name="closed" value="true" />
+      <created>1751860620255</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1751860620255</updated>
+    </task>
+    <task id="LOCAL-00002" summary="added audio controller">
+      <option name="closed" value="true" />
+      <created>1751863116524</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1751863116525</updated>
+    </task>
+    <task id="LOCAL-00003" summary="added audio controller">
+      <option name="closed" value="true" />
+      <created>1751923726450</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1751923726450</updated>
+    </task>
+    <task id="LOCAL-00004" summary="added audio controller">
+      <option name="closed" value="true" />
+      <created>1751923934556</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1751923934556</updated>
+    </task>
+    <task id="LOCAL-00005" summary="added audio controller">
+      <option name="closed" value="true" />
+      <created>1752126960278</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1752126960278</updated>
+    </task>
+    <task id="LOCAL-00006" summary="Added python script">
+      <option name="closed" value="true" />
+      <created>1752478515245</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1752478515245</updated>
+    </task>
+    <task id="LOCAL-00007" summary="completed python script">
+      <option name="closed" value="true" />
+      <created>1752482872732</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1752482872732</updated>
+    </task>
+    <task id="LOCAL-00008" summary="completed python script">
+      <option name="closed" value="true" />
+      <created>1752486021162</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1752486021162</updated>
+    </task>
+    <task id="LOCAL-00009" summary="completed python script">
+      <option name="closed" value="true" />
+      <created>1752488588307</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1752488588307</updated>
+    </task>
+    <task id="LOCAL-00010" summary="completed python script">
+      <option name="closed" value="true" />
+      <created>1752544251624</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1752544251624</updated>
+    </task>
+    <task id="LOCAL-00011" summary="completed python script">
+      <option name="closed" value="true" />
+      <created>1752721578520</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1752721578520</updated>
+    </task>
+    <task id="LOCAL-00012" summary="moved files around">
+      <option name="closed" value="true" />
+      <created>1756846289853</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1756846289853</updated>
+    </task>
+    <task id="LOCAL-00013" summary="Java is now able to call on the python script (chatGPT) and the python script is now able to output detailed datapoints of the vocal sample to get the most accurate reading (chatGPT)">
+      <option name="closed" value="true" />
+      <created>1756951946851</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1756951946851</updated>
+    </task>
+    <task id="LOCAL-00014" summary="Added audacity to the distribution.">
+      <option name="closed" value="true" />
+      <created>1756966137983</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1756966137983</updated>
+    </task>
+    <task id="LOCAL-00015" summary="refactored the python script to get a better more accurate filteration system. Ready for ML model">
+      <option name="closed" value="true" />
+      <created>1757019687129</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1757019687129</updated>
+    </task>
+    <task id="LOCAL-00016" summary="refactored the python script to get a better more accurate filteration system. Ready for ML model">
+      <option name="closed" value="true" />
+      <created>1757019765242</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1757019765242</updated>
+    </task>
+    <task id="LOCAL-00017" summary="refactored the python script to get a better more accurate filteration system. Ready for ML model">
+      <option name="closed" value="true" />
+      <created>1757113079403</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1757113079403</updated>
+    </task>
+    <task id="LOCAL-00018" summary="Finished designing the 2nd scene">
+      <option name="closed" value="true" />
+      <created>1757113130614</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1757113130614</updated>
+    </task>
+    <task id="LOCAL-00019" summary="Finished designing the 2nd scene">
+      <option name="closed" value="true" />
+      <created>1757113478576</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1757113478576</updated>
+    </task>
+    <task id="LOCAL-00020" summary="Finished designing the 2nd scene">
+      <option name="closed" value="true" />
+      <created>1765923426159</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1765923426159</updated>
+    </task>
+    <task id="LOCAL-00021" summary="Finished designing the 2nd scene">
+      <option name="closed" value="true" />
+      <created>1765923446403</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1765923446403</updated>
+    </task>
+    <task id="LOCAL-00022" summary="Finished designing the 2nd scene">
+      <option name="closed" value="true" />
+      <created>1766639158393</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1766639158393</updated>
+    </task>
+    <task id="LOCAL-00023" summary="Completed the machine learning portion, still need several hundred samples of feminine and masculine voices to ensure a high confidence interval.">
+      <option name="closed" value="true" />
+      <created>1766648640553</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1766648640553</updated>
+    </task>
+    <task id="LOCAL-00024" summary="Added components and new scenes">
+      <option name="closed" value="true" />
+      <created>1766695660673</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1766695660673</updated>
+    </task>
+    <task id="LOCAL-00025" summary="updated readme">
+      <option name="closed" value="true" />
+      <created>1766696307211</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1766696307211</updated>
+    </task>
+    <task id="LOCAL-00026" summary="Completed main functionality of the recorder model as well as the recording scene">
+      <option name="closed" value="true" />
+      <created>1766724738224</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1766724738224</updated>
+    </task>
+    <task id="LOCAL-00027" summary="Moved the python script from the SAF controller and placed it in the utilities folder.">
+      <option name="closed" value="true" />
+      <created>1766727986717</created>
+      <option name="number" value="00027" />
+      <option name="presentableId" value="LOCAL-00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1766727986717</updated>
+    </task>
+    <task id="LOCAL-00028" summary="Refactored some code: removed unused imports, added comments and javadoc, updated wording on the SAF-scene.">
+      <option name="closed" value="true" />
+      <created>1766731617064</created>
+      <option name="number" value="00028" />
+      <option name="presentableId" value="LOCAL-00028" />
+      <option name="project" value="LOCAL" />
+      <updated>1766731617064</updated>
+    </task>
+    <task id="LOCAL-00029" summary="Refactored the python script that separates the gender label and the score into 2 distinct columns for better future access to ui elements">
+      <option name="closed" value="true" />
+      <created>1766778000249</created>
+      <option name="number" value="00029" />
+      <option name="presentableId" value="LOCAL-00029" />
+      <option name="project" value="LOCAL" />
+      <updated>1766778000249</updated>
+    </task>
+    <task id="LOCAL-00030" summary="Refactored the python script that separates the gender label and the score into 2 distinct columns for better future access to ui elements">
+      <option name="closed" value="true" />
+      <created>1766778006777</created>
+      <option name="number" value="00030" />
+      <option name="presentableId" value="LOCAL-00030" />
+      <option name="project" value="LOCAL" />
+      <updated>1766778006777</updated>
+    </task>
+    <task id="LOCAL-00031" summary="Refactored the class names and removed unused methods and fields.">
+      <option name="closed" value="true" />
+      <created>1766781216507</created>
+      <option name="number" value="00031" />
+      <option name="presentableId" value="LOCAL-00031" />
+      <option name="project" value="LOCAL" />
+      <updated>1766781216507</updated>
+    </task>
+    <task id="LOCAL-00032" summary="added an open audio data scene to the workflow folder as a static class to be called by either the SAF or Recorder scene">
+      <option name="closed" value="true" />
+      <created>1766785502263</created>
+      <option name="number" value="00032" />
+      <option name="presentableId" value="LOCAL-00032" />
+      <option name="project" value="LOCAL" />
+      <updated>1766785502263</updated>
+    </task>
+    <task id="LOCAL-00033" summary="Refactored the recording. Create a new directory to store the recordings to make it more comfortable when the application gets packaged into an executable.">
+      <option name="closed" value="true" />
+      <created>1766788735036</created>
+      <option name="number" value="00033" />
+      <option name="presentableId" value="LOCAL-00033" />
+      <option name="project" value="LOCAL" />
+      <updated>1766788735036</updated>
+    </task>
+    <task id="LOCAL-00034" summary="Refactored the python script so that the user csv file gets put into local user folder instead in a directory that may be invalid when the application gets packaged in the future.">
+      <option name="closed" value="true" />
+      <created>1766790213953</created>
+      <option name="number" value="00034" />
+      <option name="presentableId" value="LOCAL-00034" />
+      <option name="project" value="LOCAL" />
+      <updated>1766790213953</updated>
+    </task>
+    <task id="LOCAL-00035" summary="Removed console output">
+      <option name="closed" value="true" />
+      <created>1766790287096</created>
+      <option name="number" value="00035" />
+      <option name="presentableId" value="LOCAL-00035" />
+      <option name="project" value="LOCAL" />
+      <updated>1766790287096</updated>
+    </task>
+    <task id="LOCAL-00036" summary="refactored the prediction function to also detect falsetto vocal qualities. Also fixed some window duplication bugs.">
+      <option name="closed" value="true" />
+      <created>1766894892404</created>
+      <option name="number" value="00036" />
+      <option name="presentableId" value="LOCAL-00036" />
+      <option name="project" value="LOCAL" />
+      <updated>1766894892404</updated>
+    </task>
+    <task id="LOCAL-00037" summary="refactored the prediction function to also detect falsetto vocal qualities. Also fixed some window duplication bugs.">
+      <option name="closed" value="true" />
+      <created>1766895566170</created>
+      <option name="number" value="00037" />
+      <option name="presentableId" value="LOCAL-00037" />
+      <option name="project" value="LOCAL" />
+      <updated>1766895566170</updated>
+    </task>
+    <task id="LOCAL-00038" summary="Created a StageFactory class to clean the code base. &#10;&#10;Add a falsetto detector, tuned it for better accuracy in the python script.&#10;&#10;Prevented the application from intentionally crashing when the audio recording goes missing, set an alert to indicate the issue to the user.&#10;&#10;Refactored the code base so that the stages used the StageFactory.&#10;&#10;Add invalidation enumerator to detect if the audio file was invalid or if the python script returned a system code 1.&#10;&#10;Added ui element to the loading screen to output where the current process is when loading.">
+      <option name="closed" value="true" />
+      <created>1766955909700</created>
+      <option name="number" value="00038" />
+      <option name="presentableId" value="LOCAL-00038" />
+      <option name="project" value="LOCAL" />
+      <updated>1766955909700</updated>
+    </task>
+    <task id="LOCAL-00039" summary="Created a StageFactory class to clean the code base. &#10;&#10;Add a falsetto detector, tuned it for better accuracy in the python script.&#10;&#10;Prevented the application from intentionally crashing when the audio recording goes missing, set an alert to indicate the issue to the user.&#10;&#10;Refactored the code base so that the stages used the StageFactory.&#10;&#10;Add invalidation enumerator to detect if the audio file was invalid or if the python script returned a system code 1.&#10;&#10;Added ui element to the loading screen to output where the current process is when loading.">
+      <option name="closed" value="true" />
+      <created>1766957572945</created>
+      <option name="number" value="00039" />
+      <option name="presentableId" value="LOCAL-00039" />
+      <option name="project" value="LOCAL" />
+      <updated>1766957572945</updated>
+    </task>
+    <task id="LOCAL-00040" summary="refactored the python script for better accuracy. &#10;&#10;Adjusted some UX stuff. &#10;&#10;Tested the application in container form...works great!&#10;&#10;Fixed some duplication bugs.&#10;&#10;Added magnifying feature for the dot graph.&#10;&#10;Decided to have the user analysis and data analysis open at the same time.&#10;&#10;Created a StageName enumerator for to ensure names of the stages remain constant since I incorporated a stage registry for better UI manipulation amongst different stages. &#10;&#10;Added an audio playback feature in the recording scene. Also the recording scene stays open until the user closes it. &#10;&#10;Set the environment install to the main so that the environment gets installed prior to starting the application.&#10;&#10;Updated the style of the loading bar for the loading scene. Added a second label for verbose.">
+      <option name="closed" value="true" />
+      <created>1767260998297</created>
+      <option name="number" value="00040" />
+      <option name="presentableId" value="LOCAL-00040" />
+      <option name="project" value="LOCAL" />
+      <updated>1767260998297</updated>
+    </task>
+    <task id="LOCAL-00041" summary="refactored the python script for better accuracy. &#10;&#10;Adjusted some UX stuff. &#10;&#10;Tested the application in container form...works great!&#10;&#10;Fixed some duplication bugs.&#10;&#10;Added magnifying feature for the dot graph.&#10;&#10;Decided to have the user analysis and data analysis open at the same time.&#10;&#10;Created a StageName enumerator for to ensure names of the stages remain constant since I incorporated a stage registry for better UI manipulation amongst different stages. &#10;&#10;Added an audio playback feature in the recording scene. Also the recording scene stays open until the user closes it. &#10;&#10;Set the environment install to the main so that the environment gets installed prior to starting the application.&#10;&#10;Updated the style of the loading bar for the loading scene. Added a second label for verbose.">
+      <option name="closed" value="true" />
+      <created>1767261186937</created>
+      <option name="number" value="00041" />
+      <option name="presentableId" value="LOCAL-00041" />
+      <option name="project" value="LOCAL" />
+      <updated>1767261186937</updated>
+    </task>
+    <task id="LOCAL-00042" summary="refactored the python script for better accuracy. &#10;&#10;Adjusted some UX stuff. &#10;&#10;Tested the application in container form...works great!&#10;&#10;Fixed some duplication bugs.&#10;&#10;Added magnifying feature for the dot graph.&#10;&#10;Decided to have the user analysis and data analysis open at the same time.&#10;&#10;Created a StageName enumerator for to ensure names of the stages remain constant since I incorporated a stage registry for better UI manipulation amongst different stages. &#10;&#10;Added an audio playback feature in the recording scene. Also the recording scene stays open until the user closes it. &#10;&#10;Set the environment install to the main so that the environment gets installed prior to starting the application.&#10;&#10;Updated the style of the loading bar for the loading scene. Added a second label for verbose.">
+      <option name="closed" value="true" />
+      <created>1767261260381</created>
+      <option name="number" value="00042" />
+      <option name="presentableId" value="LOCAL-00042" />
+      <option name="project" value="LOCAL" />
+      <updated>1767261260381</updated>
+    </task>
+    <task id="LOCAL-00043" summary="refactored the python script for better accuracy. &#10;&#10;Adjusted some UX stuff. &#10;&#10;Tested the application in container form...works great!&#10;&#10;Fixed some duplication bugs.&#10;&#10;Added magnifying feature for the dot graph.&#10;&#10;Decided to have the user analysis and data analysis open at the same time.&#10;&#10;Created a StageName enumerator for to ensure names of the stages remain constant since I incorporated a stage registry for better UI manipulation amongst different stages. &#10;&#10;Added an audio playback feature in the recording scene. Also the recording scene stays open until the user closes it. &#10;&#10;Set the environment install to the main so that the environment gets installed prior to starting the application.&#10;&#10;Updated the style of the loading bar for the loading scene. Added a second label for verbose.">
+      <option name="closed" value="true" />
+      <created>1767262217882</created>
+      <option name="number" value="00043" />
+      <option name="presentableId" value="LOCAL-00043" />
+      <option name="project" value="LOCAL" />
+      <updated>1767262217882</updated>
+    </task>
+    <task id="LOCAL-00044" summary="refactored the python script for better accuracy. &#10;&#10;Adjusted some UX stuff. &#10;&#10;Tested the application in container form...works great!&#10;&#10;Fixed some duplication bugs.&#10;&#10;Added magnifying feature for the dot graph.&#10;&#10;Decided to have the user analysis and data analysis open at the same time.&#10;&#10;Created a StageName enumerator for to ensure names of the stages remain constant since I incorporated a stage registry for better UI manipulation amongst different stages. &#10;&#10;Added an audio playback feature in the recording scene. Also the recording scene stays open until the user closes it. &#10;&#10;Set the environment install to the main so that the environment gets installed prior to starting the application.&#10;&#10;Updated the style of the loading bar for the loading scene. Added a second label for verbose.">
+      <option name="closed" value="true" />
+      <created>1767262257050</created>
+      <option name="number" value="00044" />
+      <option name="presentableId" value="LOCAL-00044" />
+      <option name="project" value="LOCAL" />
+      <updated>1767262257050</updated>
+    </task>
+    <task id="LOCAL-00045" summary="refactored the python script for better accuracy. &#10;&#10;Adjusted some UX stuff. &#10;&#10;Tested the application in container form...works great!&#10;&#10;Fixed some duplication bugs.&#10;&#10;Added magnifying feature for the dot graph.&#10;&#10;Decided to have the user analysis and data analysis open at the same time.&#10;&#10;Created a StageName enumerator for to ensure names of the stages remain constant since I incorporated a stage registry for better UI manipulation amongst different stages. &#10;&#10;Added an audio playback feature in the recording scene. Also the recording scene stays open until the user closes it. &#10;&#10;Set the environment install to the main so that the environment gets installed prior to starting the application.&#10;&#10;Updated the style of the loading bar for the loading scene. Added a second label for verbose.">
+      <option name="closed" value="true" />
+      <created>1767266776758</created>
+      <option name="number" value="00045" />
+      <option name="presentableId" value="LOCAL-00045" />
+      <option name="project" value="LOCAL" />
+      <updated>1767266776758</updated>
+    </task>
+    <task id="LOCAL-00046" summary="Tuned the guardrails for more accuracy in the pyscript">
+      <option name="closed" value="true" />
+      <created>1767306129821</created>
+      <option name="number" value="00046" />
+      <option name="presentableId" value="LOCAL-00046" />
+      <option name="project" value="LOCAL" />
+      <updated>1767306129821</updated>
+    </task>
+    <task id="LOCAL-00047" summary="Tuned the guardrails for more accuracy in the pyscript">
+      <option name="closed" value="true" />
+      <created>1767562949260</created>
+      <option name="number" value="00047" />
+      <option name="presentableId" value="LOCAL-00047" />
+      <option name="project" value="LOCAL" />
+      <updated>1767562949260</updated>
+    </task>
+    <option name="localTasksCounter" value="48" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="UnknownFeatures">
+    <option featureType="com.intellij.fileTypeFactory" implementationName="*.spec" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Added python script" />
+    <MESSAGE value="completed python script" />
+    <MESSAGE value="moved files around" />
+    <MESSAGE value="Java is now able to call on the python script (chatGPT) and the python script is now able to output detailed datapoints of the vocal sample to get the most accurate reading (chatGPT)" />
+    <MESSAGE value="Added audacity to the distribution." />
+    <MESSAGE value="refactored the python script to get a better more accurate filteration system. Ready for ML model" />
+    <MESSAGE value="Finished designing the 2nd scene" />
+    <MESSAGE value="Completed the machine learning portion, still need several hundred samples of feminine and masculine voices to ensure a high confidence interval." />
+    <MESSAGE value="Added components and new scenes" />
+    <MESSAGE value="updated readme" />
+    <MESSAGE value="Completed main functionality of the recorder model as well as the recording scene" />
+    <MESSAGE value="Moved the python script from the SAF controller and placed it in the utilities folder." />
+    <MESSAGE value="Refactored some code: removed unused imports, added comments and javadoc, updated wording on the SAF-scene." />
+    <MESSAGE value="Refactored the python script that separates the gender label and the score into 2 distinct columns for better future access to ui elements" />
+    <MESSAGE value="Refactored the class names and removed unused methods and fields." />
+    <MESSAGE value="added an open audio data scene to the workflow folder as a static class to be called by either the SAF or Recorder scene" />
+    <MESSAGE value="Refactored the recording. Create a new directory to store the recordings to make it more comfortable when the application gets packaged into an executable." />
+    <MESSAGE value="Refactored the python script so that the user csv file gets put into local user folder instead in a directory that may be invalid when the application gets packaged in the future." />
+    <MESSAGE value="Removed console output" />
+    <MESSAGE value="refactored the prediction function to also detect falsetto vocal qualities. Also fixed some window duplication bugs." />
+    <MESSAGE value="Created a StageFactory class to clean the code base. &#10;&#10;Add a falsetto detector, tuned it for better accuracy in the python script.&#10;&#10;Prevented the application from intentionally crashing when the audio recording goes missing, set an alert to indicate the issue to the user.&#10;&#10;Refactored the code base so that the stages used the StageFactory.&#10;&#10;Add invalidation enumerator to detect if the audio file was invalid or if the python script returned a system code 1.&#10;&#10;Added ui element to the loading screen to output where the current process is when loading." />
+    <MESSAGE value="refactored the python script for better accuracy. &#10;&#10;Adjusted some UX stuff. &#10;&#10;Tested the application in container form...works great!&#10;&#10;Fixed some duplication bugs.&#10;&#10;Added magnifying feature for the dot graph.&#10;&#10;Decided to have the user analysis and data analysis open at the same time.&#10;&#10;Created a StageName enumerator for to ensure names of the stages remain constant since I incorporated a stage registry for better UI manipulation amongst different stages. &#10;&#10;Added an audio playback feature in the recording scene. Also the recording scene stays open until the user closes it. &#10;&#10;Set the environment install to the main so that the environment gets installed prior to starting the application.&#10;&#10;Updated the style of the loading bar for the loading scene. Added a second label for verbose." />
+    <MESSAGE value="Tuned the guardrails for more accuracy in the pyscript" />
+    <MESSAGE value="Fixed directory issue." />
+    <MESSAGE value="Fixed directory issue" />
+    <option name="LAST_COMMIT_MESSAGE" value="Fixed directory issue" />
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/VocalAnalysis_JavaFX$Vocal_Analysis_Script.coverage" NAME="Vocal_Analysis_Script Coverage Results" MODIFIED="1756667611904" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src/main/VocalAnalysisToolKit" />
+    <SUITE FILE_PATH="coverage/VocalAnalysis_JavaFX$test.coverage" NAME="test Coverage Results" MODIFIED="1752720818733" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src/main/VocalAnalysisToolKit" />
+  </component>
+</project>
