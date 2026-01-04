@@ -1,2 +1,0 @@
-JAVA_VERSION="21.0.8"
-MODULES="java.base java.logging java.transaction.xa java.xml java.sql jdk.unsupported com.google.gson java.datatransfer java.prefs java.desktop javafx.base javafx.graphics javafx.controls java.scripting javafx.fxml javafx.media jdk.internal.jvmstat jdk.attach jdk.jdwp.agent jdk.jdi java.net.http org.controlsfx.controls org.kordamp.bootstrapfx.core org.kordamp.ikonli.core org.kordamp.ikonli.javafx java.security.sasl java.naming java.sql.rowset org.slf4j org.xerial.sqlitejdbc com.kass.vocalanalysistool"
