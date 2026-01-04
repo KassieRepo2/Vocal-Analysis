@@ -84,13 +84,12 @@ public class LoadingScreenController implements PropertyChangeListener {
         Platform.runLater(() -> {
 
 
-            if (theEvent.getPropertyName().equals(ChangeEvents.NEW_INSTALL_B.toString())) {
+            if (theEvent.getPropertyName().equals(ChangeEvents.NEW_INSTALL.toString())) {
                 myProgBar.setProgress((double) theEvent.getNewValue());
+                myInstallLabel.setText("Setting up environment for the first time:");
                 myProgressLabel.setText(String.valueOf(theEvent.getOldValue()));
             }
-            if (theEvent.getPropertyName().equals(ChangeEvents.NEW_INSTALL_A.name())) {
-                myInstallLabel.setText("Setting up a new environment:");
-            }
+
 
             if (theEvent.getPropertyName().equals(ChangeEvents.UPDATE_PROGRESS.name())) {
                 myProgBar.setProgress((double) theEvent.getNewValue());

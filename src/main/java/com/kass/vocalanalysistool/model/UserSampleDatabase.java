@@ -192,11 +192,9 @@ public class UserSampleDatabase {
         String f0_str = "";
         String f1_str = "";
         String f2_str = "";
-        String f3_str = "";
-        String f4_str = "";
 
         final String query = """
-                SELECT f0_json, f1_json, f2_json, f3_json, f4_json
+                SELECT f0_json, f1_json, f2_json
                 FROM user_formants
                 ORDER BY timestamp DESC, id DESC
                 LIMIT 1
@@ -210,12 +208,10 @@ public class UserSampleDatabase {
                 f0_str = rs.getString("f0_json");
                 f1_str = rs.getString("f1_json");
                 f2_str = rs.getString("f2_json");
-                f3_str = rs.getString("f3_json");
-                f4_str = rs.getString("f4_json");
             }
 
-            if (f0_str == null || f1_str == null || f2_str == null || f3_str == null || f4_str == null
-                    || f0_str.isBlank() || f1_str.isBlank() || f2_str.isBlank() || f3_str.isBlank() || f4_str.isBlank()) {
+            if (f0_str == null || f1_str == null || f2_str == null
+                    || f0_str.isBlank() || f1_str.isBlank() || f2_str.isBlank()) {
                 MY_LOGGER.severe("Formants are empty. Unable to retrieve them!");
                 throw new RuntimeException("Formants are empty.");
             }
@@ -223,8 +219,6 @@ public class UserSampleDatabase {
             results[0] = new Gson().fromJson(f0_str, double[].class);
             results[1] = new Gson().fromJson(f1_str, double[].class);
             results[2] = new Gson().fromJson(f2_str, double[].class);
-            results[3] = new Gson().fromJson(f3_str, double[].class);
-            results[4] = new Gson().fromJson(f4_str, double[].class);
 
         } catch (final SQLException theException) {
             MY_LOGGER.log(Level.SEVERE, "Unable to execute SQL query!", theException);
@@ -239,11 +233,11 @@ public class UserSampleDatabase {
      *
      * @return Returns an array of average formants from f0-f4.
      */
-    public final double[] getAverage() {
-        String f_Avg = "";
+    public final double[] getMedian() {
+        String f_med = "";
 
         final String query = """
-                SELECT formant_avg_json
+                SELECT formant_med_json
                 FROM user_formants
                 ORDER BY timestamp DESC, id DESC
                 LIMIT 1
@@ -254,14 +248,14 @@ public class UserSampleDatabase {
              final ResultSet rs = stmt.executeQuery(query)) {
 
             if (rs.next()) {
-                f_Avg = rs.getString("formant_avg_json");
+                f_med = rs.getString("formant_avg_json");
             }
 
-            if (f_Avg == null || f_Avg.isBlank()) {
+            if (f_med == null || f_med.isBlank()) {
                 throw new RuntimeException("No average formant data found!");
             }
 
-            return new Gson().fromJson(f_Avg, double[].class);
+            return new Gson().fromJson(f_med, double[].class);
 
         } catch (final SQLException theEvent) {
             MY_LOGGER.log(Level.SEVERE, "Unable to retrieve the average formant data", theEvent);
@@ -335,17 +329,18 @@ public class UserSampleDatabase {
         }
     }
 
+
     /**
-     * Retrieves the latest gender score from the users audio sample.
+     * Gets the latest time sequences
      *
-     * @return The gender score.
+     * @return the array of timeSequence.
      */
-    public final String getGenderScore() {
+    public final double[] getTimeSequence() {
+        String time_seq = "";
         final String query = """
-                SELECT gender_score, timestamp, id
+                SELECT time_json
                 FROM user_formants
                 ORDER BY timestamp DESC, id DESC
-                LIMIT 1
                 """;
 
         try (final Connection conn = myDs.getConnection();
@@ -353,45 +348,19 @@ public class UserSampleDatabase {
              final ResultSet rs = ps.executeQuery()) {
 
             if (rs.next()) {
-                return rs.getString("gender_score");
+                time_seq = rs.getString("time_json");
             }
 
-            throw new RuntimeException("No gender_score were found!");
-
-        } catch (final SQLException theEvent) {
-            MY_LOGGER.log(Level.SEVERE, "Unable to retrieve the gender score", theEvent);
-            throw new RuntimeException("Unable to retrieve the gender score: " + theEvent.getMessage(), theEvent);
-        }
-    }
-
-    /**
-     * Gets the latest time stamps (most recent first).
-     *
-     * @return the list of timestamps.
-     */
-    public final List<String> getTimeStamp() {
-        final List<String> results = new ArrayList<>();
-
-        final String query = """
-                SELECT timestamp
-                FROM user_formants
-                ORDER BY timestamp DESC, id DESC
-                """;
-
-        try (final Connection conn = myDs.getConnection();
-             final PreparedStatement ps = conn.prepareStatement(query);
-             final ResultSet rs = ps.executeQuery()) {
-
-            while (rs.next()) {
-                results.add(rs.getString("timestamp"));
+            if (time_seq == null || time_seq.isBlank()) {
+                throw new RuntimeException("No time sequences were found!");
             }
 
-        } catch (final SQLException theEvent) {
-            MY_LOGGER.log(Level.SEVERE, "Unable to retrieve time stamp", theEvent);
-            throw new RuntimeException("Unable to retrieve time stamp: " + theEvent.getMessage(), theEvent);
-        }
+            return new Gson().fromJson(time_seq, double[].class);
 
-        return results;
+        } catch (final SQLException theEvent) {
+            MY_LOGGER.log(Level.SEVERE, "Unable to retrieve time sequences", theEvent);
+            throw new RuntimeException("Unable to retrieve time sequences: " + theEvent.getMessage(), theEvent);
+        }
     }
 
     /**

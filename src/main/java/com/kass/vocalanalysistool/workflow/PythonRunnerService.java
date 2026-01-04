@@ -178,7 +178,7 @@ public class PythonRunnerService implements PropertyChangeListener {
             if (Files.exists(requirements)) {
                 logger.info("Installing requirements from: " + requirements);
                 myChanges.firePropertyChange(ChangeEvents.UPDATE_PROGRESS.toString(),
-                        "Installing dependency requirements...", (double) 55 / 100);
+                        "Checking dependency requirements...", (double) 55 / 100);
                 code = run.apply(new String[]{pythonExe, "-m", "pip", "install", "-r", requirements.toString()});
                 if (code != 0)
                     throw new IllegalStateException("pip install -r failed with code " + code);

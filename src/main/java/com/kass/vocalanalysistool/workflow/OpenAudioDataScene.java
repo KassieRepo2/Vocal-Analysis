@@ -65,7 +65,7 @@ public class OpenAudioDataScene {
         if (result.equals(WorkflowResult.FAILED) || result.equals(WorkflowResult.CANCELLED)) {
 
             logger.log(Level.SEVERE, "[Open Analysis] Work Flow Failed");
-            Alert alert = new Alert(Alert.AlertType.ERROR);
+            final Alert alert = new Alert(Alert.AlertType.ERROR);
             final Stage alertStage = (Stage) alert.getDialogPane().getScene().getWindow();
             setIconToStage(alertStage);
             alertStage.toFront();

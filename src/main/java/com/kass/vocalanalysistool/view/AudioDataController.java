@@ -96,6 +96,10 @@ public class AudioDataController implements PropertyChangeListener {
 
         myInformationLabel.setText(
                 """    
+                        This panel provides detailed explanations of the acoustic features shown
+                        in your analysis charts. You can scroll and reference sections as needed.
+                        --------------------------------------------------------------------------
+                        
                         * Formant [F1–F4] are resonant frequency ranges shaped by the vocal tract.
                             Vowels and vocal-tract configuration (tongue, lips, jaw) strongly influence
                             formant placement.
@@ -104,7 +108,7 @@ public class AudioDataController implements PropertyChangeListener {
                             these values overlap and vary by age, dialect, context, and articulation.
                         
                         * Formant data can give you a good idea about how you are forming your
-                            vowels, tongue placements, lips placements, jaw placements,
+                            vowels, tongue placements, lip placements, jaw placements,
                             resonance locations, as well as how you are articulating your words.
                         
                         * Gender perception of your voice can be predicted based on pitch,
@@ -113,20 +117,23 @@ public class AudioDataController implements PropertyChangeListener {
                         ---------------------------------- Pitch ----------------------------------
                         
                         ** Pitch [F0] Cis Women [165 - 300] Hz | Cis Men [85 - 155] Hz:
-                            - Pitch may play a huge role on how a person may gender your voice.
-                                However, pitch alone can not be reliably used to determine the
-                                gender perception of your voice. We must take into
-                                consideration of how we enunciate our words, as well as our resonance.
+                            - Pitch does play a major role in how a person may gender your voice.
+                               However, pitch alone can not be reliably used to determine the
+                               gender perception of your voice.
+                        
+                            - We must take into consideration of other vocal characteristics that
+                               make up our vocal profile, such as, intonation, breathiness,
+                               and resonance.
                         
                         -------------------------------- Resonance --------------------------------
                         
                         ** F1: Cis Women [300 - 900] Hz | Cis Men [250 - 750] Hz:
                             - Influenced by Tongue Height (Mouth Openness).
                         
-                            - High tongue (closed mouth) -> Low F1:
+                            - High tongue position (more closed mouth) -> Low F1:
                                 + Vowels like /i/ ("ee" in beet), /u/ ("oo" in boot)
                         
-                            - Low tongue (open mouth) -> High F1:
+                            - Low tongue position (more open mouth) -> High F1:
                                 + Vowels like /a/ ("ah" in father), /æ/ ("a" in cat)
                         
                             - Inversely related to tongue height:
@@ -135,7 +142,7 @@ public class AudioDataController implements PropertyChangeListener {
                         
                         
                         ** F2: Cis Women [1450- 3200] Hz | Cis Men [725 - 1900] Hz:
-                            - Influenced by Tongue Frontness.
+                            - Influenced by tongue frontness.
                         
                             - Tongue forward -> High F2:
                                 + Vowels like /i/ ("ee"), /e/ ("ay")
@@ -143,9 +150,9 @@ public class AudioDataController implements PropertyChangeListener {
                             - Tongue back -> Low F2:
                                 + Vowels like /u/ ("oo"), /o/ ("oh"), /a/ ("ah")
                         
-                            - Directly related to tongue front-ness.
-                                + To increase F2: keep your tongue in the front most part of your mouth.
-                                + To decrease F2: keep your tongue in the back most part of your mouth.
+                            - Directly related to tongue frontness.
+                                + To increase F2: keep your tongue in the frontmost part of your mouth.
+                                + To decrease F2: keep your tongue in the backmost part of your mouth.
                         
                         
                         ** F3: Cis Women [2600 - 3600] Hz | Cis Men [1600 - 2800] Hz:
@@ -153,17 +160,18 @@ public class AudioDataController implements PropertyChangeListener {
                         
                             - Influenced by lip rounding -> Lowers F3:
                                 + Vowels like (/r/ ("rr" in red and run) and /u/ ("oo" in boot))
-                                + Constrictions in oral cavity.
+                                + Constrictions in the oral cavity.
                         
                             - Less dramatically tied to vowels than F1/F2, but:
-                                + /i/ ("ee") tends to have a higher F3
-                                + /u/ ("oo") and /r/ ("rr") tends to have a lower F3
+                                + /i/ ("ee") tend to have a higher F3
+                                + /u/ ("oo") and /r/ ("rr") tend to have a lower F3
                         
-                            - Directly related to larynx position, mouth shape, and tongue placement.
+                            - Influenced indirectly by larynx position, mouth shape, and tongue
+                              placement.
                                 + To increase F3:
                                     - Spread your lips (think gentle smile) when speaking.
                                     - Keep your tongue as flat as possible, don't bunch up your tongue.
-                                    - Raise your larynx.
+                                    - Maintain a slightly elevated larynx.
                                     - The tongue should be rubbing the back of your two front teeth.
                                     - "The tip of the tongue the teeth the lips".
                                 + To decrease F3:
@@ -249,7 +257,10 @@ public class AudioDataController implements PropertyChangeListener {
             lensView.setViewport(new Rectangle2D(vx, vy, vw, vh));
         });
 
-        imageView.setOnMouseExited(e -> lensView.setVisible(false));
+        imageView.setOnMouseExited(e ->{
+            lensView.setVisible(false);
+
+        });
     }
 
     /**
@@ -336,7 +347,6 @@ public class AudioDataController implements PropertyChangeListener {
 
         if (theEvent.getPropertyName().equals(ChangeEvents.WORKFLOW_RESULT.name())) {
             Platform.runLater(() -> {
-                System.out.println(theEvent.getNewValue());
                 OpenAudioDataScene.openAnalysis(theEvent);
                 myPythonScript.removePropertyChangeListener(this);
 

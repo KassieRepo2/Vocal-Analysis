@@ -26,7 +26,6 @@ PREVIOUS_FREQ_F4: Optional[float] = None
 UNVOICE_DB = -200.0
 
 
-
 def _reset_track_state():
     """
     Resets the global variables to default state.
@@ -178,17 +177,23 @@ def _filter_helper(formant: str, frequency: float, time: Optional[float] = None)
         return st <= fth
 
 
-def get_freq_average(freq_data: list[float]) -> float:
+def get_freq_medians(freq_data: list[float]) -> float:
     """
-    Get the average frequency for the designated formant frequency band.
+    Get the median frequency for the designated formant frequency band.
 
     :param freq_data: List of frequencies extracted from the sample
-    :return: The mean formant.
+    :return: The median formant.
     """
 
     vals = [x for x in freq_data if x is not None and x > 0 and math.isfinite(x)]
+    vals.sort()
+    mid_index = len(vals) // 2
 
-    return sum(vals) / len(vals) if vals else float("nan")
+    if (len(vals) % 2) == int(1):
+        return vals[mid_index]
+    else:
+
+        return (vals[mid_index] + vals[mid_index - 1]) / 2
 
 
 def _hz_to_semitones(hz, ref=55.0):
@@ -517,12 +522,15 @@ def connect_table():
                    (
                        id               INTEGER PRIMARY KEY AUTOINCREMENT,
                        timestamp        TIMESTAMP DEFAULT (datetime('now', 'localtime')),
+                       time_json        TEXT NOT NULL CHECK (json_valid(time_json)),
                        f0_json          TEXT NOT NULL CHECK (json_valid(f0_json)),
                        f1_json          TEXT NOT NULL CHECK (json_valid(f1_json)),
+                       f1_med           REAL NOT NULL CHECK (f1_med >= 0),
                        f2_json          TEXT NOT NULL CHECK (json_valid(f2_json)),
-                       f3_json          TEXT NOT NULL CHECK (json_valid(f3_json)),
-                       f4_json          TEXT NOT NULL CHECK (json_valid(f4_json)),
-                       formant_avg_json TEXT NOT NULL CHECK (json_valid(formant_avg_json)),
+                       f2_med           REAL NOT NULL CHECK (f2_med >= 0),
+                       f3_med           REAL NOT NULL CHECK (f3_med >= 0),
+                       f4_med           REAL NOT NULL CHECK (f4_med >= 0),
+                       formant_med_json TEXT NOT NULL CHECK (json_valid(formant_med_json)),
                        scatter_plot     BLOB NOT NULL,
                        gender_label     TEXT NOT NULL CHECK (gender_label IN (
                                                                               'MASC', 'FEMME', 'ANDRO_MASC',
@@ -538,34 +546,43 @@ def connect_table():
     conn.close()
 
 
-def insert_to_table(time_: list[float], f0_: list[float], f1_: list[float], f2_: list[float],
-                    f3_: list[float], f4_: list[float], formant_avg: list[float],
-                    gender_label: str, gender_score: float) -> None:
+def insert_to_table(time_: list[float], f0_: list[float], f1_: list[float], f1_med: float, f2_: list[float],
+                    f2_med: float, f3_med: float, f4_med: float, formant_med: list[float], png_bytes: bytes,
+                    gender_label: str,
+                    gender_score: float) -> None:
     """
     Inserts the formant data (filtered and average) into the SQL database and generates a plot.
     Each element of formant corresponds to the time stamp in the list of time sequence.
 
 
 
+
+
     :param time_: The list of time sequence
     :param f0_: The list of pitch
     :param f1_: The list of Formants 1
+    :param f1_med: The F1 median
     :param f2_: The list of Formant 2
-    :param f3_: The list of Formant 3
-    :param f4_: The list of Formant 4
-    :param formant_avg: List of average formants (F0-F1)
+    :param f2_med: The F2 Median
+    :param f3_med: The median of Formant 3
+    :param f4_med: The median of Formant 4
+    :param formant_med: List of medians for formants (F0-F4)
+    :param png_bytes: The scatter plot
     :param gender_label:
     :param gender_score:
     :return: None
     """
-    png_bytes = plot_formants(time_, f0_, f1_, f2_, f3_, f4_)
+
     payload = (
+        json.dumps(list(map(float, time_))),
         json.dumps(list(map(float, f0_))),
         json.dumps(list(map(float, f1_))),
+        float(f1_med) if f1_med is not None else None,
         json.dumps(list(map(float, f2_))),
-        json.dumps(list(map(float, f3_))),
-        json.dumps(list(map(float, f4_))),
-        json.dumps(list(map(float, formant_avg))),
+        float(f2_med) if f2_med is not None else None,
+        float(f3_med) if f3_med is not None else None,
+        float(f4_med) if f4_med is not None else None,
+        json.dumps(list(map(float, formant_med))),
         Binary(png_bytes),
         gender_label,
         float(gender_score) if gender_score is not None else None,
@@ -574,9 +591,10 @@ def insert_to_table(time_: list[float], f0_: list[float], f1_: list[float], f2_:
     conn = sqlite3.connect("Vocal_Analysis.db")
     cur = conn.cursor()
     cur.execute("""
-                INSERT INTO user_formants(f0_json, f1_json, f2_json, f3_json, f4_json, formant_avg_json,
+                INSERT INTO user_formants(time_json, f0_json, f1_json, f1_med, f2_json, f2_med, f3_med, f4_med,
+                                          formant_med_json,
                                           scatter_plot, gender_label, gender_score)
-                VALUES (json(?), json(?), json(?), json(?), json(?), json(?), ?, ?, ?)
+                VALUES (json(?), json(?), json(?), ?, json(?), ?, ?, ?, json(?), ?, ?, ?)
                 """, payload)
     conn.commit()
     conn.close()
@@ -588,15 +606,19 @@ def _create_csv(row: dict) -> None:
     :param row: The feature list.
     :return: None
     """
-    base_dir = Path.home() / "VocalAnalysisTool" / "user_features.csv"
-    out_csv = base_dir
-    pd.DataFrame([row]).to_csv(
-        out_csv,
-        mode="w",
-        header=True,
-        index=False
-    )
-    print("CSV has been generated!")
+    df = pd.DataFrame([row])
+
+    # 1) User home app folder
+    home_csv = Path.home() / "VocalAnalysisTool" / "user_features.csv"
+    home_csv.parent.mkdir(parents=True, exist_ok=True)
+    df.to_csv(home_csv, mode="w", header=True, index=False)
+
+    # 2) Project/runtime folder
+    base_csv = Path(base_dir) / "user_features.csv"
+    base_csv.parent.mkdir(parents=True, exist_ok=True)
+    df.to_csv(base_csv, mode="w", header=True, index=False)
+
+    print(f"CSV has been generated:\n- {home_csv}\n- {base_csv}")
 
 
 def _pitch_spike_trap_guardrail(data_frame: pd.DataFrame) -> bool:
@@ -786,6 +808,7 @@ def __predict__():
         if femme > masc:
 
             result = ("FEMME", float(femme)) if user_data["F3_med"].iloc[0] > 2500 else ("MASC", float(masc))
+            label, score = result
 
         else:
 
@@ -798,7 +821,7 @@ def __predict__():
                 and (user_data["range_semitones"].iloc[0] >= 28 or user_data["f0_sd_st"].iloc[0] >= 5)
         )
         print("Pitch support gap: ", user_data["pitch_support_gap_hz"].iloc[0])
-        print("Pitch support ratio: ",  user_data["pitch_support_ratio"].iloc[0])
+        print("Pitch support ratio: ", user_data["pitch_support_ratio"].iloc[0])
 
         print(result)
 
@@ -810,24 +833,30 @@ def __predict__():
 
             if abs(diff) <= threshold:
                 print("Andro threshold")
-                result = ("ANDRO", (max((femme - min(femme, masc)), (masc + min(femme, masc)) )))
+                result = ("ANDRO", (max((femme - min(femme, masc)), (masc + min(femme, masc)))))
             else:
                 result = ("FEMME", float(femme)) if (diff > 0 and user_data["breathiness_index"].iloc[0] < -11) else (
                     "MASC", float(femme))
+
 
         if ((user_data["f0_min_hz"].iloc[0] > 290
              or user_data["f0_p5_hz"].iloc[0] > 280)
                 and (user_data["F2_med"].iloc[0] < 1650
                      or user_data["hnr_mean_db"].iloc[0] < 16
-                     or user_data["f0_sd_st"].iloc[0] < 4)
+                     or user_data["f0_sd_st"].iloc[0] < 2.4)
         ):
             result = ("FEMME_FALSETTO", float(0.5))
 
-        if ((user_data["F0_med"].iloc[0] >= 240 or user_data["f0_p5_hz"].iloc[0] >= 215)
-                and user_data["range_st_5_95"].iloc[0] < 10.8
-                and user_data["f0_sd_st"].iloc[0] < 4.5
-                and user_data["voiced_frac"].iloc[0] < 0.6
-                and user_data["breathiness_index"].iloc[0] < -18):
+        if ((femme > masc and (user_data["F1_med"].iloc[0] <= 315)
+             and user_data["voiced_frac"].iloc[0] < 0.60
+             and user_data["F2_med"].iloc[0] < 1600
+             and user_data["F2_over_F1"].iloc[0] < 4.5)
+                or ((user_data["F0_med"].iloc[0] >= 240 or
+                     user_data["f0_p5_hz"].iloc[0] >= 215)
+                    and user_data["range_st_5_95"].iloc[0] < 10.8
+                    and user_data["f0_sd_st"].iloc[0] < 4.5
+                    and user_data["voiced_frac"].iloc[0] < 0.6
+                    and user_data["breathiness_index"].iloc[0] < -18)):
             result = ("ANDRO_FALSETTO", float(0.5))
 
         if (user_data["f0_min_hz"].iloc[0] <= 80 and user_data["F0_med"].iloc[0] > 140
@@ -843,37 +872,77 @@ def __predict__():
 
     else:
         print("Masc: ", masc, "Femme: ", femme)
-        print(f"Threshold: ",({max(masc, femme) + eps}), ">" ,({multiplier * (min(masc, femme) + eps)}))
-
+        print(f"Threshold: ", ({max(masc, femme) + eps}), ">", ({multiplier * (min(masc, femme) + eps)}))
 
         diff = femme - masc
         print("Small difference found")
 
         if abs(diff) <= threshold:
-            return "ANDRO", (max((0.5 - min(femme, masc)), (0.5 + min(femme, masc)) ))
+            return "ANDRO", (max((0.5 - min(femme, masc)), (0.5 + min(femme, masc))))
 
         result = ("ANDRO_FEMME", float(max(femme, masc))) if (diff > 0 and
-                                                   (user_data["breathiness_index"].iloc[0] < -11
-                                                    or user_data["F1_med"].iloc[0] > 450)) else \
-            ("ANDRO_MASC",min(femme, masc))
+                                                              (user_data["breathiness_index"].iloc[0] < -11
+                                                               or user_data["F1_med"].iloc[0] > 450)) else (
+            "ANDRO_MASC", min(femme, masc))
 
     # Adjust this guardrail once the learning model gains higher confidence.
     # This guardrail prevents false FEMME/MASC due to speaking with a lower/higher falsetto.
     if isinstance(result, tuple) and (len(result) == int(2)):
+
         label, score = result
+
+        andro_threshold = (min((0.5 - min(femme, masc)), (0.5 + min(femme, masc))))
 
         if label == "FEMME":
             if _pitch_spike_trap_guardrail(user_data):
 
                 print("Pitch spike used")
 
-                result = ("ANDRO_MASC", float(masc))
+                # Penalize for not having proper vocal support
+                if user_data["F1_med"].iloc[0] < 400:
+                    _penalty = (abs((user_data["F1_med"].iloc[0] - 400)) / 1000)
+                    print(_penalty)
+                    _score = abs(0.55 - _penalty)
+                    print(_score)
+
+                    if _score < 0.45:
+                        result = ("ANDRO_MASC", float(_score))
+                    elif _score > 0.55:
+                        result = ("ANDRO_FEMME", float(_score))
+                    else:
+                        result = ("ANDRO", float(_score))
+
+                else:
+                    result = ("ANDRO", float(min(float(andro_threshold), femme)))
+
             elif _femme_requires_support_guardrail(user_data):
 
-                andro_threshold = (min((femme - min(femme, masc)), (femme + min(femme, masc))))
                 print("femme requires support guardrail used")
-                result = (("ANDRO", andro_threshold) if (0.35 < andro_threshold < 0.45) else ("MASC",
-                          float(andro_threshold)))
+
+                # Penalize for not having proper vocal support
+                if float(user_data["F0_med"].iloc[0]) < 140:
+                    andro_threshold = min(float(andro_threshold), 0.45)
+
+                if 0.45 < andro_threshold < 0.55:
+                    result = ("ANDRO", float(andro_threshold))
+
+                elif (3.55 <= user_data["F2_over_F1"].iloc[0] < 4.0 and user_data["F3_over_F2"].iloc[0] > 1.5 and
+                      user_data["F0_med"].iloc[0] < 165):
+                    _penalty = 0.15
+                    _diff = abs(user_data["F2_over_F1"].iloc[0] - 4.0)
+                    _score = 0.65 - _diff
+                    if user_data["F0_med"].iloc[0] < 145:
+                        _score = _score - _penalty
+                    result = ("ANDRO_MASC", _score)
+
+                elif user_data["F0_med"].iloc[0] > 165 and user_data["F3_over_F2"].iloc[0] > 1.5:
+                    _penalty = abs(round(user_data["F2_over_F1"].iloc[0], 2) - 3.54) / 10
+                    print(round(_penalty, 2))
+                    _score = 0.65 - round(_penalty, 2)
+                    print(round(_score, 2))
+                    result = ("ANDRO_FEMME", float(_score))
+                else:
+                    result = ("MASC", andro_threshold)
 
         if label == "MASC" and _soft_masc_androgyny_guardrail(user_data, masc_value=masc, femme_value=femme):
             print("soft masc androgyny used")
@@ -942,19 +1011,25 @@ def main(file_path=sys.argv[1]):
                 f4_vals_arr.append(full_data[i][5])
 
             # Gets the average formants
-            f0_average = get_freq_average(f0_vals_arr)
-            f1_average = get_freq_average(f1_vals_arr)
-            f2_average = get_freq_average(f2_vals_arr)
-            f3_average = get_freq_average(f3_vals_arr)
-            f4_average = get_freq_average(f4_vals_arr)
+            f0_medians = get_freq_medians(f0_vals_arr)
+            f1_medians = get_freq_medians(f1_vals_arr)
+            f2_medians = get_freq_medians(f2_vals_arr)
+            f3_medians = get_freq_medians(f3_vals_arr)
+            f4_medians = get_freq_medians(f4_vals_arr)
             # Crates a list of averages where i = 0 is f0_average and i = 4 is f4_average
-            avg_formants = [f0_average, f1_average, f2_average, f3_average, f4_average]
+            med_formants = [f0_medians, f1_medians, f2_medians, f3_medians, f4_medians]
+
+            # Creates the scatter plot
+            png_bytes = plot_formants(times_, f0_vals_arr, f1_vals_arr, f2_vals_arr, f3_vals_arr, f4_vals_arr)
+
             # Connects to the sqlite db
             connect_table()
+
             # Inserts the formant data into the sqlite3 database
             gender_label, gender_score = __predict__()
-            insert_to_table(times_, f0_vals_arr, f1_vals_arr, f2_vals_arr,
-                            f3_vals_arr, f4_vals_arr, avg_formants, gender_label, gender_score)
+
+            insert_to_table(times_, f0_vals_arr, f1_vals_arr, med_formants[1], f2_vals_arr, med_formants[2],
+                            med_formants[3], med_formants[4], med_formants, png_bytes, gender_label, gender_score)
 
             return gender_label
     except NameError:

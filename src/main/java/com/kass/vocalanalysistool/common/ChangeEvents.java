@@ -7,14 +7,9 @@ public enum ChangeEvents {
     UPDATE_PROGRESS,
 
     /**
-     * New Installation of the environment
-     */
-    NEW_INSTALL_A,
-
-    /**
      *
      */
-    NEW_INSTALL_B,
+    NEW_INSTALL,
 
     /**
      * New installation Skipped

@@ -12,8 +12,10 @@ import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
+import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Function;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -70,6 +72,7 @@ public class Main extends Application implements PropertyChangeListener {
 
     /**
      * Launches the stages.
+     *
      * @param args System arguments from the command line; not used.
      */
     public static void main(String[] args) {
@@ -105,8 +108,8 @@ public class Main extends Application implements PropertyChangeListener {
 
             Throwable cause = theEvent.getCause();
 
-            while(cause != null) {
-                logger.log(Level.SEVERE, "[Stack Trace] " , cause.getStackTrace());
+            while (cause != null) {
+                logger.log(Level.SEVERE, "[Stack Trace] ", cause.getStackTrace());
                 cause = cause.getCause();
             }
         }
@@ -153,10 +156,10 @@ public class Main extends Application implements PropertyChangeListener {
 
     }
 
-
     /**
      * Runs the installation thread and starts the FX main thread upon completion.
-     * @param theStage the Main stage
+     *
+     * @param theStage        the Main stage
      * @param loadingStageRef the stage Reference
      * @return the thread object.
      */
@@ -232,10 +235,7 @@ public class Main extends Application implements PropertyChangeListener {
             return;
         }
 
-        myChanges.firePropertyChange(ChangeEvents.NEW_INSTALL_A.name(), null,
-                null);
-
-        myChanges.firePropertyChange(ChangeEvents.NEW_INSTALL_B.name(), null, 0.05);
+        myChanges.firePropertyChange(ChangeEvents.NEW_INSTALL.name(), null, 0.05);
 
         final ProcessBuilder setupPB = new ProcessBuilder(
                 "cmd.exe", "/c", "call", setupBat.getFileName().toString()
@@ -255,17 +255,70 @@ public class Main extends Application implements PropertyChangeListener {
             while ((ln = reader.readLine()) != null) {
                 logger.info("[setup] " + ln);
 
-                prog = Math.min(0.99, prog + 0.005);
-                myChanges.firePropertyChange(ChangeEvents.NEW_INSTALL_B.name(), ln, prog);
+                prog = Math.min(0.85, prog + 0.01);
+                myChanges.firePropertyChange(ChangeEvents.NEW_INSTALL.name(), ln, prog);
             }
+            myChanges.firePropertyChange(ChangeEvents.NEW_INSTALL.name(), null, 1.0);
+
         }
+
+        Function<String[], Integer> run = (args) -> {
+                try {
+                    Process p = getProcess(new ProcessBuilder(args), dataDir);
+                    try (BufferedReader br = new BufferedReader(new InputStreamReader(p.getInputStream()))) {
+                        String s;
+                        while ((s = br.readLine()) != null) logger.info("[pip] " + s);
+                    }
+                    return p.waitFor();
+                } catch (Exception e) {
+                    logger.log(Level.SEVERE, "Subprocess failed: " + String.join(" ", args), e);
+                    return -1;
+                }
+            };
+                myChanges.firePropertyChange(ChangeEvents.NEW_INSTALL.name(), "Installing " +
+                        "dependencies...", 0.95);
+        int code;
+        final String pythonExe = venvPy.toString();
+
+        final Path requirements = extractResourceToDir(
+                "/VocalAnalysisToolKit/requirements.txt",
+                dataDir,
+                "requirements.txt"
+        );
+
+        if (Files.exists(requirements)) {
+            logger.info("Installing requirements from: " + requirements);
+
+            code = run.apply(new String[]{pythonExe, "-m", "pip", "install", "-r", requirements.toString()});
+            if (code != 0)
+                throw new IllegalStateException("pip install -r failed with code " + code);
+        } else {
+            // Minimal guarantee
+            logger.info("requirements.txt not found in " + dataDir + " — installing matplotlib explicitly.");
+            code = run.apply(new String[]{pythonExe, "-m", "pip", "install", "matplotlib"});
+            if (code != 0)
+                throw new IllegalStateException("pip install matplotlib failed with code " + code);
+        }
+
+        myChanges.firePropertyChange(ChangeEvents.UPDATE_PROGRESS.toString(),
+                "Importing dependencies...", (double) 64 / 100);
+        // 4) Probe: show interpreter & matplotlib version (fail fast if missing)
+        code = run.apply(new String[]{pythonExe, "-c",
+                "import sys; print('[PyProbe] exe:', sys.executable); " +
+                        "import matplotlib; print('[PyProbe] matplotlib version:', matplotlib.__version__)"
+        });
 
         final int setupExit = setupProc.waitFor();
         if (setupExit != 0) {
             throw new IOException("Environment setup failed (exit " + setupExit + ")");
         }
 
-        myChanges.firePropertyChange(ChangeEvents.NEW_INSTALL_B.name(), null, 1.0);
+        if(code == 0) {
+            myChanges.firePropertyChange(ChangeEvents.NEW_INSTALL.name(), null, 1.0);
+        } else {
+            throw new InternalError("Unable to set up environment!");
+        }
+
     }
 
 
@@ -320,6 +373,30 @@ public class Main extends Application implements PropertyChangeListener {
         }
 
         return out;
+    }
+
+    /**
+     * Helper method to condense code. Gets the process object based on the process builder.
+     *
+     * @param theCommandArgs the arguments of which process builder is executing
+     * @param theAppDir      The path of the application directory
+     * @return Returns a process object to execute the commands.
+     * @throws IOException Thrown if the path is invalid.
+     */
+    private static Process getProcess(final ProcessBuilder theCommandArgs,
+                                      final Path theAppDir) throws IOException {
+
+        theCommandArgs.directory(theAppDir.toFile());
+        theCommandArgs.redirectErrorStream(true);
+
+        final Map<String, String> env = theCommandArgs.environment();
+        env.remove("PYTHONHOME");
+        env.remove("PYTHONPATH");
+        env.put("MPLBACKEND", "Agg");
+        env.putIfAbsent("PYTHONIOENCODING", "utf-8");
+
+
+        return theCommandArgs.start();
     }
 
     /**

@@ -4,7 +4,6 @@ import com.kass.vocalanalysistool.model.UserSampleDatabase;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.OptionalDouble;
 import javafx.application.Platform;
@@ -16,6 +15,7 @@ import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -28,57 +28,94 @@ import javafx.scene.shape.Rectangle;
  */
 public class UsersAnalysisController {
     /**
+     * The audio timer hour label
+     */
+    @FXML
+    private Label myHourLabel;
+
+    /**
+     * The audio timer minute label
+     */
+    @FXML
+    private Label myMinuteLabel;
+
+    /**
+     * The audio timer seconds label
+     */
+    @FXML
+    private Label mySecondsLabel;
+
+    /**
+     * The play button
+     */
+    @FXML
+    private Button myPlayButton;
+
+    /**
+     * The stop button
+     */
+    @FXML
+    private Button myStopBtn;
+
+    /**
      * Trend chart for Pitch
      */
     @FXML
-    public LineChart<String, Number> myPitchChart;
+    private LineChart<Number, Number> myPitchChart;
 
     /**
      * Trend chart for F1
      */
     @FXML
-    public LineChart<String, Number> myF1Chart;
+    private LineChart<String, Number> myF1Chart;
 
     /**
      * Trend chart for F2
      */
     @FXML
-    public LineChart<String, Number> myF2Chart;
+    private LineChart<String, Number> myF2Chart;
 
     /**
      * Trend chart for F3
      */
     @FXML
-    public LineChart<String, Number> myF3Chart;
+    private LineChart<String, Number> myF3Chart;
 
     /**
      * Trend chart for F4
      */
     @FXML
-    public LineChart<String, Number> myF4Chart;
+    private LineChart<String, Number> myF4Chart;
 
     /**
      * Pitch StackPane
      */
     @FXML
-    public StackPane myPitchTrendStackPane;
+    private StackPane myPitchTrendStackPane;
 
     /**
      * Perceived Gender Stack Pane
      */
     @FXML
-    public StackPane myGenderPerceptStackPane;
+    private StackPane myGenderPerceptStackPane;
 
     /**
      * Perceived gender trend chart.
      */
     @FXML
-    public LineChart<String, Number> myGenderPerceptChart;
+    private LineChart<String, Number> myGenderPerceptChart;
 
     /**
      * Clears the SQL database
      */
-    public Button myClearTrendButton;
+    @FXML
+    private Button myClearTrendButton;
+
+    /**
+     * The label used to showcases the perceived gender of the vocal recording.
+     */
+    @FXML
+    private Label myGenderPerceptLabel;
 
 
     /**
@@ -87,6 +124,7 @@ public class UsersAnalysisController {
     public void initialize() {
         buildChartLayout();
         fillChart();
+        setMyGenderPerceptLabel();
 
     }
 
@@ -97,9 +135,37 @@ public class UsersAnalysisController {
         //Gender perception
         final List<String[]> dailyMedians = getDailyMedian();
         final String[] latestScore = getLatestGenderScore();
-        final XYChart.Series<String, Number> series = new XYChart.Series<>();
+        final XYChart.Series<String, Number> genderPerceptSeries = new XYChart.Series<>();
+
+        for (final String[] data : dailyMedians) {
+            final String date = data[0];
+            final double score = Double.parseDouble(data[1]);
+            genderPerceptSeries.getData().add(new XYChart.Data<>(date, score));
+        }
+
+        genderPerceptSeries.getData().add(new XYChart.Data<>(latestScore[0],
+                Double.parseDouble(latestScore[1])));
+
+        genderPerceptSeries.setName("Perceived vocal gender likelihood");
+
+        myGenderPerceptChart.getData().add(genderPerceptSeries);
+
+
+        final double[][] formants = new UserSampleDatabase(false).getFormants();
+        final double[] timeSeq = new UserSampleDatabase(false).getTimeSequence();
 
         //Pitch
+        final double[] pitch = formants[0];
+        final double[][] clippedPitch = getFrequencyData(timeSeq, pitch);
+        final XYChart.Series<Number, Number> pitchSeries = new XYChart.Series<>();
+        final int size = clippedPitch[0].length;
+        for (int i = 0; i < size; i++) {
+            double time_stamp = clippedPitch[0][i];
+            double freq = clippedPitch[1][i];
+            pitchSeries.getData().add(new XYChart.Data<>(time_stamp, freq));
+        }
+        pitchSeries.setName("Vocal Pitch");
+        myPitchChart.getData().add(pitchSeries);
 
         //F1
 
@@ -110,28 +176,50 @@ public class UsersAnalysisController {
         //F4
 
 
-        for (final String[] data : dailyMedians) {
-            final String date = data[0];
-            final double score = Double.parseDouble(data[1]);
-            series.getData().add(new XYChart.Data<>(date, score));
+    }
+
+    /**
+     * Helper to get the frequency list and the corresponded time stamp for graphing.
+     *
+     * @param theTimeSequence  The time sequency array.
+     * @param theFrequencyList The frequency array.
+     * @return A double 2d array -> double[0][] -> time sequence, double[1][] -> frequency
+     */
+    private double[][] getFrequencyData(final double[] theTimeSequence,
+                                        final double[] theFrequencyList) {
+
+        final int increment = 3;
+        final int size = theFrequencyList.length;
+        double[][] result;
+        if(size == 0) {
+            result = new double[0][0];
+        } else {
+            final int numEle = ((size - 1) / increment) + 1;
+
+            result = new double[2][numEle];
+            int index = 0;
+            for (int i = 0; i < size; i+=increment) {
+                result[0][index] = theTimeSequence[i];
+                result[1][index] = theFrequencyList[i];
+                index++;
+            }
         }
-
-        series.getData().add(new XYChart.Data<>(latestScore[0],
-                Double.parseDouble(latestScore[1])));
-        series.setName("The likelihood of the gender your voice will be perceived as");
-
-        myGenderPerceptChart.getData().add(series);
+        return result;
     }
 
 
     @FXML
     private void handleClearTrendButton() {
         new UserSampleDatabase(false).clearDatabase();
+
         myGenderPerceptChart.getData().clear();
+
         final XYChart.Series<String, Number> series = new XYChart.Series<>();
+
         series.getData().add(new XYChart.Data<>("", -1));
+
         myGenderPerceptChart.getData().add(series);
-        series.setName("The likelihood of the gender your voice will be perceived as");
+        series.setName("Perceived vocal gender likelihood");
     }
 
     /**
@@ -140,7 +228,8 @@ public class UsersAnalysisController {
     private void buildChartLayout() {
 
         myGenderPerceptChart.setCreateSymbols(true);
-        myPitchChart.setCreateSymbols(true);
+        myPitchChart.setCreateSymbols(false);
+
         myGenderPerceptChart.setAnimated(false);
         myPitchChart.setAnimated(false);
 
@@ -276,10 +365,27 @@ public class UsersAnalysisController {
             relayout.run();
 
             // And re-run on any layout change that affects plot size/position
-            runRelayout(pitchYAxis, relayout, myPitchChart, myPitchTrendStackPane);
+            rerunLayoutPitch(pitchYAxis, relayout, myPitchChart, myPitchTrendStackPane);
 
-            runRelayout(genderPerceptY, relayout, myGenderPerceptChart, myGenderPerceptStackPane);
+            rerunLayout(genderPerceptY, relayout, myGenderPerceptChart,
+                    myGenderPerceptStackPane);
         });
+    }
+
+    private void setMyGenderPerceptLabel() {
+        String percept = new UserSampleDatabase(false).getGenderLabel();
+        switch (percept) {
+            case "MASC" -> percept = "Masculine";
+            case "FEMME" -> percept = "Feminine";
+            case "ANDRO" -> percept = "Androgynous";
+            case "ANDRO_MASC" -> percept = "Androgynously-Masculine";
+            case "ANDRO_FEMME" -> percept = "Androgynously-Feminine";
+            case "MASC_FALSETTO" -> percept = "Falsetto-Masculine";
+            case "FEMME_FALSETTO" -> percept = "Falsetto-Feminine";
+            case "ANDRO_FALSETTO" -> percept = "Falsetto-Androgynous";
+            default -> percept = "";
+        }
+        myGenderPerceptLabel.setText(percept);
     }
 
     /**
@@ -290,9 +396,10 @@ public class UsersAnalysisController {
      * @param theLineChart             The Line chart with modified background
      * @param myGenderPerceptStackPane The stack pane of the line chart that was modified
      */
-    private void runRelayout(final NumberAxis theChartYAxis, final Runnable theRelayout,
+    private void rerunLayout(final NumberAxis theChartYAxis,
+                             final Runnable theRelayout,
                              final LineChart<String, Number> theLineChart,
-                             StackPane myGenderPerceptStackPane) {
+                             final StackPane myGenderPerceptStackPane) {
 
         theLineChart.layoutBoundsProperty().addListener((theObservable,
                                                          theBoundA, theBoundB) -> theRelayout.run());
@@ -307,25 +414,33 @@ public class UsersAnalysisController {
                                                         theBoundA, theBoundB) -> theRelayout.run());
     }
 
+
     /**
-     * Renormalizes the gender color bands.
+     * Reruns the layout of the chart.
      *
-     * @param rect       The color band rectangle
-     * @param low        The low bound
-     * @param high       The high bound
-     * @param plotHeight The height of the plot
+     * @param theChartYAxis            The number axis object of the line chart
+     * @param theRelayout              The relayout runnable.
+     * @param theLineChart             The Line chart with modified background
+     * @param myPitchTrendStackPane The stack pane of the line chart that was modified
      */
-    private void updateBandNormalized(final Rectangle rect,
-                                      final double low, final double high,
-                                      final double plotHeight) {
+    private void rerunLayoutPitch(final NumberAxis theChartYAxis,
+                             final Runnable theRelayout,
+                             final LineChart<Number, Number> theLineChart,
+                             final StackPane myPitchTrendStackPane) {
 
-        // In pixel space: y=0 is top, y=plotHeight is bottom
-        final double yLow = (1.0 - low) * plotHeight;
-        final double yHigh = (1.0 - high) * plotHeight;
+        theLineChart.layoutBoundsProperty().addListener((theObservable,
+                                                         theBoundA, theBoundB) -> theRelayout.run());
 
-        rect.setY(Math.min(yLow, yHigh));
-        rect.setHeight(Math.abs(yHigh - yLow));
+        myPitchTrendStackPane.layoutBoundsProperty().addListener((theObservable,
+                                                                     theBoundA, theBoundB) -> theRelayout.run());
+
+        theChartYAxis.lowerBoundProperty().addListener((theObservable,
+                                                        theBoundA, theBoundB) -> theRelayout.run());
+
+        theChartYAxis.upperBoundProperty().addListener((theObservable,
+                                                        theBoundA, theBoundB) -> theRelayout.run());
     }
+
 
     /**
      * Creates an array of rectangle objects to be used as color bands for the charts.
