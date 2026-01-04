@@ -7,6 +7,7 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="VocalAnalysisTool (1)" />
+        <module name="VocalAnalysis" />
         <module name="VocalAnalysisTool" />
       </profile>
     </annotationProcessing>

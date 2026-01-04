@@ -606,15 +606,21 @@ def _create_csv(row: dict) -> None:
     :param row: The feature list.
     :return: None
     """
-    base_dir = Path.home() / "VocalAnalysisTool" / "user_features.csv"
-    out_csv = base_dir
-    pd.DataFrame([row]).to_csv(
-        out_csv,
-        mode="w",
-        header=True,
-        index=False
-    )
-    print("CSV has been generated!")
+    df = pd.DataFrame([row])
+    base_dir = Path.home() / "VocalAnalysisTool"
+
+
+    # 1) User home app folder
+    home_csv = Path.home() / "VocalAnalysisTool" / "user_features.csv"
+    home_csv.parent.mkdir(parents=True, exist_ok=True)
+    df.to_csv(home_csv, mode="w", header=True, index=False)
+
+    # 2) Project/runtime folder
+    base_csv = Path(base_dir) / "user_features.csv"
+    base_csv.parent.mkdir(parents=True, exist_ok=True)
+    df.to_csv(base_csv, mode="w", header=True, index=False)
+
+    print(f"CSV has been generated:\n- {home_csv}\n- {base_csv}")
 
 
 def _pitch_spike_trap_guardrail(data_frame: pd.DataFrame) -> bool:
@@ -1030,6 +1036,7 @@ def main(file_path=sys.argv[1]):
             return gender_label
     except NameError:
         print("No File Selected")
+        print(["No file selected"], file_path)
 
 
 def __training_test__():

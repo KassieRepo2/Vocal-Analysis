@@ -607,6 +607,8 @@ def _create_csv(row: dict) -> None:
     :return: None
     """
     df = pd.DataFrame([row])
+    base_dir = Path.home() / "VocalAnalysisTool"
+
 
     # 1) User home app folder
     home_csv = Path.home() / "VocalAnalysisTool" / "user_features.csv"
@@ -1034,6 +1036,7 @@ def main(file_path=sys.argv[1]):
             return gender_label
     except NameError:
         print("No File Selected")
+        print(["No file selected"], file_path)
 
 
 def __training_test__():
