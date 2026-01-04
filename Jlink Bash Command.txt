@@ -1,0 +1,18 @@
+mvn clean package
+
+mvn javafx:jlink
+
+
+jpackage ^
+  --type exe ^
+  --name "Vocal Analysis" ^
+  --app-version 2.3.1 ^
+  --vendor "KassIsHere"^
+  --runtime-image "target\app" ^
+  --module "com.kass.vocalanalysistool/com.kass.vocalanalysistool.controller.Main" ^
+  --java-options "--enable-native-access=org.xerial.sqlitejdbc" ^
+  --icon "C:\Users\Kassi\OneDrive\Computer\Documents\GitHub\Vocal-Analysis\src\main\resources\com\kass\vocalanalysistool\icons\vocal_analysis_icon.ico" ^
+  --win-menu ^
+  --win-shortcut ^
+  --dest "dist"
+
